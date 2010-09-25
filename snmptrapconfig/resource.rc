@@ -1,0 +1,87 @@
+#include "resource.h"
+
+ID_ICON ICON "config.ico"
+
+ID_DIALOG_MAIN DIALOGEX 6, 5, 245, 270
+    CAPTION "Windows SNMP Trap Handler"
+    FONT 8, "Tahoma"
+    //STYLE 0x00000000
+    BEGIN
+        // XXXXXX id, x, y, width, height
+        PUSHBUTTON "Start service", ID_BUTTON_START, 10, 10, 46, 15
+        PUSHBUTTON "Stop service", ID_BUTTON_STOP, 70, 10, 46, 15
+        PUSHBUTTON "Update", ID_BUTTON_UPDATE, 130, 10, 46, 15
+
+        LISTBOX ID_LISTBOX_OID, 10, 30, 170, 100
+
+        PUSHBUTTON "Add", ID_BUTTON_ADD, 190, 40, 46, 15
+        PUSHBUTTON "Remove", ID_BUTTON_REMOVE, 190, 60, 46, 15, WS_DISABLED
+        PUSHBUTTON "Save", ID_BUTTON_MODIFY, 190, 80, 46, 15, WS_DISABLED
+
+        LTEXT "Run:", -1, 10, 190, 60, 10
+        EDITTEXT ID_EDIT_RUN, 10, 200, 206, 12
+        PUSHBUTTON "...", ID_BROWSE_RUN, 215, 200, 15, 12
+
+        LTEXT "Working directory:", -1, 10, 220, 60, 10
+        EDITTEXT ID_EDIT_WKDIR, 10, 230, 206, 12
+        PUSHBUTTON "...", ID_BROWSE_WKDIR, 215, 230, 15, 12
+
+        PUSHBUTTON "Export config.", ID_BUTTON_EXPORT, 10, 250, 60, 15
+
+        GROUPBOX " Service trap type ", ID_GROUPBOX_TRAPTYPE, 10, 132, 220 , 52, WS_GROUP
+            AUTORADIOBUTTON "Any", ID_RADIO_ANY, 17, 140, 40, 15
+            AUTORADIOBUTTON "Generic", ID_RADIO_GENERIC, 17, 153, 40, 15
+            AUTORADIOBUTTON "Enterprise specific", ID_RADIO_SPECIFIC, 17, 166, 100, 15
+            LTEXT "Trap code", ID_CAPTION_TRAP_CODE, 130, 150, 60, 10
+            EDITTEXT ID_EDIT_TRAP_CODE, 130, 160, 30, 12
+
+    END
+
+
+ID_DIALOG_ADD DIALOGEX 6, 5, 200, 50
+    CAPTION "Add an OID"
+    FONT 8, "Tahoma"
+    STYLE 0x00000000
+    BEGIN
+        // XXXXXX id, x, y, width, height
+        EDITTEXT ID_EDIT_OID, 10, 10, 180, 12
+
+        DEFPUSHBUTTON "Add", ID_BUTTON_ADD_OID, 40, 30, 46, 15
+        PUSHBUTTON "Cancel", ID_BUTTON_CANCEL_OID, 100, 30, 46, 15
+    END
+
+ID_VERSION_INFO VERSIONINFO
+	FILEVERSION 0,1,0,0
+	PRODUCTVERSION  0,1,0,0
+	FILEFLAGSMASK 0x3fL
+	FILEFLAGS 0x0L
+	FILEOS 0x40004L
+	FILETYPE 0x1L
+	FILESUBTYPE 0x0L
+	BEGIN
+		BLOCK "StringFileInfo"
+		BEGIN
+			BLOCK "040904b0"
+			BEGIN
+				VALUE "Comments", "This software have been programmed during my free time."
+                                "It is distributed as it without any guarantee under LGPLv3 licence."
+                                "http://www.gnu.org/licenses/lgpl.html\0"
+				//VALUE "CompanyName", "\0"
+				VALUE "FileDescription", "SNMPTrapHandler configuration program\0"
+				VALUE "FileVersion", "0,1,0,0\0"
+				VALUE "InternalName", "snmptrapconfig.exe\0"
+				VALUE "LegalCopyright", "(C) Julien Blitte\0"
+				//VALUE "LegalTrademarks", "\0"
+				//VALUE "OLESelfRegister", "\0"
+				VALUE "OriginalFilename", "snmptrapconfig.exe\0"
+				//VALUE "PrivateBuild", "\0"
+				VALUE "ProductName", "SNMP Trap Tools set\0"
+				VALUE "ProductVersion", "0,1,0,0\0"
+				VALUE "SpecialBuild", "Built the 2010-08-22 on Estephe with MinGW tool set\0"
+			END
+		END
+		BLOCK "VarFileInfo"
+		BEGIN
+			VALUE "Translation", 0x409, 1200
+		END
+	END
