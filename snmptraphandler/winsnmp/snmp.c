@@ -1,13 +1,11 @@
 #include <winsnmp.h>
 #include "snmp.h"
-#include "logger.h"
+#include "../logger.h"
 
 SNMPAPI_STATUS SnmpValueToStr(smiLPVALUE value, char *destBuffer, size_t lenBuffer)
 {
     unsigned int i;
     ULARGE_INTEGER u64;
-
-    logPrintPtrVar("destBuffer", destBuffer);
 
     switch(value->syntax)
     {
@@ -47,7 +45,7 @@ SNMPAPI_STATUS SnmpValueToStr(smiLPVALUE value, char *destBuffer, size_t lenBuff
         case SNMP_SYNTAX_OID:
             if (SnmpOidToStr(&value->value.oid, lenBuffer, destBuffer) == SNMPAPI_FAILURE)
             {
-                logPrint(LOG_ERROR, "SnmpOidToStr(SnmpValueToStr) failed!");
+                logPrintf(LOG_ERROR, "SnmpOidToStr(SnmpValueToStr) failed!\n");
                 return SNMPAPI_FAILURE;
             }
             break;
@@ -101,19 +99,8 @@ SNMPAPI_STATUS SnmpValueToStr(smiLPVALUE value, char *destBuffer, size_t lenBuff
     return SNMPAPI_SUCCESS;
 }
 
-SNMPAPI_STATUS SnmpFreeOID(smiLPOID oid)
-{
-    return SnmpFreeDescriptor(SNMP_SYNTAX_OID, (smiLPOPAQUE)oid);
-}
-
-SNMPAPI_STATUS SnmpFreeOCTETS(smiLPOCTETS octets)
-{
-    return SnmpFreeDescriptor(SNMP_SYNTAX_OCTETS, (smiLPOPAQUE)octets);
-}
-
 SNMPAPI_STATUS SnmpFreeValue(smiLPVALUE value)
 {
-    logPrintPtrVar("SnmpFreeValue.value", value);
     switch(value->syntax)
     {
         case SNMP_SYNTAX_OID:

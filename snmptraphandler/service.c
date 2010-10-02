@@ -20,23 +20,22 @@ void InstallService()
     SERVICE_DESCRIPTION sd;
 
     if (! GetModuleFileName(NULL, ExeAddr, MAX_PATH)) {
-        logPrint(LOG_ERROR, "GetModuleFileName failed!");
+        logPrintf(LOG_ERROR, "GetModuleFileName failed!\n");
         return;
     }
     else
     {
-        logPrint(LOG_DEBUG, "Executable is:");
-        logPrint(LOG_DEBUG, ExeAddr);
+        logPrintf(LOG_DEBUG, "Executable is: '%s'\n");
     }
 
     hSCMgr = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
     if (hSCMgr == NULL) {
-        logPrint(LOG_ERROR, "OpenSCManager failed!");
+        logPrintf(LOG_ERROR, "OpenSCManager failed!\n");
         return;
     }
     else
     {
-        logPrint(LOG_DEBUG, "OpenSCManager done.");
+        logPrintf(LOG_DEBUG, "OpenSCManager done.\n");
     }
 
     hService = CreateService(hSCMgr, gService.name, gService.name, SERVICE_ALL_ACCESS,
@@ -45,24 +44,24 @@ void InstallService()
 
     if (hService == NULL)
     {
-        logPrint(LOG_ERROR, "CreateService failed!");
+        logPrintf(LOG_ERROR, "CreateService failed!\n");
         CloseServiceHandle(hSCMgr);
         return;
     }
     else
     {
-        logPrint(LOG_DEBUG, "CreateService is ok.");
+        logPrintf(LOG_DEBUG, "CreateService is ok.\n");
     }
 
     // Now, to change its description
     sd.lpDescription = (char *)gService.description;
     if (! ChangeServiceConfig2(hService, SERVICE_CONFIG_DESCRIPTION, &sd))
     {
-        logPrint(LOG_ERROR, "ChangeServiceConfig2 failed!");
+        logPrintf(LOG_ERROR, "ChangeServiceConfig2 failed!\n");
     }
     else
     {
-        logPrint(LOG_DEBUG, "ChangeServiceConfig2 is ok.");
+        logPrintf(LOG_DEBUG, "ChangeServiceConfig2 is ok.\n");
     }
 
     CloseServiceHandle(hService);
@@ -75,38 +74,37 @@ void UninstallService()
     SC_HANDLE hService;
 
     hSCMgr = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
-    logPrintPtrVar("hSCMgr", hSCMgr);
+
     if (NULL == hSCMgr)
     {
-        logPrint(LOG_ERROR, "OpenSCManager failed!");
+        logPrintf(LOG_ERROR, "OpenSCManager failed!\n");
         return;
     }
     else
     {
-        logPrint(LOG_DEBUG, "OpenSCManager done.");
+        logPrintf(LOG_DEBUG, "OpenSCManager done.\n");
     }
 
     hService = OpenService(hSCMgr, gService.name, DELETE);
-    logPrintPtrVar("hService", hService);
 
     if (hService == NULL)
     {
-        logPrint(LOG_ERROR, "OpenService failed!");
+        logPrintf(LOG_ERROR, "OpenService failed!\n");
         CloseServiceHandle(hSCMgr);
         return;
     }
     else
     {
-        logPrint(LOG_DEBUG, "OpenService done.");
+        logPrintf(LOG_DEBUG, "OpenService done.\n");
     }
 
     if (! DeleteService(hService))
     {
-        logPrint(LOG_ERROR, "DeleteService Failed!");
+        logPrintf(LOG_ERROR, "DeleteService Failed!\n");
     }
     else
     {
-        logPrint(LOG_DEBUG, "DeleteService is ok.");
+        logPrintf(LOG_DEBUG, "DeleteService is ok.\n");
     }
 
     CloseServiceHandle(hService);
@@ -188,8 +186,8 @@ void MainService()
     {
 
         error = GetLastError();
-        logPrint(LOG_ERROR, "RegisterServiceCtrlHandler failed!");
-        logPrintIntVar(LOG_ERROR, "GetLastError", error);
+        logPrintf(LOG_ERROR, "RegisterServiceCtrlHandler failed!\n");
+        logPrintf(LOG_ERROR, "GetLastError: %d\n", error);
         return;
     }
 
@@ -198,11 +196,10 @@ void MainService()
     gStatus.dwWin32ExitCode = 0;
 
     ghStopEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-    logPrintPtrVar("ghStopEvent", ghStopEvent);
     if (ghStopEvent == NULL)
     {
         SetStatus(SERVICE_STOPPED);
-        logPrint(LOG_ERROR, "CreateEvent failed!");
+        logPrintf(LOG_ERROR, "CreateEvent failed!\n");
         return;
     }
 
@@ -211,7 +208,7 @@ void MainService()
     gService.onStart();
     SetStatus(SERVICE_RUNNING);
 
-    logPrint(LOG_INFORMATION, "Serice is running.");
+    logPrintf(LOG_INFORMATION, "Serice is running.\n");
 
     // service is running until ghStopEvent is set
     WaitForSingleObject(ghStopEvent, INFINITE);
@@ -233,12 +230,10 @@ void RunService()
     dispatchTable[1].lpServiceName = NULL;
     dispatchTable[1].lpServiceProc = NULL;
 
-    logPrintPtrVar("dispatchTable", dispatchTable);
-
     // here non return-function
     if (!StartServiceCtrlDispatcher(dispatchTable))
     {
-        logPrint(LOG_ERROR, "StartServiceCtrlDispatcher failed!");
+        logPrintf(LOG_ERROR, "StartServiceCtrlDispatcher failed!\n");
     }
 
 }
@@ -246,9 +241,6 @@ void RunService()
 void InitService(service *Service)
 {
     gService = *Service;
-
-    logPrintPtrVar("Service", Service);
-    logPrintPtrVar("gService", &gService);
 
     gServiceAccepted = 0;
     if ((gService.onContinue != NULL) && (gService.onPause != NULL))

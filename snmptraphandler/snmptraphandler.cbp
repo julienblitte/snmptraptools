@@ -6,8 +6,8 @@
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Debug">
-				<Option output="bin\Debug\snmptraphandler" prefix_auto="1" extension_auto="1" />
+			<Target title="winsnmp Debug">
+				<Option output="..\debug\snmptraphandler_winsnmp" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Debug\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -16,11 +16,11 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add library="C:\Program Files\CodeBlocks\MinGW\lib\libwsnmp32.a" />
+					<Add library="..\lib\libwsnmp32.a" />
 				</Linker>
 			</Target>
-			<Target title="Release">
-				<Option output="bin\Release\snmptraphandler" prefix_auto="1" extension_auto="1" />
+			<Target title="winsnmp Release">
+				<Option output="..\bin\snmptraphandler_winsnmp" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Release\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -29,14 +29,39 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="C:\Program Files\CodeBlocks\MinGW\lib\libwsnmp32.a" />
+					<Add library="..\lib\libwsnmp32.a" />
+				</Linker>
+			</Target>
+			<Target title="standalone Debug">
+				<Option output="..\debug\snmptraphandler_standalone" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="non-service-mode" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="..\lib\libwsock32.a" />
+				</Linker>
+			</Target>
+			<Target title="standalone Release">
+				<Option output="..\bin\snmptraphandler_standalone" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="..\lib\libwsock32.a" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="config.h" />
 		<Unit filename="dispatcher.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -45,20 +70,53 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="logger.h" />
-		<Unit filename="main.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="ressources.rc">
-			<Option compilerVar="WINDRES" />
-		</Unit>
 		<Unit filename="service.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="service.h" />
-		<Unit filename="snmp.c">
-			<Option compilerVar="CC" />
+		<Unit filename="standalone\handler_standalone.ico">
+			<Option target="standalone Debug" />
+			<Option target="standalone Release" />
 		</Unit>
-		<Unit filename="snmp.h" />
+		<Unit filename="standalone\main_standalone.c">
+			<Option compilerVar="CC" />
+			<Option target="standalone Debug" />
+			<Option target="standalone Release" />
+		</Unit>
+		<Unit filename="standalone\resources.rc">
+			<Option compilerVar="WINDRES" />
+			<Option target="standalone Debug" />
+			<Option target="standalone Release" />
+		</Unit>
+		<Unit filename="standalone\snmp_stack.c">
+			<Option compilerVar="CC" />
+			<Option target="standalone Debug" />
+			<Option target="standalone Release" />
+		</Unit>
+		<Unit filename="standalone\snmp_stack.h">
+			<Option target="standalone Debug" />
+			<Option target="standalone Release" />
+		</Unit>
+		<Unit filename="winsnmp\main.c">
+			<Option compilerVar="CC" />
+			<Option target="winsnmp Debug" />
+			<Option target="winsnmp Release" />
+		</Unit>
+		<Unit filename="winsnmp\resources.rc">
+			<Option compilerVar="WINDRES" />
+			<Option target="winsnmp Debug" />
+			<Option target="winsnmp Release" />
+		</Unit>
+		<Unit filename="winsnmp\snmp.c">
+			<Option compilerVar="CC" />
+			<Option target="winsnmp Debug" />
+			<Option target="winsnmp Release" />
+		</Unit>
+		<Unit filename="winsnmp\snmp.h">
+			<Option target="winsnmp Debug" />
+			<Option target="winsnmp Release" />
+		</Unit>
+		<Unit filename="..\snmptraptool_config.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

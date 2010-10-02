@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <windows.h>
+#include <stdarg.h>
 #include "logger.h"
-#include "config.h"
+#include "../snmptraptool_config.h"
 
 // temporary implementation to be changed with a newer one
-
-#define LOG_BLANK       (LOG_PEDANTIC-100)
 
 const char *gLogLevelName[] = { "PEDANTIC", "DEBUG", "INFO", "WARN", "ERROR" };
 
@@ -24,11 +23,13 @@ void logSetLevel(INT32 logLevel)
 
 BOOL logInit()
 {
-    return logPrint(LOG_BLANK, "-");
+    return logPrintf(LOG_PEDANTIC-1, "");
 }
 
-BOOL logPrint(INT32 level, char *data)
+BOOL logPrintf(INT32 level, char *format, ...)
 {
+    va_list va;
+
     if (logFile == NULL)
     {
         logFile = fopen(LOG_FILENAME, "wt");
@@ -40,7 +41,8 @@ BOOL logPrint(INT32 level, char *data)
 
     if (level >= LOG_DEBUG)
     {
-        fprintf(logFile, "%s\t%s\n", gLogLevelName[level], data);
+        fprintf(logFile, "%s\t", gLogLevelName[level]);
+        vfprintf(logFile, format, va);
         fflush(logFile);
     }
 
@@ -54,22 +56,4 @@ void logClean()
         fclose(logFile);
         logFile = NULL;
     }
-}
-
-void logPrintIntVar(INT32 level, char *variableName, DWORD value)
-{
-        char data[256];
-
-        snprintf(data, sizeof(data), "%s: %lu", variableName, value);
-        logPrint(level, data);
-}
-
-
-
-void logPrintPtrVar(char *variableName, void *address)
-{
-        char data[256];
-
-        snprintf(data, sizeof(data), ">>> @%s = %p", variableName, address);
-        logPrint(LOG_PEDANTIC, data);
 }

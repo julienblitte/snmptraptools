@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <windows.h>
 #include "configuration.h"
-#include "config.h"
+#include "../snmptraptool_config.h"
 #include "trapSnmp.h"
 
 // this function only exists since Windows Vista
