@@ -3,40 +3,19 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <winsnmp.h>
-#include "service.h"
-#include "dispatcher.h"
-#include "config.h"
-#include "logger.h"
+#include "../service.h"
+#include "../dispatcher.h"
+#include "../../snmptraptool_config.h"
+#include "../logger.h"
 #include "snmp.h"
 
 HSNMP_SESSION hSnmpSession;
-
-void safeDispatchData(char *data)
-{
-    if (data == NULL)
-    {
-        logPrint(LOG_WARNING, "safeDispatchData called with a NULL pointer!");
-        return;
-    }
-
-    // empty string
-    if (data[0] == '\0')
-    {
-        return;
-    }
-
-    if (printDispatcher(data) == 0)
-    {
-        logPrint(LOG_ERROR, "printDispatcher failed!");
-        PanicQuitService(ERROR_DISPATCHER_WRITE);
-    }
-}
-
 
 SNMPAPI_STATUS snmpMessage(HSNMP_SESSION hSession, HWND hWnd, UINT wMsg, WPARAM wParam, LPARAM lParam, LPVOID lpClientData)
 {
     // data
     HSNMP_CONTEXT hContext;
+    static char dispatcherBuffer[1024];
     HSNMP_PDU data;
 
     // decoded content
@@ -54,23 +33,20 @@ SNMPAPI_STATUS snmpMessage(HSNMP_SESSION hSession, HWND hWnd, UINT wMsg, WPARAM 
     smiOID oid;
     smiVALUE value;
 
-    // dispatcher buffer
-    static char dispatcherBuffer[MAX_DISPATCHER_LINE_LEN];
-
     if (wParam == 0)
     {
-        logPrint(LOG_DEBUG, "Data recieved from snmp stack");
+        logPrintf(LOG_DEBUG, "Data recieved from snmp stack\n");
 
         if (SnmpRecvMsg(hSession, NULL, NULL, &hContext, &data) != SNMPAPI_SUCCESS)
         {
-            logPrint(LOG_ERROR, "SnmprecvMsg failed!");
+            logPrintf(LOG_ERROR, "SnmprecvMsg failed!\n");
             return SNMPAPI_FAILURE;
         }
 
         // decode content
         if (SnmpGetPduData(data, &PDU_type, &request_id, &error_status, &error_index, &varbindlist) != SNMPAPI_SUCCESS)
         {
-            logPrint(LOG_ERROR, "SnmpGetPduData failed!");
+            logPrintf(LOG_ERROR, "SnmpGetPduData failed!\n");
             return SNMPAPI_FAILURE;
         }
 
@@ -80,60 +56,63 @@ SNMPAPI_STATUS snmpMessage(HSNMP_SESSION hSession, HWND hWnd, UINT wMsg, WPARAM 
             variableCount = SnmpCountVbl(varbindlist);
             if (variableCount == SNMPAPI_FAILURE)
             {
-                logPrint(LOG_ERROR, "SnmpCountVbl failed!");
+                logPrintf(LOG_ERROR, "SnmpCountVbl failed!\n");
                 return SNMPAPI_FAILURE;
             }
 
             // retrieve community and write it like other variables
             SnmpContextToStr(hContext, &context);
-
             if (context.len < (sizeof(dispatcherBuffer)-1))
             {
                 memcpy(dispatcherBuffer, context.ptr, context.len);
                 dispatcherBuffer[context.len] = '\0';
             }
-            safeDispatchData("1.3.6.1.6.3.1.2.2.9.0\t");
-            safeDispatchData(dispatcherBuffer);
-            safeDispatchData("\n");
+            else
+            {
+                memcpy(dispatcherBuffer, context.ptr, (sizeof(dispatcherBuffer)-1));
+                dispatcherBuffer[(sizeof(dispatcherBuffer)-1)] = '\0';
+            }
+            printDispatcherF("%s\t%s\n", OID_COMMUNITY, dispatcherBuffer);
+            SnmpFreeOCTETS(&context);
 
             // other stuff
             for(variableIndex=1; variableIndex <= variableCount; variableIndex++)
             {
                 if (SnmpGetVb(varbindlist, variableIndex, &oid, &value) != SNMPAPI_SUCCESS)
                 {
-                    logPrint(LOG_ERROR, "SnmpGetVb failed!");
+                    logPrintf(LOG_ERROR, "SnmpGetVb failed!\n");
                     return SNMPAPI_FAILURE;
                 }
 
                 if (SnmpOidToStr(&oid, sizeof(dispatcherBuffer), dispatcherBuffer) == SNMPAPI_FAILURE)
                 {
-                    logPrint(LOG_ERROR, "SnmpOidToStr failed!");
-                    snprintf(dispatcherBuffer, sizeof(dispatcherBuffer), "-");
+                    logPrintf(LOG_ERROR, "SnmpOidToStr failed!\n");
                 }
-
-                safeDispatchData(dispatcherBuffer);
-                safeDispatchData("\t");
-
-                if (SnmpValueToStr(&value, dispatcherBuffer, sizeof(dispatcherBuffer)) == SNMPAPI_FAILURE)
+                else
                 {
-                    logPrint(LOG_ERROR, "SnmpValueToStr failed!");
-                    snprintf(dispatcherBuffer, sizeof(dispatcherBuffer), "-");
+                    SnmpFreeOID(&oid);
+
+                    printDispatcherF("%s\t", dispatcherBuffer);
+
+                    if (SnmpValueToStr(&value, dispatcherBuffer, sizeof(dispatcherBuffer)) == SNMPAPI_FAILURE)
+                    {
+                        logPrintf(LOG_ERROR, "SnmpValueToStr failed!\n");
+                        printDispatcherF("-\n");
+                    }
+                    else
+                    {
+                        SnmpFreeValue(&value);
+                        printDispatcherF("%s\n", dispatcherBuffer);
+                    }
                 }
-
-                safeDispatchData(dispatcherBuffer);
-                safeDispatchData("\n");
-
-                SnmpFreeOID(&oid);
-                SnmpFreeOCTETS(&context);
-                SnmpFreeValue(&value);
             }
 
             // blank line to inform user that all packet is done
-            safeDispatchData("\n");
+            printDispatcherF("\n");
         }
         else
         {
-            logPrint(LOG_WARNING, "SNMP packet recieved but not a TRAP.");
+            logPrintf(LOG_WARNING, "SNMP packet recieved but not a TRAP.\n");
         }
 
         //SnmpFreeEntity(hSource);
@@ -147,45 +126,45 @@ SNMPAPI_STATUS snmpMessage(HSNMP_SESSION hSession, HWND hWnd, UINT wMsg, WPARAM 
 
 void MyServiceContinue()
 {
-    logPrint(LOG_DEBUG, "Try to continue service...");
+    logPrintf(LOG_DEBUG, "Try to continue service...\n");
     if (SnmpRegister(hSnmpSession, NULL, NULL, NULL, NULL, SNMPAPI_ON) == SNMPAPI_FAILURE)
     {
-        logPrint(LOG_ERROR, "SnmpRegister failed during enabling!");
+        logPrintf(LOG_ERROR, "SnmpRegister failed during enabling!\n");
     }
-    logPrint(LOG_DEBUG, "Service continued.");
+    logPrintf(LOG_DEBUG, "Service continued.\n");
 }
 
 void MyServicePause()
 {
-    logPrint(LOG_DEBUG, "Try to pause service...");
+    logPrintf(LOG_DEBUG, "Try to pause service...\n");
     if (SnmpRegister(hSnmpSession, NULL, NULL, NULL, NULL, SNMPAPI_OFF) == SNMPAPI_FAILURE)
     //SNMP_PDU_TRAP
     {
-        logPrint(LOG_ERROR, "SnmpRegister failed during disabling!");
+        logPrintf(LOG_ERROR, "SnmpRegister failed during disabling!\n");
     }
-    logPrint(LOG_DEBUG, "Service paused.");
+    logPrintf(LOG_DEBUG, "Service paused.\n");
 }
 
 void MyServiceStart()
 {
-    logPrint(LOG_DEBUG, "Try to start service...");
+    logPrintf(LOG_DEBUG, "Try to start service...\n");
 
     hSnmpSession = SnmpCreateSession(NULL, 0, (SNMPAPI_CALLBACK)snmpMessage, NULL);
     if (hSnmpSession == SNMPAPI_FAILURE)
     {
-        logPrint(LOG_ERROR, "SnmpCreateSession failed!");
+        logPrintf(LOG_ERROR, "SnmpCreateSession failed!\n");
         PanicQuitService(ERROR_SNMP_INIT);
         return;
     }
 
     if (initDispatcher() == false)
     {
-        logPrint(LOG_ERROR, "initDispatcher failed!");
+        logPrintf(LOG_ERROR, "initDispatcher failed!\n");
         PanicQuitService(ERROR_DISPATCHER_INIT);
         return;
     }
 
-    logPrint(LOG_DEBUG, "Service is ready.");
+    logPrintf(LOG_DEBUG, "Service is ready.\n");
 
     // To enable trap handling
     MyServiceContinue();
@@ -193,32 +172,32 @@ void MyServiceStart()
 
 void MyServiceStop()
 {
-    logPrint(LOG_DEBUG, "Try to stop service...");
+    logPrintf(LOG_DEBUG, "Try to stop service...\n");
     // this will close pipe between service and child process
     // child process should terminate by it self (no more data on STDIN)
     cleanDispatcher();
 
     if (SnmpClose(hSnmpSession) != SNMPAPI_SUCCESS)
     {
-        logPrint(LOG_ERROR, "SnmpClose failed!");
+        logPrintf(LOG_ERROR, "SnmpClose failed!\n");
         return;
     }
-    logPrint(LOG_DEBUG, "Service stopped.");
+    logPrintf(LOG_DEBUG, "Service stopped.\n");
 }
 
 void MyServiceReload()
 {
-    logPrint(LOG_DEBUG, "Reloading dispatcher...");
+    logPrintf(LOG_DEBUG, "Reloading dispatcher...\n");
     cleanDispatcher();
 
     if (initDispatcher() == false)
     {
-        logPrint(LOG_ERROR, "initDispatcher failed!");
+        logPrintf(LOG_ERROR, "initDispatcher failed!\n");
         PanicQuitService(ERROR_DISPATCHER_INIT);
         return;
     }
 
-    logPrint(LOG_INFORMATION, "Dispatcher reloaded.");
+    logPrintf(LOG_INFORMATION, "Dispatcher reloaded.\n");
 }
 
 int main( int argc, char *argv[])
@@ -248,26 +227,26 @@ int main( int argc, char *argv[])
 
     if (argc == 2 && ! stricmp(argv[1], "install"))
     {
-        logPrint(LOG_INFORMATION, "Installing service...");
+        logPrintf(LOG_INFORMATION, "Installing service...\n");
         InstallService();
-        logPrint(LOG_INFORMATION, "Service installed.");
+        logPrintf(LOG_INFORMATION, "Service installed.\n");
         return EXIT_SUCCESS;
     }
     else if (argc == 2 && ! stricmp(argv[1], "uninstall"))
     {
-        logPrint(LOG_INFORMATION, "Uninstalling service...");
+        logPrintf(LOG_INFORMATION, "Uninstalling service...\n");
         UninstallService();
-        logPrint(LOG_INFORMATION, "Service uninstalled.");
-        logPrint(LOG_WARNING, "User must restart system for changes to take effect.");
+        logPrintf(LOG_INFORMATION, "Service uninstalled.\n");
+        logPrintf(LOG_WARNING, "User must restart system for changes to take effect.\n");
         return EXIT_SUCCESS;
     }
     else if (argc == 2 && ! stricmp(argv[1], "non-service-mode"))
     {
-        logPrint(LOG_DEBUG, "SNMP stack initialization...");
+        logPrintf(LOG_DEBUG, "SNMP stack initialization...\n");
         if (SnmpStartup(&snmpStackInfo[0], &snmpStackInfo[1], &snmpStackInfo[2],
                         &snmpStackInfo[3], &snmpStackInfo[4]) != SNMPAPI_SUCCESS)
         {
-            logPrint(LOG_ERROR, "SnmpStartup failed!");
+            logPrintf(LOG_ERROR, "SnmpStartup failed!\n");
             return EXIT_FAILURE;
         }
 
@@ -303,18 +282,18 @@ int main( int argc, char *argv[])
     }
     else
     {
-        logPrint(LOG_INFORMATION, "Starting service...");
-        logPrint(LOG_DEBUG, "SNMP stack initialization...");
-        logPrintPtrVar("snmpStackInfo", snmpStackInfo);
+        logPrintf(LOG_INFORMATION, "Starting service...\n");
+        logPrintf(LOG_DEBUG, "SNMP stack initialization...\n");
+
         if (SnmpStartup(&snmpStackInfo[0], &snmpStackInfo[1], &snmpStackInfo[2],
                         &snmpStackInfo[3], &snmpStackInfo[4]) != SNMPAPI_SUCCESS)
         {
-            logPrint(LOG_ERROR, "SnmpStartup failed!");
+            logPrintf(LOG_ERROR, "SnmpStartup failed!\n");
             return EXIT_FAILURE;
         }
-        logPrint(LOG_DEBUG, "Windows service registering...");
+        logPrintf(LOG_DEBUG, "Windows service registering...\n");
         RunService();
-        logPrint(LOG_INFORMATION, "Service terminated.");
+        logPrintf(LOG_INFORMATION, "Service terminated.\n");
         SnmpCleanup();
     }
 

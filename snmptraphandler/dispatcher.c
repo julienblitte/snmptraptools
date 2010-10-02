@@ -1,8 +1,10 @@
 #include <windows.h>
 #include <stdio.h>
-#include "config.h"
+#include <stdarg.h>
+#include "../snmptraptool_config.h"
 #include "dispatcher.h"
 #include "logger.h"
+#include "service.h"
 
 HANDLE gPipeReadHandle = NULL;
 HANDLE gPipeWriteHandle = NULL;
@@ -23,14 +25,14 @@ BOOL initDispatcher()
     if (!CreatePipe(&gPipeReadHandle, &gPipeWriteHandle, &sa, 0))
     {
        error = GetLastError();
-       logPrint(LOG_ERROR, "CreatePipe(initDispatcher) failed!");
-       logPrintIntVar(LOG_ERROR, "GetLastError", error);
+       logPrintf(LOG_ERROR, "CreatePipe(initDispatcher) failed!\n");
+       logPrintf(LOG_ERROR, "GetLastError: %d\n", error);
        return FALSE;
     }
 
     if (!SetHandleInformation(gPipeWriteHandle, HANDLE_FLAG_INHERIT, 0))
     {
-        logPrint(LOG_ERROR, "SetHandleInformation(initDispatcher) failed!");
+        logPrintf(LOG_ERROR, "SetHandleInformation(initDispatcher) failed!\n");
         return FALSE;
     }
 
@@ -44,14 +46,14 @@ BOOL initDispatcher()
     if (CreateProcess(NULL, DISPATCHER, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi) == FALSE)
     {
         error = GetLastError();
-        logPrint(LOG_ERROR, "CreateProcess(initDispatcher) failed!");
-        logPrintIntVar(LOG_ERROR, "GetLastError", error);
+        logPrintf(LOG_ERROR, "CreateProcess(initDispatcher) failed!\n");
+        logPrintf(LOG_ERROR, "GetLastError: %d\n", error);
         return FALSE;
     }
     else
     {
-        logPrint(LOG_DEBUG, "dispacher process is running.");
-        logPrintIntVar(LOG_DEBUG, "pid", pi.dwProcessId);
+        logPrintf(LOG_DEBUG, "dispacher process is running.\n");
+        logPrintf(LOG_DEBUG, "pid: %u\n", pi.dwProcessId);
     }
 
     gDispatcherThread = pi.hProcess;
@@ -72,23 +74,23 @@ DWORD printDispatcher(char *data)
 
     if (GetExitCodeProcess(gDispatcherThread, &dispatcherExit) == FALSE)
     {
-        logPrint(LOG_ERROR, "GetExitCodeProcess failed!");
+        logPrintf(LOG_ERROR, "GetExitCodeProcess failed!\n");
         return 0;
     }
 
     if (dispatcherExit != STILL_ACTIVE)
     {
-        logPrint(LOG_ERROR, "Dispatcher process has exited! Trying to restart it...");
+        logPrintf(LOG_ERROR, "Dispatcher process has exited! Trying to restart it...\n");
 
         cleanDispatcher();
         if (initDispatcher() == FALSE)
         {
-            logPrint(LOG_ERROR, "initDispatcher failed!");
+            logPrintf(LOG_ERROR, "initDispatcher failed!\n");
             return 0;
         }
         else
         {
-            logPrint(LOG_INFORMATION, "Dispatcher restarted.");
+            logPrintf(LOG_INFORMATION, "Dispatcher restarted.\n");
         }
     }
 
@@ -97,8 +99,18 @@ DWORD printDispatcher(char *data)
 
     if (written != strlen(data))
     {
-        logPrint(LOG_WARNING, "All information does not have been transmitted to dispatcher!");
+        logPrintf(LOG_WARNING, "All information does not have been transmitted to dispatcher!\n");
     }
 
     return written;
+}
+
+DWORD printDispatcherF(char *format, ...)
+{
+    va_list va;
+    static char dispatcher_buffer[MAX_DISPATCHER_LINE_LEN];
+
+    vsnprintf(dispatcher_buffer, sizeof(dispatcher_buffer), format, va);
+
+    return printDispatcher(dispatcher_buffer);
 }

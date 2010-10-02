@@ -44,7 +44,7 @@
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="ressources.rc">
+		<Unit filename="resources.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Extensions>

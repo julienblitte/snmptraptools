@@ -4,7 +4,7 @@
 #include <string.h>
 #include <windows.h>
 #include "trapSnmp.h"
-#include "config.h"
+#include "../snmptraptool_config.h"
 #include "configuration.h"
 
 void actionCallback(trap_action_entry *action, snmpTrap *trap, unsigned long actionNumber)
@@ -22,7 +22,7 @@ void actionCallback(trap_action_entry *action, snmpTrap *trap, unsigned long act
 
 int main()
 {
-    char buffer[MAX_INPUT_LINE_LEN];
+    char buffer[MAX_DISPATCHER_LINE_LEN];
     snmpTrap trap;
     trap_action_entry *trap_actions;
     bool recieving = false;

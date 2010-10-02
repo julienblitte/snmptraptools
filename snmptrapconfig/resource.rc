@@ -68,7 +68,7 @@ ID_VERSION_INFO VERSIONINFO
                                 "http://www.gnu.org/licenses/lgpl.html\0"
 				//VALUE "CompanyName", "\0"
 				VALUE "FileDescription", "SNMPTrapHandler configuration program\0"
-				VALUE "FileVersion", "0,1,0,0\0"
+				VALUE "FileVersion", "0,2,0,0\0"
 				VALUE "InternalName", "snmptrapconfig.exe\0"
 				VALUE "LegalCopyright", "(C) Julien Blitte\0"
 				//VALUE "LegalTrademarks", "\0"
@@ -76,8 +76,8 @@ ID_VERSION_INFO VERSIONINFO
 				VALUE "OriginalFilename", "snmptrapconfig.exe\0"
 				//VALUE "PrivateBuild", "\0"
 				VALUE "ProductName", "SNMP Trap Tools set\0"
-				VALUE "ProductVersion", "0,1,0,0\0"
-				VALUE "SpecialBuild", "Built the 2010-08-22 on Estephe with MinGW tool set\0"
+				VALUE "ProductVersion", "0,2,0,0\0"
+				VALUE "SpecialBuild", "Built the 2010-10-02 on Estephe with MinGW tool set\0"
 			END
 		END
 		BLOCK "VarFileInfo"

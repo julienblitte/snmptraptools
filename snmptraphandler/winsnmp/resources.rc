@@ -1,4 +1,4 @@
-1 ICON "handler.ico"
+1 ICON "handler_winsnmp.ico"
 1 VERSIONINFO
 	FILEVERSION 0,1,0,0
 	PRODUCTVERSION  0,1,0,0
@@ -16,8 +16,8 @@
                                 "It is distributed as it without any guarantee under LGPLv3 licence."
                                 "http://www.gnu.org/licenses/lgpl.html\0"
 				//VALUE "CompanyName", "\0"
-				VALUE "FileDescription", "SNMPTrapHandler service\0"
-				VALUE "FileVersion", "0,1,0,0\0"
+				VALUE "FileDescription", "SNMPTrapHandler service (winsnmp)\0"
+				VALUE "FileVersion", "0,2,0,0\0"
 				VALUE "InternalName", "snmptraphandler.exe\0"
 				VALUE "LegalCopyright", "(C) Julien Blitte\0"
 				//VALUE "LegalTrademarks", "\0"
@@ -25,8 +25,8 @@
 				VALUE "OriginalFilename", "snmptraphandler.exe\0"
 				//VALUE "PrivateBuild", "\0"
 				VALUE "ProductName", "SNMP Trap Tools set\0"
-				VALUE "ProductVersion", "0,1,0,0\0"
-				VALUE "SpecialBuild", "Built the 2010-08-22 on Estephe with MinGW tool set\0"
+				VALUE "ProductVersion", "0,2,0,0\0"
+				VALUE "SpecialBuild", "Built the 2010-10-02 on Estephe with MinGW tool set\0"
 			END
 		END
 		BLOCK "VarFileInfo"

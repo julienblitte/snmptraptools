@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdbool.h>
-#include "config.h"
+#include "../snmptraptool_config.h"
 
 #ifndef H_TRAPSNMP_INCLUDED
 #define H_TRAPSNMP_INCLUDED
