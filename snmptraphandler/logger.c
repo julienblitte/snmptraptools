@@ -30,6 +30,8 @@ BOOL logPrintf(INT32 level, char *format, ...)
 {
     va_list va;
 
+    va_start(va, format);
+
     if (logFile == NULL)
     {
         logFile = fopen(LOG_FILENAME, "wt");

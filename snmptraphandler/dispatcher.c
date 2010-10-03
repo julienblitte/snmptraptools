@@ -110,6 +110,8 @@ DWORD printDispatcherF(char *format, ...)
     va_list va;
     static char dispatcher_buffer[MAX_DISPATCHER_LINE_LEN];
 
+    va_start(va, format);
+
     vsnprintf(dispatcher_buffer, sizeof(dispatcher_buffer), format, va);
 
     return printDispatcher(dispatcher_buffer);
