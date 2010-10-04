@@ -83,7 +83,7 @@
 			<Option target="standalone Debug" />
 			<Option target="standalone Release" />
 		</Unit>
-		<Unit filename="standalone\ressources.rc">
+		<Unit filename="standalone\resources.rc">
 			<Option compilerVar="WINDRES" />
 			<Option target="standalone Debug" />
 			<Option target="standalone Release" />
@@ -102,7 +102,7 @@
 			<Option target="winsnmp Debug" />
 			<Option target="winsnmp Release" />
 		</Unit>
-		<Unit filename="winsnmp\ressources.rc">
+		<Unit filename="winsnmp\resources.rc">
 			<Option compilerVar="WINDRES" />
 			<Option target="winsnmp Debug" />
 			<Option target="winsnmp Release" />
