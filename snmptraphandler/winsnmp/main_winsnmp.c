@@ -131,7 +131,7 @@ void MyServiceContinue()
     {
         logPrintf(LOG_ERROR, "SnmpRegister failed during enabling!\n");
     }
-    logPrintf(LOG_DEBUG, "Service continued.\n");
+    logPrintf(LOG_INFORMATION, "Service continued.\n");
 }
 
 void MyServicePause()
@@ -142,7 +142,7 @@ void MyServicePause()
     {
         logPrintf(LOG_ERROR, "SnmpRegister failed during disabling!\n");
     }
-    logPrintf(LOG_DEBUG, "Service paused.\n");
+    logPrintf(LOG_INFORMATION, "Service paused.\n");
 }
 
 void MyServiceStart()
@@ -164,7 +164,7 @@ void MyServiceStart()
         return;
     }
 
-    logPrintf(LOG_DEBUG, "Service is ready.\n");
+    logPrintf(LOG_INFORMATION, "Service is ready.\n");
 
     // To enable trap handling
     MyServiceContinue();
@@ -182,7 +182,7 @@ void MyServiceStop()
         logPrintf(LOG_ERROR, "SnmpClose failed!\n");
         return;
     }
-    logPrintf(LOG_DEBUG, "Service stopped.\n");
+    logPrintf(LOG_INFORMATION, "Service stopped.\n");
 }
 
 void MyServiceReload()

@@ -18,7 +18,7 @@ void MyServiceContinue()
     logPrintf(LOG_DEBUG, "Try to continue service...\n");
     if (ResumeThread(hThread) >= 0)
     {
-        logPrintf(LOG_DEBUG, "Service continued.\n");
+        logPrintf(LOG_INFORMATION, "Service continued.\n");
     }
     else
     {
@@ -31,7 +31,7 @@ void MyServicePause()
     logPrintf(LOG_DEBUG, "Try to pause service...\n");
     if (SuspendThread(hThread) >= 0)
     {
-        logPrintf(LOG_DEBUG, "Service paused.\n");
+        logPrintf(LOG_INFORMATION, "Service paused.\n");
     }
     else
     {
@@ -58,7 +58,7 @@ void MyServiceStart()
         return;
 	}
 
-    logPrintf(LOG_DEBUG, "Service is ready.\n");
+    logPrintf(LOG_INFORMATION, "Service is ready.\n");
 }
 
 void MyServiceStop()
@@ -70,7 +70,7 @@ void MyServiceStop()
 
     TerminateThread(hThread, 0);
 
-    logPrintf(LOG_DEBUG, "Service stopped.\n");
+    logPrintf(LOG_INFORMATION, "Service stopped.\n");
 }
 
 void MyServiceReload()
@@ -105,14 +105,22 @@ DWORD WINAPI udp_server(LPVOID lpParam)
 	sock_addr.sin_port = htons(SERVER_LISTEN_PORT);
 	sock_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-	bind(server, (SOCKADDR*)&sock_addr, sizeof(sock_addr));
-
-	buffer_length = sizeof(buffer);
-
-	while (recvfrom(server, buffer, buffer_length, 0, NULL, NULL) == 0)
+	if (bind(server, (SOCKADDR*)&sock_addr, sizeof(sock_addr)) != 0)
 	{
-		snmp_trap_decode(buffer, buffer_length);
+        logPrintf(LOG_ERROR, "Bind error...\n");
+	    return 1;
 	}
+    logPrintf(LOG_INFORMATION, "Listening on port %u\n", SERVER_LISTEN_PORT);
+
+	do
+	{
+	    buffer_length = recv(server, buffer, sizeof(buffer), 0);
+	    if (buffer_length != SOCKET_ERROR)
+	    {
+            logPrintf(LOG_DEBUG, "Data recieved from snmp stack\n");
+            snmp_trap_decode(buffer, buffer_length);
+	    }
+	} while(buffer_length != SOCKET_ERROR);
 
 	closesocket(server);
 
