@@ -296,6 +296,8 @@ void snmp_trap_decode(const char *data, const unsigned int data_len)
         }
         printDispatcherF("%s\n", buffer);
     }
+
+    printDispatcherF("\n");
 }
 
 bool snmp_value2str(const char *value, size_t value_len, char *buffer, size_t buffer_len, char value_type)

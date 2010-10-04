@@ -17,7 +17,7 @@
                                 "http://www.gnu.org/licenses/lgpl.html\0"
 				//VALUE "CompanyName", "\0"
 				VALUE "FileDescription", "SNMPTrapHandler service (winsnmp)\0"
-				VALUE "FileVersion", "0,2,0,0\0"
+				VALUE "FileVersion", "0,2,0,2\0"
 				VALUE "InternalName", "snmptraphandler.exe\0"
 				VALUE "LegalCopyright", "(C) Julien Blitte\0"
 				//VALUE "LegalTrademarks", "\0"
@@ -26,7 +26,7 @@
 				//VALUE "PrivateBuild", "\0"
 				VALUE "ProductName", "SNMP Trap Tools set\0"
 				VALUE "ProductVersion", "0,2,0,0\0"
-				VALUE "SpecialBuild", "Built the 2010-10-02 on Estephe with MinGW tool set\0"
+				VALUE "SpecialBuild", "Built the 2010-10-05 on Estephe with MinGW tool set\0"
 			END
 		END
 		BLOCK "VarFileInfo"

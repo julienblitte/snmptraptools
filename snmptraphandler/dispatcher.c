@@ -52,8 +52,7 @@ BOOL initDispatcher()
     }
     else
     {
-        logPrintf(LOG_DEBUG, "dispacher process is running.\n");
-        logPrintf(LOG_DEBUG, "pid: %u\n", pi.dwProcessId);
+        logPrintf(LOG_INFORMATION, "dispacher process running, pid: %u\n", pi.dwProcessId);
     }
 
     gDispatcherThread = pi.hProcess;
