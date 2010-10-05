@@ -25,7 +25,7 @@ void InstallService()
     }
     else
     {
-        logPrintf(LOG_DEBUG, "Executable is: '%s'\n");
+        logPrintf(LOG_INFORMATION, "Executable is: '%s'\n", ExeAddr);
     }
 
     hSCMgr = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
