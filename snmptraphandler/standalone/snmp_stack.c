@@ -315,7 +315,7 @@ bool snmp_value2str(const char *value, size_t value_len, char *buffer, size_t bu
                 u64.LowPart <<= 8;
                 u64.LowPart |= (value[i] & 0x000000FF);
             }
-            snprintf(buffer, buffer_len, "%d", u64.LowPart);
+            snprintf(buffer, buffer_len, "%d", (int)u64.LowPart);
             break;
 
         case SNMP_SYNTAX_OCTETS:
@@ -393,7 +393,7 @@ bool snmp_value2str(const char *value, size_t value_len, char *buffer, size_t bu
                 u64.LowPart <<= 8;
                 u64.LowPart |= (value[i] & 0x000000FF);
             }
-            snprintf(buffer, buffer_len, "%u", u64.LowPart);
+            snprintf(buffer, buffer_len, "%u", (unsigned int)u64.LowPart);
             break;
 
         case SNMP_SYNTAX_CNTR64:
