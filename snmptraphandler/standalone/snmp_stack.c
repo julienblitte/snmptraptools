@@ -309,12 +309,13 @@ bool snmp_value2str(const char *value, size_t value_len, char *buffer, size_t bu
     switch(value_type)
     {
         case SNMP_SYNTAX_INT:
-            if (value_len > 0 && value_len <= sizeof(i))
+            u64.LowPart = 0;
+            for(i=0; (i < value_len) && (i < sizeof(u64.LowPart)); i++)
             {
-                memcpy(&i, value, value_len);
-                i &= (0xFFFFFFFF >> 8 * (sizeof(i) - value_len));
+                u64.LowPart <<= 8;
+                u64.LowPart |= (value[i] & 0x000000FF);
             }
-            snprintf(buffer, buffer_len, "%d", i);
+            snprintf(buffer, buffer_len, "%d", u64.LowPart);
             break;
 
         case SNMP_SYNTAX_OCTETS:
@@ -339,6 +340,10 @@ bool snmp_value2str(const char *value, size_t value_len, char *buffer, size_t bu
             if (i <= buffer_len)
             {
                 buffer[i] = '\0';
+            }
+            else
+            {
+                buffer[buffer_len] = '\0';
             }
             break;
 
@@ -373,6 +378,8 @@ bool snmp_value2str(const char *value, size_t value_len, char *buffer, size_t bu
                              (((unsigned short)value[14]) << 8) | (((unsigned short)value[15]) & 0xFF)
                     );
                     break;
+                default:
+                    strncpy(buffer, "", buffer_len);
             }
             break;
 
@@ -380,7 +387,13 @@ bool snmp_value2str(const char *value, size_t value_len, char *buffer, size_t bu
         case SNMP_SYNTAX_GAUGE32:
         case SNMP_SYNTAX_TIMETICKS:
         case SNMP_SYNTAX_UINT32:
-            snprintf(buffer, buffer_len, "%u", *value);
+            u64.LowPart = 0;
+            for(i=0; (i < value_len) && (i < sizeof(u64.LowPart)); i++)
+            {
+                u64.LowPart <<= 8;
+                u64.LowPart |= (value[i] & 0x000000FF);
+            }
+            snprintf(buffer, buffer_len, "%u", u64.LowPart);
             break;
 
         case SNMP_SYNTAX_CNTR64:
