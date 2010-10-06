@@ -3,7 +3,7 @@
 #include <time.h>
 #include <string.h>
 #include <windows.h>
-#include "trapSnmp.h"
+#include "../libtrapsnmp/trapSnmp.h"
 #include "../snmptraptool_config.h"
 #include "configuration.h"
 
