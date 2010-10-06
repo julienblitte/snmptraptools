@@ -66,6 +66,7 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="serviceController.h" />
+		<Unit filename="..\snmptraptools_config.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

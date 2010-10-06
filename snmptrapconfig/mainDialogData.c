@@ -69,13 +69,14 @@ BOOL deleteAction(HWND hDlg, LPCTSTR oid)
 BOOL addAction(LPCTSTR oid)
 {
     HKEY hKey, hSubKey;
+    DWORD created;
 
     if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, REGISTRY_CONFIG_PATH, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_READ|KEY_WRITE, NULL, &hKey, NULL) != ERROR_SUCCESS)
     {
         return FALSE;
     }
 
-    if (RegCreateKeyEx(hKey, oid, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_READ|KEY_WRITE, NULL, &hSubKey, NULL) != ERROR_SUCCESS)
+    if (RegCreateKeyEx(hKey, oid, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_READ|KEY_WRITE, NULL, &hSubKey, &created) != ERROR_SUCCESS)
     {
         RegCloseKey(hKey);
         return FALSE;
@@ -83,6 +84,12 @@ BOOL addAction(LPCTSTR oid)
 
     RegCloseKey(hSubKey);
     RegCloseKey(hKey);
+
+    // if key already exists, fail
+    if (created != REG_CREATED_NEW_KEY)
+    {
+        return FALSE;
+    }
 
     return TRUE;
 }

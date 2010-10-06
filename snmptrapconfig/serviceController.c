@@ -1,5 +1,6 @@
 #include <windows.h>
 #include "serviceController.h"
+#include "../snmptraptools_config.h"
 
 
 SC_HANDLE hSCManager = NULL;
@@ -13,7 +14,7 @@ BOOL openService()
         return FALSE;
     }
 
-    hService = OpenService(hSCManager, "snmpTrapHandler", GENERIC_READ|GENERIC_EXECUTE);
+    hService = OpenService(hSCManager, SERVICE_NAME, GENERIC_READ|GENERIC_EXECUTE);
     if (hService == NULL)
     {
         CloseServiceHandle(hSCManager);
