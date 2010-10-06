@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
+#include <stdbool.h>
 #include "configuration.h"
 #include "../snmptraptool_config.h"
 #include "../libtrapsnmp/trapSnmp.h"
