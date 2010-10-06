@@ -1,8 +1,8 @@
 #ifndef SNMPTRAPTOOL_CONFIG_H_INCLUDED
 #define SNMPTRAPTOOL_CONFIG_H_INCLUDED
 
-#define SERVICE_NAME		"snmptraptools";
-#define SERVICE_DESC		"provides a gateway to translate recieved SNMP trap to an external program";
+#define SERVICE_NAME		"snmptraptools"
+#define SERVICE_DESC		"provides a gateway to translate recieved SNMP trap to an external program"
 
 #define SERVER_LISTEN_PORT			162
 #define REGISTRY_CONFIG_PATH		"SYSTEM\\CurrentControlSet\\Services\\snmptraptools\\dispatcher\\"
