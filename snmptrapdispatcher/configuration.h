@@ -1,7 +1,7 @@
-#include "trapSnmp.h"
-
 #ifndef H_CONFIGURATION_INCLUDED
 #define H_CONFIGURATION_INCLUDED
+
+#include "../libtrapsnmp/trapSnmp.h"
 
 typedef struct _trap_action_entry
 {

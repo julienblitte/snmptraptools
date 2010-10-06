@@ -28,6 +28,7 @@ Source: "..\bin\snmptrapdispatcher.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\snmptraphandler_standalone.exe"; DestDir: "{app}"; Flags: ignoreversion; DestName: "snmptraphandler.exe"
 Source: "..\tools\sendemail\download sendEmail.html"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\tools\sendemail\snmptrap_email.bat"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\tools\messagebox\messagebox.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
