@@ -42,7 +42,6 @@ void trapPrint(FILE *out, snmpTrap *trap)
         fprintf(out, "    %s: %s\n", trap->variablesOID[i], trap->variablesValue[i]);
     }
 
-    fprintf(out, "\n");
     fflush(out);
 }
 

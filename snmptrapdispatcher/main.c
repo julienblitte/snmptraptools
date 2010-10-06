@@ -62,6 +62,8 @@ int main()
 
             configurationMatch(trap_actions, &trap, &actionCallback);
 
+            fprintf(logFile, "\n");
+
             trapFree(&trap);
         }
         else
