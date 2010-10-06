@@ -8,13 +8,13 @@
 AppId={{B7ABA127-3FBE-4118-BD12-A2B9D372D1F9}
 AppName=Snmptraptools
 ;AppVersion=2.2b
-AppVerName=Snmptraptools - standalone version 2.2b
+AppVerName=Snmptraptools - standalone version 2.3b
 AppPublisherURL=http://marin.jb.free.fr/snmptraptools
 AppSupportURL=http://marin.jb.free.fr/snmptraptools
 AppUpdatesURL=http://marin.jb.free.fr/snmptraptools
 DefaultDirName={pf}\Snmptraptools
 DefaultGroupName=Snmptraptools
-OutputBaseFilename=setup_2.2b_standalone
+OutputBaseFilename=setup_2.3b_standalone
 OutputDir=..\bin
 Compression=lzma
 SolidCompression=yes
@@ -26,9 +26,9 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Source: "..\bin\snmptrapconfig.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\snmptrapdispatcher.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\snmptraphandler_standalone.exe"; DestDir: "{app}"; Flags: ignoreversion; DestName: "snmptraphandler.exe"
-Source: "..\tools\sendemail\download sendEmail.html"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\tools\sendemail\snmptrap_email.bat"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\tools\messagebox\messagebox.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\tools\snmptrapemail\download sendEmail.html"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\tools\snmptrapemail\snmptrapemail.bat"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\tools\snmptrapmessagebox\snmptrapmessagebox.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
