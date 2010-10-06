@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     //snprintf(param, sizeof(param), "%s %s %ld %ld", trap->agent, trap->enterprise, trap->genericTrap, trap->specificTrap);
     if (argc != 5)
     {
-        MessageBoxA(NULL, "Bad arguments.\nArguments should be: {agent, oid, generic type, specific type}", "snmptraptools", MB_OK|MB_ICONERROR);
+        MessageBoxA(NULL, "Bad arguments.\nArguments should be: {agent, oid, generic type, specific type}", "snmptraptools", MB_OK|MB_ICONERROR|MB_SERVICE_NOTIFICATION);
         return EXIT_FAILURE;
     }
     sscanf(argv[ARG_GENERIC], "%d", &generic_type);
