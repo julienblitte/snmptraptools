@@ -53,8 +53,8 @@ Filename: "{app}\snmptraphandler.exe"; Parameters: "install"
 Filename: "{sys}\sc.exe"; Parameters: "start snmptraphandler"; Tasks: runservice
 
 [Registry]
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\snmpTrapHandler\dispatcher\1.3.6.1.4.1"; ValueType: string; ValueName: "run"; ValueData: "snmptrapmessagebox.exe"
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\snmpTrapHandler\dispatcher\1.3.6.1.4.1"; ValueType: string; ValueName: "wkdir"; ValueData: "{app}"
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\snmptraptools\dispatcher\1.3.6.1.4.1"; ValueType: string; ValueName: "run"; ValueData: "snmptrapmessagebox.exe"
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\snmptraptools\dispatcher\1.3.6.1.4.1"; ValueType: string; ValueName: "wkdir"; ValueData: "{app}"
 
 [UninstallRun]
 Filename: "{sys}\sc.exe"; Parameters: "stop snmptraphandler"

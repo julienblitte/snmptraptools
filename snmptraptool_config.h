@@ -1,11 +1,11 @@
 #ifndef SNMPTRAPTOOL_CONFIG_H_INCLUDED
 #define SNMPTRAPTOOL_CONFIG_H_INCLUDED
 
-#define SERVICE_NAME		"snmpTrapHandler";
-#define SERVICE_DESC		"SnmpTrapHandler service provides a gateway to translate recieved alert to an external program";
+#define SERVICE_NAME		"snmptraptools";
+#define SERVICE_DESC		"provides a gateway to translate recieved SNMP trap to an external program";
 
 #define SERVER_LISTEN_PORT			162
-#define REGISTRY_CONFIG_PATH		"SYSTEM\\CurrentControlSet\\Services\\snmpTrapHandler\\dispatcher\\"
+#define REGISTRY_CONFIG_PATH		"SYSTEM\\CurrentControlSet\\Services\\snmptraptools\\dispatcher\\"
 #define OID_SEPARATOR               '.'
 #define SPECIFIC_TYPE_GENERIC       6
 #define TRAP_TYPE_UNKNOW            -1
@@ -16,9 +16,9 @@
 #define LOG_INFORMATION 2
 #define LOG_DEBUG       1
 #define LOG_PEDANTIC    0
-#define LOG_FILENAME				"snmptraphandler.log"
+#define LOG_FILENAME				"service.log"
 
-#define DISTPATCHER_LOGFILE			"snmptrapdispatcher.log"
+#define DISTPATCHER_LOGFILE			"network.log"
 
 #define MAX_DISPATCHER_LINE_LEN		4096
 #define MAX_COMMUNITY_LEN			256
