@@ -4,7 +4,7 @@
 #include "mainDialogData.h"
 #include "serviceController.h"
 #include "resource.h"
-#include "../snmptraptool_config.h"
+#include "../snmptraptools_config.h"
 #include "mainDialog.h"
 #include "addDialog.h"
 

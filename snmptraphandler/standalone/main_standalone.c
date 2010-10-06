@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "../service.h"
 #include "../dispatcher.h"
-#include "../../snmptraptool_config.h"
+#include "../../snmptraptools_config.h"
 #include "../logger.h"
 #include "snmp_stack.h"
 #include <winsock2.h>

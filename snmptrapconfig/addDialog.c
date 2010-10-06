@@ -2,7 +2,7 @@
 #include <regex.h>
 #include "resource.h"
 #include "mainDialogData.h"
-#include "../snmptraptool_config.h"
+#include "../snmptraptools_config.h"
 #include "../libtrapsnmp/trapSnmp.h"
 
 HWND hMainDialog = NULL;
