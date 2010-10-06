@@ -35,7 +35,7 @@
 
 #define OID_COMMUNITY   "1.3.6.1.6.3.1.2.2.9.0"
 #define OID_TIMESTAMP   "1.3.6.1.2.1.1.3.0"
-#define OID_AGENT       "1.3.6.1.3.1057.1.0"
+#define OID_AGENT       "1.3.6.1.3.1057.1"
 #define OID_ENTERPRISE  "1.3.6.1.6.3.1.1.4.3.0"
 #define OID_TRAP_CODE   "1.3.6.1.6.3.1.1.4.1.0"
 #define OID_TRAP_CODE_GENERIC   "1.3.6.1.6.3.1.1.5.0"
