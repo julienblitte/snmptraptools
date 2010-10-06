@@ -16,9 +16,9 @@
 #define LOG_INFORMATION 2
 #define LOG_DEBUG       1
 #define LOG_PEDANTIC    0
-#define LOG_FILENAME				"service.log"
+#define LOG_FILENAME				"snmptrapservice.log"
 
-#define DISTPATCHER_LOGFILE			"network.log"
+#define DISTPATCHER_LOGFILE			"snmptrapnetwork.log"
 
 #define MAX_DISPATCHER_LINE_LEN		4096
 #define MAX_COMMUNITY_LEN			256
