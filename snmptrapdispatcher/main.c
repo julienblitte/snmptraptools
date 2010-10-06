@@ -3,13 +3,18 @@
 #include <time.h>
 #include <string.h>
 #include <windows.h>
+#include <stdbool.h>
 #include "../libtrapsnmp/trapSnmp.h"
 #include "../snmptraptool_config.h"
 #include "configuration.h"
 
+FILE *logFile;
+
 void actionCallback(trap_action_entry *action, snmpTrap *trap, unsigned long actionNumber)
 {
     char param[MAX_NETWORK_ADDRESS_LEN+MAX_OID_LEN+64];
+
+    fprintf(logFile, "run: [%s]\n", action->run);
 
     if (action->run != NULL)
     {
@@ -17,8 +22,6 @@ void actionCallback(trap_action_entry *action, snmpTrap *trap, unsigned long act
         ShellExecute(NULL, "open", action->run, param, action->wkDir, SW_SHOW);
     }
 }
-
-    FILE *logFile;
 
 int main()
 {
