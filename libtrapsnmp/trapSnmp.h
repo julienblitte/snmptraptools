@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <windows.h>
-#include "../snmptraptool_config.h"
+#include "../snmptraptools_config.h"
 
 
 typedef struct

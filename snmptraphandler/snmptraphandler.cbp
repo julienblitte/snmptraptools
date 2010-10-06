@@ -116,7 +116,7 @@
 			<Option target="winsnmp Debug" />
 			<Option target="winsnmp Release" />
 		</Unit>
-		<Unit filename="..\snmptraptool_config.h" />
+		<Unit filename="..\snmptraptools_config.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

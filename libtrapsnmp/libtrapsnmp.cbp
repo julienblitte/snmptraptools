@@ -38,7 +38,7 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="trapSnmp.h" />
-		<Unit filename="..\snmptraptool_config.h" />
+		<Unit filename="..\snmptraptools_config.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

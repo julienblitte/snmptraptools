@@ -5,7 +5,7 @@
 #include <winsnmp.h>
 #include "../service.h"
 #include "../dispatcher.h"
-#include "../../snmptraptool_config.h"
+#include "../../snmptraptools_config.h"
 #include "../logger.h"
 #include "snmp.h"
 

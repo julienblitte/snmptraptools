@@ -5,7 +5,7 @@
 #include <windows.h>
 #include <stdbool.h>
 #include "../libtrapsnmp/trapSnmp.h"
-#include "../snmptraptool_config.h"
+#include "../snmptraptools_config.h"
 #include "configuration.h"
 
 FILE *logFile;
