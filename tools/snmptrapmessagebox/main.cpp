@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
              get_trap_code(generic_type, specific_type),
              get_trap_eventdescription(generic_type, argv[ARG_AGENT])
              );
-    MessageBoxA(NULL, buffer, get_trap_eventname(generic_type), MB_OK|MB_ICONINFORMATION);
+    MessageBoxA(NULL, buffer, get_trap_eventname(generic_type), MB_OK|MB_ICONINFORMATION|MB_SERVICE_NOTIFICATION);
 
     LocalFree(argv);
 
