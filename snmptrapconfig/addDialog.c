@@ -1,5 +1,4 @@
 #include <windows.h>
-#include <regex.h>
 #include "resource.h"
 #include "mainDialogData.h"
 #include "../snmptraptools_config.h"
@@ -22,12 +21,7 @@ BOOL dlgAddEventHandler(HWND hDlg, WPARAM wParam)
             }
             else
             {
-
-                if (addAction((LPCTSTR)buffer) == TRUE)
-                {
-                    SendDlgItemMessage(hMainDialog, ID_LISTBOX_OID, LB_ADDSTRING, 0, (LPARAM)(LPCTSTR)buffer);
-                }
-
+                addAction(hMainDialog, (LPCTSTR)buffer);
                 EndDialog(hDlg, 0);
             }
             return TRUE;

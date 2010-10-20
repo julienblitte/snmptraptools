@@ -1,9 +1,11 @@
 #include <windows.h>
 
-LONG loadOidList(HWND hDlg);
+LONG loadActionList(HWND hDlg);
+void freeActionList(HWND hDlg);
+void refreshActionList(HWND hDlg);
 
-BOOL loadAction(HWND hDlg, LPCTSTR oid);
-BOOL addAction(LPCTSTR oid);
-BOOL deleteAction(HWND hDlg, LPCTSTR oid);
-BOOL saveAction(HWND hDlg, LPCTSTR oid);
+BOOL loadAction(HWND hDlg, DWORD selected);
+BOOL addAction(HWND hDlg, LPCTSTR oid);
+BOOL deleteAction(HWND hDlg, DWORD selected);
+BOOL saveAction(HWND hDlg, DWORD selected);
 BOOL exportData(LPCTSTR filename);

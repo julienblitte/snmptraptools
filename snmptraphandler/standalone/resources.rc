@@ -1,7 +1,7 @@
 1 ICON "handler_standalone.ico"
 1 VERSIONINFO
-	FILEVERSION 0,2,0,3
-	PRODUCTVERSION  0,2,0,3
+	FILEVERSION 0,2,0,4
+	PRODUCTVERSION  0,2,0,4
 	FILEFLAGSMASK 0x3fL
 	FILEFLAGS 0x0L
 	FILEOS 0x40004L
@@ -17,7 +17,7 @@
                                 "http://www.gnu.org/licenses/lgpl.html\0"
 				//VALUE "CompanyName", "\0"
 				VALUE "FileDescription", "SNMPTrapHandler service (standalone)\0"
-				VALUE "FileVersion", "0,2,0,3\0"
+				VALUE "FileVersion", "0,2,0,4\0"
 				VALUE "InternalName", "snmptraphandler.exe\0"
 				VALUE "LegalCopyright", "(C) Julien Blitte\0"
 				//VALUE "LegalTrademarks", "\0"
@@ -25,8 +25,8 @@
 				VALUE "OriginalFilename", "snmptraphandler.exe\0"
 				//VALUE "PrivateBuild", "\0"
 				VALUE "ProductName", "SNMP Trap Tools set\0"
-				VALUE "ProductVersion", "0,2,0,3\0"
-				VALUE "SpecialBuild", "Built the 2010-10-05 on Estephe with MinGW tool set\0"
+				VALUE "ProductVersion", "0,2,0,4\0"
+				VALUE "SpecialBuild", "Built the 2010-10-20 on Estephe with MinGW tool set\0"
 			END
 		END
 		BLOCK "VarFileInfo"

@@ -8,37 +8,64 @@
 #include "addDialog.h"
 #include "serviceController.h"
 #include "mainDialog.h"
+#include "../libregistry/registry.h"
 
-LONG inline RegCountSubKeys(HKEY hKey, LPDWORD lpcSubKeys)
-{
-    return RegQueryInfoKey(hKey, NULL, NULL, NULL, lpcSubKeys, NULL,  NULL, NULL, NULL, NULL, NULL, NULL);
-}
+char **actionList = NULL;
 
-LONG loadOidList(HWND hDlg)
+LONG loadActionList(HWND hDlg)
 {
-    HKEY hKey;
+    HKEY hKey, hSubKey;
     DWORD keyIndex, keyCount;
-    char readBuffer[MAX_REGISTRY_LEN];
-    DWORD readBufferSize;
+    char subKeyName[MAX_REGISTRY_LEN];
+    DWORD subKeyNameSize;
+    char oid[MAX_OID_LEN];
+    DWORD oidSize;
 
+    // open registry
     if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, REGISTRY_CONFIG_PATH, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_READ|KEY_WRITE, NULL, &hKey, NULL) != ERROR_SUCCESS)
     {
         return 0;
     }
 
+    // get number of subkeys
     if (RegCountSubKeys(hKey, &keyCount) != ERROR_SUCCESS)
     {
         RegCloseKey(hKey);
         return 0;
     }
 
+    actionList = calloc(keyCount, sizeof(char *));
+    if (actionList == NULL)
+    {
+        return 0;
+    }
+
+    // for each subkey
     keyIndex = 0;
-    readBufferSize = sizeof(readBuffer);
-    while((RegEnumKeyEx(hKey, keyIndex, readBuffer, &readBufferSize, NULL, NULL, NULL, NULL) == ERROR_SUCCESS)
+    subKeyNameSize = sizeof(subKeyName);
+    while((RegEnumKeyEx(hKey, keyIndex, subKeyName, &subKeyNameSize, NULL, NULL, NULL, NULL) == ERROR_SUCCESS)
           && (keyIndex < keyCount))
     {
-        SendDlgItemMessage(hDlg, ID_LISTBOX_OID, LB_ADDSTRING, 0, (LPARAM)(LPCTSTR)readBuffer);
-        readBufferSize = sizeof(readBuffer); keyIndex++;
+        // TODO: read oid value
+        oidSize = sizeof(oid);
+        if (RegGetValue(hKey, subKeyName, REGISTRY_OID, 0, NULL, oid, &oidSize) != ERROR_SUCCESS)
+        {
+            // Oops, problem detected in registry
+            // maybe an old version of program was installed before
+
+            // fill missing oid with subKeyName (old version's configuration format)
+            strncpy(oid, subKeyName, sizeof(oid));
+
+            // try to update configuration's format in registry
+            if (RegCreateKeyEx(hKey, subKeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_READ|KEY_WRITE, NULL, &hSubKey, NULL) == ERROR_SUCCESS)
+            {
+                RegSetValueEx(hSubKey, REGISTRY_OID, 0, REG_SZ, (BYTE*)oid, strlen(oid)+1);
+                RegCloseKey(hSubKey);
+            }
+        }
+        SendDlgItemMessage(hDlg, ID_LISTBOX_OID, LB_ADDSTRING, 0, (LPARAM)(LPCTSTR)oid);
+        actionList[keyIndex] = strdup(subKeyName);
+        keyIndex++; subKeyNameSize = sizeof(subKeyName);
     }
 
     RegCloseKey(hKey);
@@ -46,7 +73,19 @@ LONG loadOidList(HWND hDlg)
     return keyIndex;
 }
 
-BOOL deleteAction(HWND hDlg, LPCTSTR oid)
+void freeActionList(HWND hDlg)
+{
+    SendDlgItemMessage(hDlg, ID_LISTBOX_OID, LB_RESETCONTENT, 0, 0);
+    free(actionList);
+}
+
+void refreshActionList(HWND hDlg)
+{
+    freeActionList(hDlg);
+    loadActionList(hDlg);
+}
+
+BOOL deleteAction(HWND hDlg, DWORD selected)
 {
     HKEY hKey;
 
@@ -55,7 +94,7 @@ BOOL deleteAction(HWND hDlg, LPCTSTR oid)
         return FALSE;
     }
 
-    if (RegDeleteKey(hKey, oid) != ERROR_SUCCESS)
+    if (RegDeleteKey(hKey, actionList[selected]) != ERROR_SUCCESS)
     {
         RegCloseKey(hKey);
         return FALSE;
@@ -63,21 +102,31 @@ BOOL deleteAction(HWND hDlg, LPCTSTR oid)
 
     RegCloseKey(hKey);
 
+    refreshActionList(hDlg);
+
     return TRUE;
 }
 
-BOOL addAction(LPCTSTR oid)
+BOOL addAction(HWND hDlg, LPCTSTR oid)
 {
     HKEY hKey, hSubKey;
-    DWORD created;
 
     if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, REGISTRY_CONFIG_PATH, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_READ|KEY_WRITE, NULL, &hKey, NULL) != ERROR_SUCCESS)
     {
         return FALSE;
     }
 
-    if (RegCreateKeyEx(hKey, oid, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_READ|KEY_WRITE, NULL, &hSubKey, &created) != ERROR_SUCCESS)
+    // add a new subkey
+    if (RegCreateSubKey(hKey, REG_OPTION_NON_VOLATILE, KEY_READ|KEY_WRITE, &hSubKey) != ERROR_SUCCESS)
     {
+        RegCloseKey(hKey);
+        return FALSE;
+    }
+
+    // add value REGISTRY_OID in this key
+    if (RegSetValueEx(hSubKey, REGISTRY_OID, 0, REG_SZ, (BYTE*)oid, strlen(oid)+1) != ERROR_SUCCESS)
+    {
+        RegCloseKey(hSubKey);
         RegCloseKey(hKey);
         return FALSE;
     }
@@ -85,16 +134,12 @@ BOOL addAction(LPCTSTR oid)
     RegCloseKey(hSubKey);
     RegCloseKey(hKey);
 
-    // if key already exists, fail
-    if (created != REG_CREATED_NEW_KEY)
-    {
-        return FALSE;
-    }
+    refreshActionList(hDlg);
 
     return TRUE;
 }
 
-BOOL loadAction(HWND hDlg, LPCTSTR oid)
+BOOL loadAction(HWND hDlg, DWORD selected)
 {
     HKEY hKey;
     HKEY hSubKey;
@@ -109,13 +154,16 @@ BOOL loadAction(HWND hDlg, LPCTSTR oid)
         return FALSE;
     }
 
-    if (RegOpenKeyEx(hKey, oid, 0, KEY_READ, &hSubKey) != ERROR_SUCCESS)
+    printf("%u: %s\n", (unsigned int)selected, actionList[selected]);
+
+    // TODO: retrive oid from selected index...
+    if (RegOpenKeyEx(hKey, actionList[selected], 0, KEY_READ, &hSubKey) != ERROR_SUCCESS)
     {
         return FALSE;
     }
 
     bufferSize = sizeof(buffer);
-    if (RegQueryValueEx(hSubKey, "specificType", NULL, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
+    if (RegQueryValueEx(hSubKey, REGISTRY_SPECIFIC_TYPE, NULL, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
     {
         memcpy(&numeric, buffer, sizeof(numeric));
         snprintf((char *)buffer, sizeof(buffer), "%lu", numeric);
@@ -129,7 +177,7 @@ BOOL loadAction(HWND hDlg, LPCTSTR oid)
     else
     {
         bufferSize = sizeof(buffer);
-        if (RegQueryValueEx(hSubKey, "genericType", NULL, NULL, buffer, &bufferSize) ==  ERROR_SUCCESS)
+        if (RegQueryValueEx(hSubKey, REGISTRY_GENERIC_TYPE, NULL, NULL, buffer, &bufferSize) ==  ERROR_SUCCESS)
         {
             memcpy(&numeric, buffer, sizeof(numeric));
             snprintf((char *)buffer, sizeof(buffer), "%lu", numeric);
@@ -152,14 +200,14 @@ BOOL loadAction(HWND hDlg, LPCTSTR oid)
     }
 
     bufferSize = sizeof(buffer);
-    if (RegQueryValueEx(hSubKey, "run", NULL, NULL, buffer, &bufferSize) != ERROR_SUCCESS)
+    if (RegQueryValueEx(hSubKey, REGISTRY_RUN, NULL, NULL, buffer, &bufferSize) != ERROR_SUCCESS)
     {
             buffer[0] = '\0';
     }
     SendDlgItemMessage(hDlg, ID_EDIT_RUN, WM_SETTEXT, 0, (LPARAM)buffer);
 
     bufferSize = sizeof(buffer);
-    if (RegQueryValueEx(hSubKey, "wkdir", NULL, NULL, buffer, &bufferSize) != ERROR_SUCCESS)
+    if (RegQueryValueEx(hSubKey, REGISTRY_WKDIR, NULL, NULL, buffer, &bufferSize) != ERROR_SUCCESS)
     {
             buffer[0] = '\0';
     }
@@ -192,7 +240,7 @@ BOOL isNumber(LPBYTE buffer)
     return TRUE;
 }
 
-BOOL saveAction(HWND hDlg, LPCTSTR oid)
+BOOL saveAction(HWND hDlg, DWORD selected)
 {
     HKEY hKey;
     HKEY hSubKey;
@@ -207,7 +255,7 @@ BOOL saveAction(HWND hDlg, LPCTSTR oid)
         return FALSE;
     }
 
-    if (RegOpenKeyEx(hKey, oid, 0, KEY_READ|KEY_WRITE, &hSubKey) != ERROR_SUCCESS)
+    if (RegOpenKeyEx(hKey, actionList[selected], 0, KEY_READ|KEY_WRITE, &hSubKey) != ERROR_SUCCESS)
     {
         return FALSE;
     }
@@ -215,8 +263,8 @@ BOOL saveAction(HWND hDlg, LPCTSTR oid)
     if (SendDlgItemMessage(hDlg, ID_RADIO_ANY, BM_GETCHECK, 0, 0) == BST_CHECKED)
     {
         // delete values speficicType and genericType
-        RegDeleteValue(hSubKey, "specificType");
-        RegDeleteValue(hSubKey, "genericType");
+        RegDeleteValue(hSubKey, REGISTRY_SPECIFIC_TYPE);
+        RegDeleteValue(hSubKey, REGISTRY_GENERIC_TYPE);
     }
     else
     {
@@ -226,8 +274,8 @@ BOOL saveAction(HWND hDlg, LPCTSTR oid)
             MessageBox(hDlg, "Invalid trap code!", "Error", MB_ICONERROR|MB_OK);
 
             // delete values speficicType and genericType
-            RegDeleteValue(hSubKey, "specificType");
-            RegDeleteValue(hSubKey, "genericType");
+            RegDeleteValue(hSubKey, REGISTRY_SPECIFIC_TYPE);
+            RegDeleteValue(hSubKey, REGISTRY_GENERIC_TYPE);
         }
         else
         {
@@ -238,22 +286,22 @@ BOOL saveAction(HWND hDlg, LPCTSTR oid)
             {
                 // wirte value specificType
                 bufferSize = sizeof(numeric);
-                RegSetValueEx(hSubKey, "specificType", 0, REG_DWORD, buffer, bufferSize);
+                RegSetValueEx(hSubKey, REGISTRY_SPECIFIC_TYPE, 0, REG_DWORD, buffer, bufferSize);
 
                 // write value 6 as genericType
                 numeric = 6;
                 memcpy(buffer, &numeric, sizeof(numeric));
                 bufferSize = sizeof(numeric);
-                RegSetValueEx(hSubKey, "genericType", 0, REG_DWORD, buffer, bufferSize);
+                RegSetValueEx(hSubKey, REGISTRY_GENERIC_TYPE, 0, REG_DWORD, buffer, bufferSize);
             }
             else if (SendDlgItemMessage(hDlg, ID_RADIO_GENERIC, BM_GETCHECK, 0, 0) == BST_CHECKED)
             {
                 // write value genericType
                 bufferSize = sizeof(numeric);
-                RegSetValueEx(hSubKey, "genericType", 0, REG_DWORD, buffer, bufferSize);
+                RegSetValueEx(hSubKey, REGISTRY_GENERIC_TYPE, 0, REG_DWORD, buffer, bufferSize);
 
                 // delete value specificType
-                RegDeleteValue(hSubKey, "specificType");
+                RegDeleteValue(hSubKey, REGISTRY_SPECIFIC_TYPE);
             }
         }
     }
@@ -262,22 +310,22 @@ BOOL saveAction(HWND hDlg, LPCTSTR oid)
     bufferSize = strlen((char *)buffer)+1;
     if (bufferSize > 1)
     {
-        RegSetValueEx(hSubKey, "run", 0, REG_SZ, buffer, bufferSize);
+        RegSetValueEx(hSubKey, REGISTRY_RUN, 0, REG_SZ, buffer, bufferSize);
     }
     else
     {
-        RegDeleteValue(hSubKey, "run");
+        RegDeleteValue(hSubKey, REGISTRY_RUN);
     }
 
     SendDlgItemMessage(hDlg, ID_EDIT_WKDIR, WM_GETTEXT, (WPARAM)sizeof(buffer), (LPARAM)buffer);
     bufferSize = strlen((char *)buffer)+1;
     if (bufferSize > 1)
     {
-        RegSetValueEx(hSubKey, "wkdir", 0, REG_SZ, buffer, bufferSize);
+        RegSetValueEx(hSubKey, REGISTRY_WKDIR, 0, REG_SZ, buffer, bufferSize);
     }
     else
     {
-        RegDeleteValue(hSubKey, "wkdir");
+        RegDeleteValue(hSubKey, REGISTRY_WKDIR);
     }
 
     RegCloseKey(hSubKey);
@@ -286,12 +334,3 @@ BOOL saveAction(HWND hDlg, LPCTSTR oid)
     return TRUE;
 }
 
-BOOL exportData(LPCTSTR filename)
-{
-    char buffer[MAX_PATH+512];
-
-    snprintf(buffer, sizeof(buffer), "/e \"%s\" HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\snmpTrapHandler\\dispatcher", filename);
-    ShellExecute(NULL, "open", "regedit.exe", buffer, NULL, SW_SHOW);
-
-    return TRUE;
-}

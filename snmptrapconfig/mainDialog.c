@@ -7,6 +7,7 @@
 #include "../snmptraptools_config.h"
 #include "mainDialog.h"
 #include "addDialog.h"
+#include "../libregistry/registry.h"
 
 BOOL proposeServiceUpdate(HWND hDlg)
 {
@@ -136,12 +137,10 @@ BOOL dlgMainEventHandler(HWND hDlg, WPARAM wParam)
             selected = (int)SendDlgItemMessage(hDlg, ID_LISTBOX_OID, LB_GETCURSEL, 0, 0);
             if (selected != LB_ERR)
             {
-                SendDlgItemMessage(hDlg, ID_LISTBOX_OID, LB_GETTEXT, (WPARAM)selected, (LPARAM)oid);
-                if (MessageBox(hDlg, "Do you really want to remove this action?", oid, MB_ICONQUESTION|MB_YESNO) == IDYES)
+                if (MessageBox(hDlg, "Do you really want to remove this action?", "Delete confirmation", MB_ICONQUESTION|MB_YESNO) == IDYES)
                 {
-                    if (deleteAction(hDlg, oid) == TRUE)
+                    if (deleteAction(hDlg, selected) == TRUE)
                     {
-                        SendDlgItemMessage(hDlg, ID_LISTBOX_OID, LB_DELETESTRING, (WPARAM)selected, 0);
                         enableActionModification(hDlg, FALSE);
                         proposeServiceUpdate(hDlg);
                     }
@@ -153,9 +152,9 @@ BOOL dlgMainEventHandler(HWND hDlg, WPARAM wParam)
             if (selected != LB_ERR)
             {
                 SendDlgItemMessage(hDlg, ID_LISTBOX_OID, LB_GETTEXT, (WPARAM)selected, (LPARAM)oid);
-                if (saveAction(hDlg, oid) == TRUE)
+                if (saveAction(hDlg, selected) == TRUE)
                 {
-                    loadAction(hDlg, oid);
+                    loadAction(hDlg, selected);
                     proposeServiceUpdate(hDlg);
                 }
             }
@@ -189,7 +188,7 @@ BOOL dlgMainEventHandler(HWND hDlg, WPARAM wParam)
                 enableDlgItem(hDlg, ID_BUTTON_REMOVE, TRUE);
 
                 SendDlgItemMessage(hDlg, ID_LISTBOX_OID, LB_GETTEXT, (WPARAM)selected, (LPARAM)oid);
-                loadAction(hDlg, oid);
+                loadAction(hDlg, selected);
                 enableActionModification(hDlg, TRUE);
             }
             else
@@ -212,6 +211,8 @@ BOOL dlgMainEventHandler(HWND hDlg, WPARAM wParam)
             if (GetOpenFileName(&openFile))
             {
                 SendDlgItemMessage(hDlg, ID_EDIT_RUN, WM_SETTEXT, 0, (LPARAM)buffer);
+                // TODO: update wkdir if empty
+                // gettext, if empty, extract path and set wkdir to it
             }
             return TRUE;
 
@@ -236,7 +237,7 @@ BOOL dlgMainEventHandler(HWND hDlg, WPARAM wParam)
 
             if (GetSaveFileName(&openFile))
             {
-                exportData(openFile.lpstrFile);
+                regExportPath(HKEY_LOCAL_MACHINE, REGISTRY_CONFIG_PATH, openFile.lpstrFile);
             }
             return TRUE;
 
@@ -258,7 +259,7 @@ BOOL CALLBACK dlgMainMessageHandler(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM 
             updateServiceState(hDlg);
             SetTimer(hDlg, 1, 500, NULL);
 
-            loadOidList(hDlg);
+            loadActionList(hDlg);
             enableActionModification(hDlg, FALSE);
             enableDlgItem(hDlg, ID_BUTTON_UPDATE, FALSE);
 
