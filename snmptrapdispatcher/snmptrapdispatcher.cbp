@@ -16,6 +16,7 @@
 				</Compiler>
 				<Linker>
 					<Add library="..\lib\libtrapsnmp.a" />
+					<Add library="..\lib\libregistry.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -29,6 +30,7 @@
 				<Linker>
 					<Add option="-s" />
 					<Add library="..\lib\libtrapsnmp.a" />
+					<Add library="..\lib\libregistry.a" />
 				</Linker>
 			</Target>
 		</Build>
@@ -36,6 +38,7 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="..\libtrapsnmp\trapSnmp.h" />
+		<Unit filename="..\libregistry\registry.h" />
 		<Unit filename="configuration.c">
 			<Option compilerVar="CC" />
 		</Unit>

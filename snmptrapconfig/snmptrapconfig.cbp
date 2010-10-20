@@ -17,6 +17,7 @@
 				<Linker>
 					<Add library="..\lib\libcomdlg32.a" />
 					<Add library="..\lib\libtrapsnmp.a" />
+					<Add library="..\lib\libregistry.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -31,6 +32,7 @@
 					<Add option="-s" />
 					<Add library="..\lib\libcomdlg32.a" />
 					<Add library="..\lib\libtrapsnmp.a" />
+					<Add library="..\lib\libregistry.a" />
 				</Linker>
 			</Target>
 		</Build>
@@ -42,6 +44,7 @@
 			<Add library="user32" />
 			<Add library="kernel32" />
 		</Linker>
+		<Unit filename="..\libregistry\registry.h" />
 		<Unit filename="..\libtrapsnmp\trapSnmp.h" />
 		<Unit filename="addDialog.c">
 			<Option compilerVar="CC" />

@@ -6,6 +6,13 @@
 
 #define SERVER_LISTEN_PORT			162
 #define REGISTRY_CONFIG_PATH		"SYSTEM\\CurrentControlSet\\Services\\snmptraptools\\dispatcher\\"
+#define REGISTRY_OID			NULL
+#define REGISTRY_RUN            "run"
+#define REGISTRY_WKDIR          "wkdir"
+#define REGISTRY_SPECIFIC_TYPE  "specificType"
+#define REGISTRY_GENERIC_TYPE   "genericType"
+
+
 #define OID_SEPARATOR               '.'
 #define SPECIFIC_TYPE_GENERIC       6
 #define TRAP_TYPE_UNKNOW            -1
@@ -31,7 +38,6 @@
 #define ERROR_DISPATCHER_INIT   2
 #define ERROR_DISPATCHER_WRITE  3
 #define ERROR_THREAD_INIT       4
-
 
 #define OID_COMMUNITY   "1.3.6.1.6.3.1.2.2.9.0"
 #define OID_TIMESTAMP   "1.3.6.1.2.1.1.3.0"

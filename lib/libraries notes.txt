@@ -3,8 +3,10 @@ Use of libraries:
 * snmptrapconfig
   - libcomdlg32.a
   - libtrampsnmp.a
+  - libregistry.a
 * snmptrapdispatcher
   - libtrampsnmp.a
+  - libregistry.a
 * snpmtraphandler (standalone):
   - libwsocks32.a
 * snpmtraphandler (winsnmp):
@@ -14,6 +16,7 @@ Origin of libraries:
 ====================
 * Built from project:
   - libtrapsnmp.a
+  - libregistry.a
 
 * Extracted from MinGW:
   - libcomdlg32.a

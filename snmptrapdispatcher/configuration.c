@@ -5,44 +5,14 @@
 #include "configuration.h"
 #include "../snmptraptools_config.h"
 #include "../libtrapsnmp/trapSnmp.h"
-
-// this function only exists since Windows Vista
-#ifndef RegGetValue
-LONG RegGetValue(HKEY hKey, LPCTSTR lpSubKey, LPCTSTR lpValue,
-                        DWORD __reserved, LPDWORD pdwType, PVOID pvData, LPDWORD pcbData)
-{
-    HKEY hSubKey;
-    LONG errorCode;
-
-    errorCode = RegOpenKeyEx(hKey, lpSubKey, 0, KEY_READ, &hSubKey);
-    if (errorCode != ERROR_SUCCESS)
-    {
-        return errorCode;
-    }
-
-    errorCode = RegQueryValueEx(hSubKey, lpValue, NULL, pdwType, pvData, pcbData);
-    if (errorCode != ERROR_SUCCESS)
-    {
-        RegCloseKey(hSubKey);
-        return errorCode;
-    }
-
-    RegCloseKey(hSubKey);
-
-    return ERROR_SUCCESS;
-}
-#endif
-
-LONG inline RegCountSubKeys(HKEY hKey, LPDWORD lpcSubKeys)
-{
-    return RegQueryInfoKey(hKey, NULL, NULL, NULL, lpcSubKeys, NULL,  NULL, NULL, NULL, NULL, NULL, NULL);
-}
+#include "../libregistry/registry.h"
 
 trap_action_entry *configurationLoad()
 {
     HKEY hKey;
     DWORD keyIndex, keyCount;
     char buffer[MAX_REGISTRY_LEN];
+	char currentKey[MAX_REGISTRY_LEN];
     DWORD bufferSize;
 
     trap_action_entry *result;
@@ -69,51 +39,57 @@ trap_action_entry *configurationLoad()
     // TODO: try to read allowed communit(y|ies) here
 
     keyIndex = 0;
-    bufferSize = sizeof(buffer);
-    while((RegEnumKeyEx(hKey, keyIndex, buffer, &bufferSize, NULL, NULL, NULL, NULL) == ERROR_SUCCESS)
+    bufferSize = sizeof(currentKey);
+    while((RegEnumKeyEx(hKey, keyIndex, currentKey, &bufferSize, NULL, NULL, NULL, NULL) == ERROR_SUCCESS)
           && (keyIndex < keyCount))
     {
-        result[keyIndex].oid = strdup(buffer);
-
         result[keyIndex].specificType = TRAP_TYPE_UNKNOW;
         result[keyIndex].genericType = TRAP_TYPE_UNKNOW;
 
-        if (result[keyIndex].oid != NULL)
+        bufferSize = sizeof(buffer);
+        if (RegGetValue(hKey, currentKey, REGISTRY_OID, 0, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
         {
-            bufferSize = sizeof(buffer);
-            if (RegGetValue(hKey, result[keyIndex].oid, "specificType", 0, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
-            {
-                // result[keyIndex].specificType = *((long *)buffer);
-                memcpy(&result[keyIndex].specificType, buffer, sizeof(((trap_action_entry*)NULL)->specificType));
-
-            }
-
-            bufferSize = sizeof(buffer);
-            if (RegGetValue(hKey, result[keyIndex].oid, "genericType", 0, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
-            {
-                //result[keyIndex].genericType = *((long *)buffer);
-                memcpy(&result[keyIndex].genericType, buffer, sizeof(((trap_action_entry*)NULL)->genericType));
-            }
-
-            bufferSize = sizeof(buffer);
-            if (RegGetValue(hKey, result[keyIndex].oid, "run", 0, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
-            {
-                result[keyIndex].run = strdup(buffer);
-            }
-
-            bufferSize = sizeof(buffer);
-            if (RegGetValue(hKey, result[keyIndex].oid, "wkdir", 0, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
-            {
-                result[keyIndex].wkDir = strdup(buffer);
-            }
+            result[keyIndex].oid = strdup(buffer);
         }
+		else
+		{
+			// for configuration of previous versions
+			// oid = name of key
+			result[keyIndex].oid = strdup(currentKey);
+		}
+
+		bufferSize = sizeof(buffer);
+		if (RegGetValue(hKey, currentKey, REGISTRY_SPECIFIC_TYPE, 0, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
+		{
+			// result[keyIndex].specificType = *((long *)buffer);
+			memcpy(&result[keyIndex].specificType, buffer, sizeof(((trap_action_entry*)NULL)->specificType));
+		}
+
+		bufferSize = sizeof(buffer);
+		if (RegGetValue(hKey, currentKey, REGISTRY_GENERIC_TYPE, 0, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
+		{
+			//result[keyIndex].genericType = *((long *)buffer);
+			memcpy(&result[keyIndex].genericType, buffer, sizeof(((trap_action_entry*)NULL)->genericType));
+		}
+
+		bufferSize = sizeof(buffer);
+		if (RegGetValue(hKey, currentKey, REGISTRY_RUN, 0, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
+		{
+			result[keyIndex].run = strdup(buffer);
+		}
+
+		bufferSize = sizeof(buffer);
+		if (RegGetValue(hKey, currentKey, REGISTRY_WKDIR, 0, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
+		{
+			result[keyIndex].wkDir = strdup(buffer);
+		}
 
         if ((result[keyIndex].genericType == TRAP_TYPE_UNKNOW) && (result[keyIndex].specificType != TRAP_TYPE_UNKNOW))
         {
             result[keyIndex].genericType = SPECIFIC_TYPE_GENERIC;
         }
 
-        bufferSize = sizeof(buffer); keyIndex++;
+        bufferSize = sizeof(currentKey); keyIndex++;
     }
 
     RegCloseKey(hKey);
