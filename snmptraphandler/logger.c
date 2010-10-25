@@ -8,7 +8,7 @@
 
 const char *gLogLevelName[] = { "PEDANTIC", "DEBUG", "INFO", "WARN", "ERROR" };
 
-INT32 gLogLevel = 0;
+INT32 gLogLevel = LOG_INFORMATION;
 FILE *logFile = NULL;
 
 INT32 logGetLevel()
@@ -23,6 +23,7 @@ void logSetLevel(INT32 logLevel)
 
 BOOL logInit()
 {
+    // force to open logfile
     return logPrintf(LOG_PEDANTIC-1, "");
 }
 
@@ -41,7 +42,7 @@ BOOL logPrintf(INT32 level, char *format, ...)
         }
     }
 
-    if (level >= LOG_DEBUG)
+    if (level >= gLogLevel)
     {
         fprintf(logFile, "%s\t", gLogLevelName[level]);
         vfprintf(logFile, format, va);
