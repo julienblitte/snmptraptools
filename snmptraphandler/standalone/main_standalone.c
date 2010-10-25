@@ -174,6 +174,8 @@ int main( int argc, char *argv[])
     }
     else if (argc == 2 && ! stricmp(argv[1], "non-service-mode"))
     {
+        logSetLevel(LOG_PEDANTIC);
+
         // ici, gérer les messages
         MyServiceStart();
 

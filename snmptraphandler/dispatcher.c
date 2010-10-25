@@ -52,7 +52,7 @@ BOOL initDispatcher()
     }
     else
     {
-        logPrintf(LOG_INFORMATION, "dispacher process running, pid: %u\n", pi.dwProcessId);
+        logPrintf(LOG_DEBUG, "dispacher process running, pid: %u\n", pi.dwProcessId);
     }
 
     gDispatcherThread = pi.hProcess;
@@ -95,6 +95,8 @@ DWORD printDispatcher(char *data)
 
     // asynchronous, do not test returned value - instead use written
     WriteFile(gPipeWriteHandle, data, strlen(data), &written, NULL);
+
+    logPrintf(LOG_PEDANTIC, "dispatcher/%s", data);
 
     if (written != strlen(data))
     {

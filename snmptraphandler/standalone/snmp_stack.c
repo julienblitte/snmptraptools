@@ -26,6 +26,40 @@
 
 bool snmp_value2str(const char *value, size_t value_len, char *buffer, size_t buffer_len, char value_type);
 
+unsigned long snmp_length(const char **buffer, unsigned int *buffer_len)
+{
+        unsigned long result;
+        unsigned int length;
+
+        if (*buffer_len <= 0)
+        {
+            return 0;
+        }
+
+        if ((**buffer & 0x80) == 0)
+        {
+            result = **buffer & 0xFF;
+            (*buffer)++, (*buffer_len)--;
+        }
+        else
+        {
+            length = **buffer & 0x7F;
+            (*buffer)++, (*buffer_len)--;
+
+            result = 0;
+            while ((length != 0) && (buffer_len != 0))
+            {
+                result <<= 8;
+                result |= **buffer & 0xFF;
+
+                (*buffer)++, (*buffer_len)--;
+                length--;
+            }
+        }
+
+        return result;
+}
+
 bool snmp_oid2str(const char *value, size_t value_len, char *buffer, size_t buffer_len)
 {
     unsigned int i;
@@ -82,7 +116,7 @@ bool snmp_read_value(const char **buffer, unsigned int *buffer_len,
                         char *dest_buffer, char dest_type, unsigned int dest_len)
 {
     char read_type;
-    char read_len;
+    unsigned long read_len;
 
     // do not go out of buffer
     if (*buffer_len < 2)
@@ -91,15 +125,17 @@ bool snmp_read_value(const char **buffer, unsigned int *buffer_len,
     }
 
     // read type and length
-    read_type = (*buffer)[0];
-    read_len = (*buffer)[1];
+    read_type = **buffer;
 
-    *buffer += 2;
-    *buffer_len -= 2;
+    (*buffer)++;
+    (*buffer_len)--;
+
+    read_len = snmp_length(buffer, buffer_len);
 
     // do not go out of buffer
     if (*buffer_len <  read_len)
     {
+        logPrintf(LOG_ERROR, "protocol error: data size seems invalid!\n");
         return false;
     }
 
@@ -129,7 +165,7 @@ bool snmp_read_value(const char **buffer, unsigned int *buffer_len,
 bool snmp_open_sequence(const char **buffer, unsigned int *buffer_len, char sequence_type)
 {
     char read_type;
-    char read_len;
+    unsigned long read_len;
 
     // do not go out of buffer
     if (*buffer_len < 2)
@@ -138,12 +174,25 @@ bool snmp_open_sequence(const char **buffer, unsigned int *buffer_len, char sequ
     }
 
     // read type and length
-    read_type = (*buffer)[0];
-    read_len = (*buffer)[1];
+    read_type = **buffer;
+
+    (*buffer)++;
+    (*buffer_len)--;
+
+    read_len = snmp_length(buffer, buffer_len);
+
+    // do not go out of buffer
+    if (*buffer_len <  read_len)
+    {
+        logPrintf(LOG_ERROR, "protocol error: data size seems invalid!\n");
+        return false;
+    }
 
     // check if sequence goes out of buffer
-    if (*buffer_len <  2 + read_len)
+    if (*buffer_len <  read_len)
     {
+        logPrintf(LOG_ERROR, "protocol error: sequence size seems invalid!\n");
+        logPrintf(LOG_ERROR, "\texcepted size:%u, size of data:%u\n", *buffer_len, read_len);
         return false;
     }
 
@@ -153,13 +202,9 @@ bool snmp_open_sequence(const char **buffer, unsigned int *buffer_len, char sequ
         return false;
     }
 
-    *buffer += 2;
-    *buffer_len -= 2;
-
     return true;
 }
 
-//TODO: replace printf by printDispatcher
 void snmp_trap_decode(const char *data, const unsigned int data_len)
 {
     const char *local_addr;
@@ -175,22 +220,26 @@ void snmp_trap_decode(const char *data, const unsigned int data_len)
     // global sequence
     if (!snmp_open_sequence(&local_addr, &local_len, SNMP_SYNTAX_SEQUENCE))
     {
+        logPrintf(LOG_ERROR, "protocol error: failed opening a sequence (first)\n");
         return;
     }
 
     // snmp version integer
     if (!snmp_read_value(&local_addr, &local_len, buffer, SNMP_SYNTAX_INT, sizeof(buffer)))
     {
+        logPrintf(LOG_ERROR, "protocol error: failed reading integer (version)\n");
         return;
     }
     if (strcmp(buffer, "0") != 0)
     {
+        logPrintf(LOG_ERROR, "protocol error: bad snmp version\n");
         return;
     }
 
     // community string
     if (!snmp_read_value(&local_addr, &local_len, buffer, SNMP_SYNTAX_OCTETS, sizeof(buffer)))
     {
+        logPrintf(LOG_ERROR, "protocol error: failed reading string (community)\n");
         return;
     }
     else
@@ -201,6 +250,7 @@ void snmp_trap_decode(const char *data, const unsigned int data_len)
     // trap sequence
     if (!snmp_open_sequence(&local_addr, &local_len, SNMP_SYNTAX_TRAP))
     {
+            logPrintf(LOG_ERROR, "protocol error: failed reading string (trap)\n");
             printDispatcherF("\n");
             return;
     }
@@ -208,6 +258,7 @@ void snmp_trap_decode(const char *data, const unsigned int data_len)
     // oid
     if (!snmp_read_value(&local_addr, &local_len, buffer, SNMP_SYNTAX_OID, sizeof(buffer)))
     {
+        logPrintf(LOG_ERROR, "protocol error: failed reading oid (trap)\n");
         printDispatcherF("\n");
         return;
     }
@@ -220,6 +271,7 @@ void snmp_trap_decode(const char *data, const unsigned int data_len)
     // source ip
     if (!snmp_read_value(&local_addr, &local_len, buffer, SNMP_SYNTAX_IPADDR, sizeof(buffer)))
     {
+        logPrintf(LOG_ERROR, "protocol error: failed reading ip (agent)\n");
         printDispatcherF("\n");
         return;
     }
@@ -231,6 +283,7 @@ void snmp_trap_decode(const char *data, const unsigned int data_len)
     // generic trap type
     if (!snmp_read_value(&local_addr, &local_len, buffer, SNMP_SYNTAX_INT, sizeof(buffer)))
     {
+        logPrintf(LOG_ERROR, "protocol error: failed reading integer (generic trap code)\n");
         printDispatcherF("\n");
         return;
     }
@@ -245,6 +298,7 @@ void snmp_trap_decode(const char *data, const unsigned int data_len)
     // enterprise trap type
     if (!snmp_read_value(&local_addr, &local_len, buffer, SNMP_SYNTAX_INT, sizeof(buffer)))
     {
+        logPrintf(LOG_ERROR, "protocol error: failed reading integer (specific trap code)\n");
         printDispatcherF("\n");
         return;
     }
@@ -259,6 +313,7 @@ void snmp_trap_decode(const char *data, const unsigned int data_len)
     // timestamp
     if (!snmp_read_value(&local_addr, &local_len, buffer, SNMP_SYNTAX_TIMETICKS, sizeof(buffer)))
     {
+        logPrintf(LOG_ERROR, "protocol error: failed reading timestamp (date)\n");
         printDispatcherF("\n");
         return;
     }
