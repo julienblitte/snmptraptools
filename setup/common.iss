@@ -7,13 +7,13 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{B7ABA127-3FBE-4118-BD12-A2B9D372D1F9}
 AppName=Snmptraptools
-AppVersion=2.4b
+AppVersion=2.41b
 AppPublisherURL=http://marin.jb.free.fr/snmptraptools
 AppSupportURL=http://marin.jb.free.fr/snmptraptools
 AppUpdatesURL=http://marin.jb.free.fr/snmptraptools
 DefaultDirName={pf}\Snmptraptools
 DefaultGroupName=Snmptraptools
-OutputBaseFilename=setup_snmptraptools_2.4b
+OutputBaseFilename=setup_snmptraptools_2.41b
 LicenseFile=lgpl3.txt
 OutputDir=..\bin
 Compression=lzma
