@@ -84,6 +84,12 @@ trap_action_entry *configurationLoad()
 			result[keyIndex].wkDir = strdup(buffer);
 		}
 
+		bufferSize = sizeof(buffer);
+		if (RegGetValue(hKey, currentKey, REGISTRY_DESCRIPTION, 0, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
+		{
+			result[keyIndex].desc = strdup(buffer);
+		}
+
         if ((result[keyIndex].genericType == TRAP_TYPE_UNKNOW) && (result[keyIndex].specificType != TRAP_TYPE_UNKNOW))
         {
             result[keyIndex].genericType = SPECIFIC_TYPE_GENERIC;
@@ -112,6 +118,10 @@ void configurationClean(trap_action_entry *list)
         if (list[i].wkDir != NULL)
         {
             free(list[i].wkDir);
+        }
+        if (list[i].desc != NULL)
+        {
+            free(list[i].desc);
         }
 
         i++;

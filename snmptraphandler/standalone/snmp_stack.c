@@ -364,11 +364,16 @@ bool snmp_value2str(const char *value, size_t value_len, char *buffer, size_t bu
     switch(value_type)
     {
         case SNMP_SYNTAX_INT:
-            u64.LowPart = 0;
+			if (value_len == 0)
+			{
+				break;
+			}
+			// take care about sign bit propagation
+			u64.LowPart = (value[0] & 0x80 ? (unsigned)-1 : 0);
             for(i=0; (i < value_len) && (i < sizeof(u64.LowPart)); i++)
-            {
+            {		
                 u64.LowPart <<= 8;
-                u64.LowPart |= (value[i] & 0x000000FF);
+                u64.LowPart |= (value[i] & 0x000000ff);
             }
             snprintf(buffer, buffer_len, "%d", (int)u64.LowPart);
             break;

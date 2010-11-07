@@ -37,8 +37,8 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="..\libtrapsnmp\trapSnmp.h" />
 		<Unit filename="..\libregistry\registry.h" />
+		<Unit filename="..\libtrapsnmp\trapSnmp.h" />
 		<Unit filename="configuration.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -49,6 +49,11 @@
 		<Unit filename="resources.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="xstring.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="xstring.h" />
+		<Unit filename="..\snmptraptools_config.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

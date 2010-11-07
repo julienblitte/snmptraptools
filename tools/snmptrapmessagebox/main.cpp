@@ -57,22 +57,26 @@ int main(int argc, char *argv[])
 {
     unsigned int generic_type;
     unsigned int specific_type;
+    const char *description;
 
     //snprintf(param, sizeof(param), "%s %s %ld %ld", trap->agent, trap->enterprise, trap->genericTrap, trap->specificTrap);
-    if (argc != 5)
+    if (argc < 5)
     {
-        MessageBoxA(NULL, "Bad arguments.\nArguments should be: {agent, oid, generic type, specific type}", "snmptraptools", MB_OK|MB_ICONERROR|MB_SERVICE_NOTIFICATION);
+        MessageBoxA(NULL, "Bad arguments.\nArguments should be: {agent, oid, generic type, specific type, [description]}", "snmptraptools", MB_OK|MB_ICONERROR|MB_SERVICE_NOTIFICATION);
         return EXIT_FAILURE;
     }
     sscanf(argv[ARG_GENERIC], "%d", &generic_type);
     sscanf(argv[ARG_SPECIFIC], "%d", &specific_type);
 
+    description = (argc == 5 ? "" : argv[5]);
+
     snprintf(buffer, sizeof(buffer),
-             "Agent: %s\n\nOID:%s\nTrap code is %d\n\n%s",
+             "Agent: %s\n\nOID:%s\nTrap code is %d\n\n%s\n%s",
              argv[ARG_AGENT], // agent
              argv[ARG_OID], // oid
              get_trap_code(generic_type, specific_type),
-             get_trap_eventdescription(generic_type, argv[ARG_AGENT])
+             get_trap_eventdescription(generic_type, argv[ARG_AGENT]),
+             description
              );
     MessageBoxA(NULL, buffer, get_trap_eventname(generic_type), MB_OK|MB_ICONINFORMATION|MB_SERVICE_NOTIFICATION);
 

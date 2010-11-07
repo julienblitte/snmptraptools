@@ -200,6 +200,13 @@ BOOL loadAction(HWND hDlg, DWORD selected)
     }
 
     bufferSize = sizeof(buffer);
+    if (RegQueryValueEx(hSubKey, REGISTRY_DESCRIPTION, NULL, NULL, buffer, &bufferSize) != ERROR_SUCCESS)
+    {
+            buffer[0] = '\0';
+    }
+    SendDlgItemMessage(hDlg, ID_EDIT_DESCRIPTION, WM_SETTEXT, 0, (LPARAM)buffer);
+
+    bufferSize = sizeof(buffer);
     if (RegQueryValueEx(hSubKey, REGISTRY_RUN, NULL, NULL, buffer, &bufferSize) != ERROR_SUCCESS)
     {
             buffer[0] = '\0';
@@ -211,7 +218,7 @@ BOOL loadAction(HWND hDlg, DWORD selected)
     {
             buffer[0] = '\0';
     }
-    SendDlgItemMessage(hDlg, ID_EDIT_WKDIR, WM_SETTEXT, 0, (LPARAM)buffer);
+    SendDlgItemMessage(hDlg, ID_EDIT_WORK_DIR, WM_SETTEXT, 0, (LPARAM)buffer);
 
     RegCloseKey(hSubKey);
     RegCloseKey(hKey);
@@ -306,6 +313,17 @@ BOOL saveAction(HWND hDlg, DWORD selected)
         }
     }
 
+    SendDlgItemMessage(hDlg, ID_EDIT_DESCRIPTION, WM_GETTEXT, (WPARAM)sizeof(buffer), (LPARAM)buffer);
+    bufferSize = strlen((char *)buffer)+1;
+    if (bufferSize > 1)
+    {
+        RegSetValueEx(hSubKey, REGISTRY_DESCRIPTION, 0, REG_SZ, buffer, bufferSize);
+    }
+    else
+    {
+        RegDeleteValue(hSubKey, REGISTRY_DESCRIPTION);
+    }
+
     SendDlgItemMessage(hDlg, ID_EDIT_RUN, WM_GETTEXT, (WPARAM)sizeof(buffer), (LPARAM)buffer);
     bufferSize = strlen((char *)buffer)+1;
     if (bufferSize > 1)
@@ -317,7 +335,7 @@ BOOL saveAction(HWND hDlg, DWORD selected)
         RegDeleteValue(hSubKey, REGISTRY_RUN);
     }
 
-    SendDlgItemMessage(hDlg, ID_EDIT_WKDIR, WM_GETTEXT, (WPARAM)sizeof(buffer), (LPARAM)buffer);
+    SendDlgItemMessage(hDlg, ID_EDIT_WORK_DIR, WM_GETTEXT, (WPARAM)sizeof(buffer), (LPARAM)buffer);
     bufferSize = strlen((char *)buffer)+1;
     if (bufferSize > 1)
     {
