@@ -2,7 +2,7 @@
 
 ID_ICON ICON "config.ico"
 
-ID_DIALOG_MAIN DIALOGEX 6, 5, 245, 270
+ID_DIALOG_MAIN DIALOGEX 6, 5, 245, 305
     CAPTION "Windows SNMP Trap Handler"
     FONT 8, "Tahoma"
     //STYLE 0x00000000
@@ -18,15 +18,18 @@ ID_DIALOG_MAIN DIALOGEX 6, 5, 245, 270
         PUSHBUTTON "Remove", ID_BUTTON_REMOVE, 190, 60, 46, 15, WS_DISABLED
         PUSHBUTTON "Save", ID_BUTTON_MODIFY, 190, 80, 46, 15, WS_DISABLED
 
-        LTEXT "Run:", -1, 10, 190, 60, 10
-        EDITTEXT ID_EDIT_RUN, 10, 200, 206, 12
-        PUSHBUTTON "...", ID_BROWSE_RUN, 215, 200, 15, 12
+        LTEXT "Description:", -1, 10, 190, 60, 10
+        EDITTEXT ID_EDIT_DESCRIPTION, 10, 200, 220, 12
 
-        LTEXT "Working directory:", -1, 10, 220, 60, 10
-        EDITTEXT ID_EDIT_WKDIR, 10, 230, 206, 12
-        PUSHBUTTON "...", ID_BROWSE_WKDIR, 215, 230, 15, 12
+        LTEXT "Run:", -1, 10, 220, 60, 10
+        EDITTEXT ID_EDIT_RUN, 10, 230, 206, 12
+        PUSHBUTTON "...", ID_BROWSE_RUN, 215, 230, 15, 12
 
-        PUSHBUTTON "Export config.", ID_BUTTON_EXPORT, 10, 250, 60, 15
+        LTEXT "Working directory:", -1, 10, 250, 60, 10
+        EDITTEXT ID_EDIT_WORK_DIR, 10, 260, 206, 12
+        PUSHBUTTON "...", ID_BROWSE_WORK_DIR, 215, 260, 15, 12
+
+        PUSHBUTTON "Export config.", ID_BUTTON_EXPORT, 10, 280, 60, 15
 
         GROUPBOX " Service trap type ", ID_GROUPBOX_TRAPTYPE, 10, 132, 220 , 52, WS_GROUP
             AUTORADIOBUTTON "Any", ID_RADIO_ANY, 17, 140, 40, 15

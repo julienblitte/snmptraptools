@@ -17,13 +17,14 @@
     #define ID_BUTTON_EXPORT    0x109
 
     #define ID_BROWSE_RUN       0x120
-    #define ID_BROWSE_WKDIR     0x121
+    #define ID_BROWSE_WORK_DIR  0x121
 
     #define ID_LISTBOX_OID      0x201
 
-    #define ID_EDIT_TRAP_CODE     0x401
-    #define ID_EDIT_RUN       0x402
-    #define ID_EDIT_WKDIR     0x403
+    #define ID_EDIT_TRAP_CODE    0x401
+    #define ID_EDIT_RUN          0x402
+    #define ID_EDIT_WORK_DIR     0x403
+    #define ID_EDIT_DESCRIPTION  0x404
 
     #define ID_GROUPBOX_TRAPTYPE   0x301
 

@@ -70,11 +70,12 @@ BOOL enableActionModification(HWND hDlg, BOOL state)
         enableDlgItem(hDlg, ID_CAPTION_TRAP_CODE, state);
     }
 
+    enableDlgItem(hDlg, ID_EDIT_DESCRIPTION, state);
     enableDlgItem(hDlg, ID_EDIT_RUN, state);
     enableDlgItem(hDlg, ID_BROWSE_RUN, state);
 
-    enableDlgItem(hDlg, ID_EDIT_WKDIR, state);
-    enableDlgItem(hDlg, ID_BROWSE_WKDIR, state);
+    enableDlgItem(hDlg, ID_EDIT_WORK_DIR, state);
+    enableDlgItem(hDlg, ID_BROWSE_WORK_DIR, state);
 
     return state;
 }
@@ -160,12 +161,9 @@ BOOL dlgMainEventHandler(HWND hDlg, WPARAM wParam)
             }
             return TRUE;
         case ON_CHANGE|ID_EDIT_TRAP_CODE:
-            enableDlgItem(hDlg, ID_BUTTON_MODIFY, TRUE);
-            return TRUE;
+        case ON_CHANGE|ID_EDIT_DESCRIPTION:
         case ON_CHANGE|ID_EDIT_RUN:
-            enableDlgItem(hDlg, ID_BUTTON_MODIFY, TRUE);
-            return TRUE;
-        case ON_CHANGE|ID_EDIT_WKDIR:
+        case ON_CHANGE|ID_EDIT_WORK_DIR:
             enableDlgItem(hDlg, ID_BUTTON_MODIFY, TRUE);
             return TRUE;
         case ON_CLICK|ID_RADIO_GENERIC:
@@ -216,10 +214,10 @@ BOOL dlgMainEventHandler(HWND hDlg, WPARAM wParam)
             }
             return TRUE;
 
-        case ON_CLICK|ID_BROWSE_WKDIR:
+        case ON_CLICK|ID_BROWSE_WORK_DIR:
             if (GetOpenDirectory(hDlg, buffer) == TRUE)
             {
-                SendDlgItemMessage(hDlg, ID_EDIT_WKDIR, WM_SETTEXT, 0, (LPARAM)buffer);
+                SendDlgItemMessage(hDlg, ID_EDIT_WORK_DIR, WM_SETTEXT, 0, (LPARAM)buffer);
             }
             return TRUE;
         case ON_CLICK|ID_BUTTON_EXPORT:

@@ -11,6 +11,7 @@
 #define REGISTRY_WKDIR          "wkdir"
 #define REGISTRY_SPECIFIC_TYPE  "specificType"
 #define REGISTRY_GENERIC_TYPE   "genericType"
+#define REGISTRY_DESCRIPTION    "description"
 
 
 #define OID_SEPARATOR               '.'
@@ -28,6 +29,8 @@
 #define DISTPATCHER_LOGFILE			"snmptrapnetwork.log"
 
 #define MAX_DISPATCHER_LINE_LEN		4096
+#define MAX_PARAMETERS              2048
+#define MAX_DESCRIPTION_LEN         1024
 #define MAX_COMMUNITY_LEN			256
 #define MAX_NETWORK_ADDRESS_LEN     64
 #define MAX_OID_LEN                 256

@@ -10,6 +10,7 @@ typedef struct _trap_action_entry
     long genericType;
     char *run;
     char *wkDir;
+    char *desc;
 } trap_action_entry;
 
 trap_action_entry *configurationLoad();

@@ -11,7 +11,7 @@
 				<Option object_output="obj\Debug\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="127.0.0.1 1.2.3.4.5.6 4 32" />
+				<Option parameters="127.0.0.1 1.2.3.4.5.6 4 32 description" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -21,7 +21,7 @@
 				<Option object_output="obj\Release\" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option parameters="127.0.0.1 1.2.3.4.5.6 4 32" />
+				<Option parameters="127.0.0.1 1.2.3.4.5.6 4 32 description" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>

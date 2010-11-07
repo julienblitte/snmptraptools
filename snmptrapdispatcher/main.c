@@ -7,18 +7,55 @@
 #include "../libtrapsnmp/trapSnmp.h"
 #include "../snmptraptools_config.h"
 #include "configuration.h"
+#include "xstring.h"
 
 FILE *logFile;
 
+const char *compileDescription(trap_action_entry *action, snmpTrap *trap)
+{
+    static char description[MAX_DESCRIPTION_LEN];
+    char nameToken[16];
+    int i;
+
+    if (action->desc == NULL)
+    {
+        return "";
+    }
+
+    // copy description text
+    strncpy(description, action->desc, sizeof(description));
+
+    // handle ${*} item
+    if (strstr(description, "${*}") != NULL)
+    {
+        for(i=0; i < trap->variablesCount; i++)
+        {
+            snprintf(nameToken, sizeof(nameToken), "${%d} ${*}", i+1);
+            strnreplace(description, "${*}", nameToken, sizeof(description));
+        }
+        strnreplace(description, "${*}", "", sizeof(description));
+    }
+
+    // replace each values
+    for(i=0; i < trap->variablesCount; i++)
+    {
+        snprintf(nameToken, sizeof(nameToken), "${%d}", i+1);
+        strnreplace(description, nameToken, trap->variablesValue[i], sizeof(description));
+    }
+
+    return description;
+}
+
 void actionCallback(trap_action_entry *action, snmpTrap *trap, unsigned long actionNumber)
 {
-    char param[MAX_NETWORK_ADDRESS_LEN+MAX_OID_LEN+64];
+    static char param[MAX_PARAMETERS];
 
     fprintf(logFile, "run: [%s]\n", action->run);
 
     if (action->run != NULL)
     {
-        snprintf(param, sizeof(param), "%s %s %ld %ld", trap->agent, trap->enterprise, trap->genericTrap, trap->specificTrap);
+        snprintf(param, sizeof(param), "%s %s %ld %ld \"%s\"", trap->agent, trap->enterprise, trap->genericTrap, trap->specificTrap,
+                 compileDescription(action, trap));
         ShellExecute(NULL, "open", action->run, param, action->wkDir, SW_SHOW);
     }
 }
