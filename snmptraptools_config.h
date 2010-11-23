@@ -5,7 +5,9 @@
 #define SERVICE_DESC		"provides a gateway to translate recieved SNMP trap to an external program"
 
 #define SERVER_LISTEN_PORT			162
+#define REGISTRY_SERVICE_PATH		"SYSTEM\\CurrentControlSet\\Services\\snmptraptools\\"
 #define REGISTRY_CONFIG_PATH		"SYSTEM\\CurrentControlSet\\Services\\snmptraptools\\dispatcher\\"
+#define REGISTRY_SERVICE_EXECUTABLE	"ImagePath"
 #define REGISTRY_OID			NULL
 #define REGISTRY_RUN            "run"
 #define REGISTRY_WKDIR          "wkdir"
@@ -49,5 +51,6 @@
 #define OID_TRAP_CODE   "1.3.6.1.6.3.1.1.4.1.0"
 #define OID_TRAP_CODE_GENERIC   "1.3.6.1.6.3.1.1.5.0"
 
+#define DEFAULT_ACTION  "snmpmessagebox.exe"
 
 #endif // SNMPTRAPTOOL_CONFIG_H_INCLUDED

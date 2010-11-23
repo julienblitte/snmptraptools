@@ -7,13 +7,13 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{B7ABA127-3FBE-4118-BD12-A2B9D372D1F9}
 AppName=Snmptraptools
-AppVersion=2.5b
+AppVersion=2.51b
 AppPublisherURL=http://marin.jb.free.fr/snmptraptools
 AppSupportURL=http://marin.jb.free.fr/snmptraptools
 AppUpdatesURL=http://marin.jb.free.fr/snmptraptools
 DefaultDirName={pf}\Snmptraptools
 DefaultGroupName=Snmptraptools
-OutputBaseFilename=setup_snmptraptools_2.5b
+OutputBaseFilename=setup_snmptraptools_2.51b
 LicenseFile=lgpl3.txt
 OutputDir=..\bin
 Compression=lzma
@@ -39,6 +39,7 @@ Source: "..\bin\snmptrapconfig.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\snmptrapdispatcher.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\snmptraphandler_standalone.exe"; DestDir: "{app}"; Components: standalone; Flags: ignoreversion; DestName: "snmptraphandler.exe"
 Source: "..\bin\snmptraphandler_winsnmp.exe"; DestDir: "{app}"; Components: winsnmp; Flags: ignoreversion; DestName: "snmptraphandler.exe"
+Source: "..\bin\import-mib.exe"; DestDir: "{app}"; Flags: ignoreversion; DestName: "import-mib.exe"
 Source: "..\tools\snmptrapemail\download sendEmail.html"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\tools\snmptrapemail\snmptrapemail.bat"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\tools\snmptrapmessagebox\snmptrapmessagebox.exe"; DestDir: "{app}"; Flags: ignoreversion
