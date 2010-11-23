@@ -11,6 +11,10 @@ Use of libraries:
   - libwsocks32.a
 * snpmtraphandler (winsnmp):
   - libwsnmp32.a
+* import-mib:
+  - liby.a
+  - libfl.a
+  - libregistry.a
 
 Origin of libraries:
 ====================
@@ -22,3 +26,5 @@ Origin of libraries:
   - libcomdlg32.a
   - libwsock32.a
   - libwsnmp32.a
+  - liby.a
+  - libfl.a
