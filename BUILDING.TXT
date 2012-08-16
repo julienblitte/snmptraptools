@@ -1,0 +1,45 @@
+CodeBlocks
+==========
+Download and install CodeBlocks IDE for Windows:
+ - http://www.codeblocks.org/
+
+Choose the version including the MinGW package.
+After installation, check that you are able to load the project file.
+
+
+Bison and Flex
+==============
+
+Installing Bison and Flex
+-------------------------
+Go on both webpage and download binary and dependencies zip file.
+ - http://gnuwin32.sourceforge.net/packages/bison.htm
+ - http://gnuwin32.sourceforge.net/packages/flex.htm
+
+If version of Bison is 2.4.1, download the fix regarding the path bug:
+http://marin.jb.free.fr/bison/
+
+Configure Bison and Flex with Code::Blocks
+------------------------------------------
+Put files in relevant Code::Blocks path:
+ - Binaries -> <codeblocks>\MinGW\bin\
+ - Bison's data files -> <codeblocks>\MinGW\share\
+
+Configure building rules.
+Go in menu Settings, Compiler and debugger; go in tab Other settings and click on button Advanced options.
+
+For Bison, add the following building rule:
+ - Command: Compile single file to object file
+ - Extension: y
+ - Macro: bison -v -d $file -o $file_dir/$file_name.parser.cc
+ - Generated files: $file_dir/$file_name.parser.cc
+					$file_dir/$file_name.parser.hh
+
+For Flex, add the following building rule:
+ - Command: Compile single file to object file
+ - Extension: l
+ - Macro: flex -o$file_dir/$file_name.scanner.cc $file
+ - Generated files: $file_dir/$file_name.scanner.cc
+
+bison -d import-mib\import-mib.y (génère deux fichiers tabs)
+flex -oimport-mib\import-mib.lex.c import-mib\import-mib.l

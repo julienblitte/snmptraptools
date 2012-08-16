@@ -1,6 +1,7 @@
 #include <windows.h>
 #include "registry.h"
 #include "../snmptraptools_config.h"
+#include "../libregistry/registry.h"
 
 char registryWkDir[MAX_PATH];
 DWORD registryWkDir_size;
