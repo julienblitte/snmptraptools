@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <winsnmp.h>
-#include "../service.h"
-#include "../dispatcher.h"
-#include "../../snmptraptools_config.h"
-#include "../logger.h"
+#include "..\service.h"
+#include "..\dispatcher.h"
+#include "..\..\core\snmptraptools_config.h"
+#include "..\logger.h"
 #include "snmp.h"
 
 HSNMP_SESSION hSnmpSession;

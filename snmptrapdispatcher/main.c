@@ -4,8 +4,8 @@
 #include <string.h>
 #include <windows.h>
 #include <stdbool.h>
-#include "../libtrapsnmp/trapSnmp.h"
-#include "../snmptraptools_config.h"
+#include "..\core\trapSnmp.h"
+#include "..\core\snmptraptools_config.h"
 #include "configuration.h"
 #include "xstring.h"
 

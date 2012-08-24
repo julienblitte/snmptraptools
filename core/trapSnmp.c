@@ -4,7 +4,7 @@
 #include <windows.h>
 #include <string.h>
 #include "trapSnmp.h"
-#include "../snmptraptools_config.h"
+#include "..\core\snmptraptools_config.h"
 
 void trapFree(snmpTrap *trap)
 {

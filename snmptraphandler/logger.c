@@ -2,7 +2,7 @@
 #include <windows.h>
 #include <stdarg.h>
 #include "logger.h"
-#include "../snmptraptools_config.h"
+#include "..\core\snmptraptools_config.h"
 
 // temporary implementation to be changed with a newer one
 

@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include "../logger.h"
-#include "../dispatcher.h"
-#include "../../libtrapsnmp/trapSnmp.h"
+#include "..\logger.h"
+#include "..\dispatcher.h"
+#include "..\..\core\trapSnmp.h"
 
 #define SNMP_SYNTAX_INT			0x02
 #define SNMP_SYNTAX_BITS		0x03
@@ -371,7 +371,7 @@ bool snmp_value2str(const char *value, size_t value_len, char *buffer, size_t bu
 			// take care about sign bit propagation
 			u64.LowPart = (value[0] & 0x80 ? (unsigned)-1 : 0);
             for(i=0; (i < value_len) && (i < sizeof(u64.LowPart)); i++)
-            {		
+            {
                 u64.LowPart <<= 8;
                 u64.LowPart |= (value[i] & 0x000000ff);
             }

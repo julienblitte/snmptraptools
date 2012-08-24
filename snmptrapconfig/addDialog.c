@@ -1,8 +1,8 @@
 #include <windows.h>
 #include "resource.h"
 #include "mainDialogData.h"
-#include "../snmptraptools_config.h"
-#include "../libtrapsnmp/trapSnmp.h"
+#include "..\core\snmptraptools_config.h"
+#include "..\core\trapSnmp.h"
 
 HWND hMainDialog = NULL;
 
