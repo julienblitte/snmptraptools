@@ -4,8 +4,8 @@
 #include <stdbool.h>
 #include <windows.h>
 
-#include "..\snmptraptools_config.h"
-#include "..\libtrapsnmp\trapSnmp.h"
+#include "..\core\snmptraptools_config.h"
+#include "..\core\trapSnmp.h"
 #include "namespace.h"
 #include "registry.h"
 #include "import-mib.h"

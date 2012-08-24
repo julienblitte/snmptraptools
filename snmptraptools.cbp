@@ -42,7 +42,6 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="lib\libtrapsnmp.a" />
 					<Add library="lib\libregistry.a" />
 				</Linker>
 			</Target>
@@ -57,7 +56,6 @@
 				<Linker>
 					<Add option="-s" />
 					<Add library="lib\libcomdlg32.a" />
-					<Add library="lib\libtrapsnmp.a" />
 					<Add library="lib\libregistry.a" />
 					<Add library="gdi32" />
 					<Add library="user32" />
@@ -66,21 +64,6 @@
 			</Target>
 			<Target title="libregistry">
 				<Option output="lib\libregistry" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="" />
-				<Option object_output="obj\Release\" />
-				<Option type="2" />
-				<Option compiler="gcc" />
-				<Option createDefFile="1" />
-				<Compiler>
-					<Add option="-Wall" />
-					<Add option="-O2" />
-				</Compiler>
-				<Linker>
-					<Add option="-s" />
-				</Linker>
-			</Target>
-			<Target title="libtrapsnmp">
-				<Option output="lib\libtrapsnmp" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="obj\Release\" />
 				<Option type="2" />
@@ -107,7 +90,6 @@
 					<Add library="lib\libfl.a" />
 					<Add library="lib\libregistry.a" />
 					<Add library="lib\liby.a" />
-					<Add library="lib\libtrapsnmp.a" />
 				</Linker>
 				<ExtraCommands>
 					<Add before="bison -o import-mib\import-mib.tab.c -d import-mib\import-mib.y " />
@@ -149,7 +131,6 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add library="lib\libtrapsnmp.a" />
 					<Add library="lib\libregistry.a" />
 				</Linker>
 			</Target>
@@ -163,7 +144,6 @@
 				</Compiler>
 				<Linker>
 					<Add library="lib\libcomdlg32.a" />
-					<Add library="lib\libtrapsnmp.a" />
 					<Add library="lib\libregistry.a" />
 					<Add library="gdi32" />
 					<Add library="user32" />
@@ -172,18 +152,6 @@
 			</Target>
 			<Target title="DEBUG libregistry">
 				<Option output="debug\libregistry" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="" />
-				<Option object_output="obj\Debug\" />
-				<Option type="2" />
-				<Option compiler="gcc" />
-				<Option createDefFile="1" />
-				<Compiler>
-					<Add option="-Wall" />
-					<Add option="-g" />
-				</Compiler>
-			</Target>
-			<Target title="DEBUG libtrapsnmp">
-				<Option output="debug\libtrapsnmp" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="obj\Debug\" />
 				<Option type="2" />
@@ -206,7 +174,6 @@
 					<Add library="lib\libfl.a" />
 					<Add library="lib\libregistry.a" />
 					<Add library="lib\liby.a" />
-					<Add library="lib\libtrapsnmp.a" />
 				</Linker>
 				<ExtraCommands>
 					<Add before="bison -d import-mib\import-mib.y" />
@@ -393,18 +360,22 @@
 			<Option target="DEBUG snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapconfig" />
 		</Unit>
-		<Unit filename="libtrapsnmp\trapSnmp.c">
+		<Unit filename="core\trapSnmp.c">
 			<Option compilerVar="CC" />
-			<Option target="libtrapsnmp" />
-			<Option target="DEBUG libtrapsnmp" />
-		</Unit>
-		<Unit filename="libtrapsnmp\trapSnmp.h">
 			<Option target="snmptrapdispatcher" />
 			<Option target="snmptrapconfig" />
-			<Option target="libtrapsnmp" />
+			<Option target="import-mib" />
 			<Option target="DEBUG snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapconfig" />
-			<Option target="DEBUG libtrapsnmp" />
+			<Option target="DEBUG import-mib" />
+		</Unit>
+		<Unit filename="core\trapSnmp.h">
+			<Option target="snmptrapdispatcher" />
+			<Option target="snmptrapconfig" />
+			<Option target="import-mib" />
+			<Option target="DEBUG snmptrapdispatcher" />
+			<Option target="DEBUG snmptrapconfig" />
+			<Option target="DEBUG import-mib" />
 		</Unit>
 		<Unit filename="import-mib\import-mib.h">
 			<Option target="import-mib" />
@@ -453,18 +424,16 @@
 			<Option target="import-mib" />
 			<Option target="DEBUG import-mib" />
 		</Unit>
-		<Unit filename="snmptraptools_config.h">
+		<Unit filename="core\snmptraptools_config.h">
 			<Option target="snmptraphandler standalone" />
 			<Option target="snmptraphandler winsnmp" />
 			<Option target="snmptrapdispatcher" />
 			<Option target="snmptrapconfig" />
-			<Option target="libtrapsnmp" />
 			<Option target="import-mib" />
 			<Option target="DEBUG snmptraphandler standalone" />
 			<Option target="DEBUG snmptraphandler winsnmp" />
 			<Option target="DEBUG snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapconfig" />
-			<Option target="DEBUG libtrapsnmp" />
 			<Option target="DEBUG import-mib" />
 		</Unit>
 		<Extensions>

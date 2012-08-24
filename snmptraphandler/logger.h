@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <windows.h>
 #include <stdarg.h>
-#include "../snmptraptools_config.h"
+#include "..\core\snmptraptools_config.h"
 
 INT32 logGetLevel();
 void logSetLevel(INT32 logLevel);

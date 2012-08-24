@@ -1,7 +1,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include <stdarg.h>
-#include "../snmptraptools_config.h"
+#include "..\core\snmptraptools_config.h"
 #include "dispatcher.h"
 #include "logger.h"
 #include "service.h"

@@ -3,9 +3,9 @@
 #include <windows.h>
 #include <stdbool.h>
 #include "configuration.h"
-#include "../snmptraptools_config.h"
-#include "../libtrapsnmp/trapSnmp.h"
-#include "../libregistry/registry.h"
+#include "..\core\snmptraptools_config.h"
+#include "..\core\trapSnmp.h"
+#include "..\libregistry\registry.h"
 
 trap_action_entry *configurationLoad()
 {

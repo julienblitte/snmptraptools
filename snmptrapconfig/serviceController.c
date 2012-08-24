@@ -1,6 +1,6 @@
 #include <windows.h>
 #include "serviceController.h"
-#include "../snmptraptools_config.h"
+#include "..\core\snmptraptools_config.h"
 
 
 SC_HANDLE hSCManager = NULL;
