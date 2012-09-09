@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdint.h>
 #include "..\logger.h"
 #include "..\dispatcher.h"
 #include "..\..\core\trapSnmp.h"
@@ -43,6 +44,7 @@ unsigned long snmp_length(const char **buffer, unsigned int *buffer_len)
         }
         else
         {
+			// length of "real length" value
             length = **buffer & 0x7F;
             (*buffer)++, (*buffer_len)--;
 
@@ -96,7 +98,7 @@ bool snmp_oid2str(const char *value, size_t value_len, char *buffer, size_t buff
 
             memcpy(cat_buffer, buffer, buffer_len);
             snprintf(buffer, buffer_len, "%s%c%u", cat_buffer, OID_SEPARATOR, multibyte);
-            // force value to zero to indicate that previous byte was not multi-byte coded
+            // force value to zero to indicate that next byte is not part of a multi-byte coded value
             multibyte = 0;
         }
         else
@@ -420,22 +422,32 @@ bool snmp_value2str(const char *value, size_t value_len, char *buffer, size_t bu
             {
                 case 4:
                     snprintf(buffer, buffer_len, "%u.%u.%u.%u",
-                             ((unsigned char)value[0]),
-                             ((unsigned char)value[1]),
-                             ((unsigned char)value[2]),
-                             ((unsigned char)value[3])
+                             ((uint8_t)value[0]),
+                             ((uint8_t)value[1]),
+                             ((uint8_t)value[2]),
+                             ((uint8_t)value[3])
                     );
                     break;
                 case 16:
                     snprintf(buffer, buffer_len, "%x:%x:%x:%x:%x:%x:%x:%x",
-                             (((unsigned short)value[0]) << 8) | (((unsigned short)value[1]) & 0xFF),
-                             (((unsigned short)value[2]) << 8) | (((unsigned short)value[3]) & 0xFF),
-                             (((unsigned short)value[4]) << 8) | (((unsigned short)value[5]) & 0xFF),
-                             (((unsigned short)value[6]) << 8) | (((unsigned short)value[7]) & 0xFF),
-                             (((unsigned short)value[8]) << 8) | (((unsigned short)value[9]) & 0xFF),
-                             (((unsigned short)value[10]) << 8) | (((unsigned short)value[11]) & 0xFF),
-                             (((unsigned short)value[12]) << 8) | (((unsigned short)value[13]) & 0xFF),
-                             (((unsigned short)value[14]) << 8) | (((unsigned short)value[15]) & 0xFF)
+							 ntohs(((uint16_t *)value)[0]),
+							 ntohs(((uint16_t *)value)[1]),
+							 ntohs(((uint16_t *)value)[2]),
+							 ntohs(((uint16_t *)value)[3]),
+							 ntohs(((uint16_t *)value)[4]),
+							 ntohs(((uint16_t *)value)[5]),
+							 ntohs(((uint16_t *)value)[6]),
+							 ntohs(((uint16_t *)value)[7])
+/*
+							 (((uint16_t)value[0]) << 8) | (((uint16_t)value[1]) & 0xFF),
+                             (((uint16_t)value[2]) << 8) | (((uint16_t)value[3]) & 0xFF),
+                             (((uint16_t)value[4]) << 8) | (((uint16_t)value[5]) & 0xFF),
+                             (((uint16_t)value[6]) << 8) | (((uint16_t)value[7]) & 0xFF),
+                             (((uint16_t)value[8]) << 8) | (((uint16_t)value[9]) & 0xFF),
+                             (((uint16_t)value[10]) << 8) | (((uint16_t)value[11]) & 0xFF),
+                             (((uint16_t)value[12]) << 8) | (((uint16_t)value[13]) & 0xFF),
+                             (((uint16_t)value[14]) << 8) | (((uint16_t)value[15]) & 0xFF)
+*/
                     );
                     break;
                 default:
@@ -447,16 +459,18 @@ bool snmp_value2str(const char *value, size_t value_len, char *buffer, size_t bu
         case SNMP_SYNTAX_GAUGE32:
         case SNMP_SYNTAX_TIMETICKS:
         case SNMP_SYNTAX_UINT32:
-            u64.LowPart = 0;
+			u64.LowPart = 0;
+			// we don't know the length
             for(i=0; (i < value_len) && (i < sizeof(u64.LowPart)); i++)
             {
                 u64.LowPart <<= 8;
                 u64.LowPart |= (value[i] & 0x000000FF);
             }
-            snprintf(buffer, buffer_len, "%u", (unsigned int)u64.LowPart);
+            snprintf(buffer, buffer_len, "%u", (uint32_t)u64.LowPart);
             break;
 
         case SNMP_SYNTAX_CNTR64:
+			// big endian
             memcpy(&u64.HighPart, value, 4);
             memcpy(&u64.LowPart, value+4, 4);
             wsprintf(buffer, "%I64u", u64);

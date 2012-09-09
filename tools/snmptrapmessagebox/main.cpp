@@ -59,14 +59,14 @@ int main(int argc, char *argv[])
     unsigned int specific_type;
     const char *description;
 
-    //snprintf(param, sizeof(param), "%s %s %ld %ld", trap->agent, trap->enterprise, trap->genericTrap, trap->specificTrap);
+    //snprintf(param, sizeof(param), "%s %s %ld %ld", trap->agent, trap->enterprise, trap->generic_type, trap->specific_type);
     if (argc < 5)
     {
         MessageBoxA(NULL, "Bad arguments.\nArguments should be: {agent, oid, generic type, specific type, [description]}", "snmptraptools", MB_OK|MB_ICONERROR|MB_SERVICE_NOTIFICATION);
         return EXIT_FAILURE;
     }
-    sscanf(argv[ARG_GENERIC], "%d", &generic_type);
-    sscanf(argv[ARG_SPECIFIC], "%d", &specific_type);
+    sscanf(argv[ARG_GENERIC], "%u", &generic_type);
+    sscanf(argv[ARG_SPECIFIC], "%u", &specific_type);
 
     description = (argc == 5 ? "" : argv[5]);
 

@@ -15,7 +15,7 @@ BOOL dlgAddEventHandler(HWND hDlg, WPARAM wParam)
         case ON_CLICK|ID_BUTTON_ADD_OID:
             SendDlgItemMessage(hDlg, ID_EDIT_OID, WM_GETTEXT, (WPARAM)sizeof(buffer), (LPARAM)buffer);
 
-            if (oidIsValid(buffer) == FALSE)
+            if (snmpoid_valid(buffer) == FALSE)
             {
                 MessageBox(hDlg, "You must enter a valid OID!\nOid have to start by a digit, not a dot.", "Error", MB_ICONERROR|MB_OK);
             }

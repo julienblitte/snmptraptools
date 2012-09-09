@@ -129,7 +129,7 @@ void add_trap_registry(const char *name, const char *enterprise, unsigned int tr
     oid = ns_find(enterprise);
     if (oid == NULL)
     {
-        if (oidIsValid(enterprise) == TRUE)
+        if (snmpoid_valid(enterprise) == TRUE)
         {
             oid = enterprise;
         }

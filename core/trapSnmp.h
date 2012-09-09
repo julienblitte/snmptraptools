@@ -5,28 +5,36 @@
 #include <stdlib.h>
 #include <time.h>
 #include <windows.h>
+#include <stdint.h>
 #include "snmptraptools_config.h"
 
+#ifndef ntohs
+	#define ntohs(W)	((((uint16_t)W)<<8)|(((uint16_t)W)>>8))
+#endif
 
 typedef struct
 {
     time_t date;
     char community[MAX_COMMUNITY_LEN];
-    unsigned long int timestamp;
-    long genericTrap;
-    long specificTrap;
+    uint32_t timestamp;
+    uint32_t generic_type;
+    uint32_t specific_type;
     char agent[MAX_NETWORK_ADDRESS_LEN];
     char enterprise[MAX_OID_LEN];
-    unsigned long int variablesCount;
-    char *variablesOID[MAX_TRAP_VARIABLES];
-    char *variablesValue[MAX_TRAP_VARIABLES];
+    uint32_t variables_count;
+    char *variables_oid[MAX_TRAP_VARIABLES];
+    char *variables_value[MAX_TRAP_VARIABLES];
 } snmpTrap;
 
-void trapFree(snmpTrap *trap);
-void trapPrint(FILE *out, snmpTrap *trap);
-long oidLastId(const char *oid);
-BOOL oidStartBy(const char *begin, const char *str);
-BOOL oidIsValid(const char *oid);
-void trapReadLine(char *buffer, snmpTrap *trap);
+void snmptrap_free(snmpTrap *trap);
+void snmptrap_print(FILE *out, snmpTrap *trap);
+long snmpoid_last_id(const char *oid);
+BOOL snmpoid_start_by(const char *begin, const char *str);
+BOOL snmpoid_valid(const char *oid);
+void snmptrap_gets(char *buffer, snmpTrap *trap);
+
+const char *snmptrap_eventname(snmpTrap *trap);
+unsigned int snmptrap_code(snmpTrap *trap);
+const char *snmptrap_description(snmpTrap *trap);
 
 #endif

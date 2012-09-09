@@ -7,10 +7,12 @@
 #define SERVER_LISTEN_PORT			162
 #define REGISTRY_SERVICE_PATH		"SYSTEM\\CurrentControlSet\\Services\\snmptraptools\\"
 #define REGISTRY_CONFIG_PATH		"SYSTEM\\CurrentControlSet\\Services\\snmptraptools\\dispatcher\\"
+#define REGISTRY_PLUGIN_CONFIG_PATH		"SYSTEM\\CurrentControlSet\\Services\\snmptraptools\\plugins\\"
 #define REGISTRY_SERVICE_EXECUTABLE	"ImagePath"
 #define REGISTRY_OID			NULL
 #define REGISTRY_RUN            "run"
 #define REGISTRY_WKDIR          "wkdir"
+#define REGISTRY_PLUGIN         "plugin"
 #define REGISTRY_SPECIFIC_TYPE  "specificType"
 #define REGISTRY_GENERIC_TYPE   "genericType"
 #define REGISTRY_DESCRIPTION    "description"
