@@ -138,17 +138,17 @@ void configurationMatch(trap_action_entry *list, snmpTrap *trap,
     i = 0;
     while(list[i].oid != NULL)
     {
-        if (oidStartBy(list[i].oid, trap->enterprise) == true)
+        if (snmpoid_start_by(list[i].oid, trap->enterprise) == true)
         {
             if ((list[i].genericType != TRAP_TYPE_UNKNOW)
-                && (list[i].genericType != trap->genericTrap))
+                && (list[i].genericType != trap->generic_type))
             {
                 i++;
                 continue;
             }
 
             if (((list[i].genericType == SPECIFIC_TYPE_GENERIC) || (list[i].genericType == TRAP_TYPE_UNKNOW))
-               && (list[i].specificType != TRAP_TYPE_UNKNOW) && (list[i].specificType != trap->specificTrap))
+               && (list[i].specificType != TRAP_TYPE_UNKNOW) && (list[i].specificType != trap->specific_type))
             {
                 i++;
                 continue;

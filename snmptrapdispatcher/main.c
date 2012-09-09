@@ -28,7 +28,7 @@ const char *compileDescription(trap_action_entry *action, snmpTrap *trap)
     // handle ${*} item
     if (strstr(description, "${*}") != NULL)
     {
-        for(i=0; i < trap->variablesCount; i++)
+        for(i=0; i < trap->variables_count; i++)
         {
             snprintf(nameToken, sizeof(nameToken), "${%d} ${*}", i+1);
             strnreplace(description, "${*}", nameToken, sizeof(description));
@@ -37,10 +37,10 @@ const char *compileDescription(trap_action_entry *action, snmpTrap *trap)
     }
 
     // replace each values
-    for(i=0; i < trap->variablesCount; i++)
+    for(i=0; i < trap->variables_count; i++)
     {
         snprintf(nameToken, sizeof(nameToken), "${%d}", i+1);
-        strnreplace(description, nameToken, trap->variablesValue[i], sizeof(description));
+        strnreplace(description, nameToken, trap->variables_value[i], sizeof(description));
     }
 
     return description;
@@ -54,7 +54,7 @@ void actionCallback(trap_action_entry *action, snmpTrap *trap, unsigned long act
 
     if (action->run != NULL)
     {
-        snprintf(param, sizeof(param), "%s %s %ld %ld \"%s\"", trap->agent, trap->enterprise, trap->genericTrap, trap->specificTrap,
+        snprintf(param, sizeof(param), "%s %s %u %u \"%s\"", trap->agent, trap->enterprise, trap->generic_type, trap->specific_type,
                  compileDescription(action, trap));
         ShellExecute(NULL, "open", action->run, param, action->wkDir, SW_SHOW);
     }
@@ -86,7 +86,7 @@ int main()
         {
             recieving = true;
             ZeroMemory(&trap, sizeof(snmpTrap));
-            // variablesCount is set to 0
+            // variables_count is set to 0
 
             trap.date = time(NULL);
         }
@@ -95,18 +95,18 @@ int main()
         {
             // reading complete
             recieving = false;
-            trapPrint(logFile, &trap);
+            snmptrap_print(logFile, &trap);
 
             configurationMatch(trap_actions, &trap, &actionCallback);
 
             fprintf(logFile, "\n");
             fflush(logFile);
 
-            trapFree(&trap);
+            snmptrap_free(&trap);
         }
         else
         {
-            trapReadLine(buffer, &trap);
+            snmptrap_gets(buffer, &trap);
         }
     }
 
