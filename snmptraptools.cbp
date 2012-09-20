@@ -96,6 +96,39 @@
 					<Add before="flex -oimport-mib\import-mib.lex.c import-mib\import-mib.l" />
 				</ExtraCommands>
 			</Target>
+			<Target title="plugin messagebox">
+				<Option output="bin\plugin_messagebox" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DBUILD_DLL" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="plugin syslog">
+				<Option output="bin\plugin_syslog" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-DBUILD_DLL" />
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="lib\libwsock32.a" />
+				</Linker>
+			</Target>
 			<Target title="DEBUG snmptraphandler standalone">
 				<Option output="debug\snmptraphandler_standalone" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Debug\" />
@@ -184,6 +217,204 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="core\pluginEngine.c">
+			<Option compilerVar="CC" />
+			<Option target="snmptrapdispatcher" />
+			<Option target="snmptrapconfig" />
+			<Option target="DEBUG snmptrapdispatcher" />
+			<Option target="DEBUG snmptrapconfig" />
+		</Unit>
+		<Unit filename="core\pluginEngine.h">
+			<Option target="snmptrapdispatcher" />
+			<Option target="snmptrapconfig" />
+			<Option target="DEBUG snmptrapdispatcher" />
+			<Option target="DEBUG snmptrapconfig" />
+		</Unit>
+		<Unit filename="core\snmptraptools_config.h">
+			<Option target="snmptraphandler standalone" />
+			<Option target="snmptraphandler winsnmp" />
+			<Option target="snmptrapdispatcher" />
+			<Option target="snmptrapconfig" />
+			<Option target="import-mib" />
+			<Option target="DEBUG snmptraphandler standalone" />
+			<Option target="DEBUG snmptraphandler winsnmp" />
+			<Option target="DEBUG snmptrapdispatcher" />
+			<Option target="DEBUG snmptrapconfig" />
+			<Option target="DEBUG import-mib" />
+		</Unit>
+		<Unit filename="core\trapSnmp.c">
+			<Option compilerVar="CC" />
+			<Option target="snmptrapdispatcher" />
+			<Option target="snmptrapconfig" />
+			<Option target="plugin messagebox" />
+			<Option target="plugin syslog" />
+			<Option target="import-mib" />
+			<Option target="DEBUG snmptrapdispatcher" />
+			<Option target="DEBUG snmptrapconfig" />
+			<Option target="DEBUG import-mib" />
+		</Unit>
+		<Unit filename="core\trapSnmp.h">
+			<Option target="snmptrapdispatcher" />
+			<Option target="snmptrapconfig" />
+			<Option target="plugin messagebox" />
+			<Option target="plugin syslog" />
+			<Option target="import-mib" />
+			<Option target="DEBUG snmptrapdispatcher" />
+			<Option target="DEBUG snmptrapconfig" />
+			<Option target="DEBUG import-mib" />
+		</Unit>
+		<Unit filename="import-mib\import-mib.h">
+			<Option target="import-mib" />
+			<Option target="DEBUG import-mib" />
+		</Unit>
+		<Unit filename="import-mib\import-mib.l">
+			<Option target="notarget" />
+		</Unit>
+		<Unit filename="import-mib\import-mib.lex.c">
+			<Option compilerVar="CC" />
+			<Option target="import-mib" />
+			<Option target="DEBUG import-mib" />
+		</Unit>
+		<Unit filename="import-mib\import-mib.tab.c">
+			<Option compilerVar="CC" />
+			<Option target="import-mib" />
+			<Option target="DEBUG import-mib" />
+		</Unit>
+		<Unit filename="import-mib\import-mib.tab.h">
+			<Option target="import-mib" />
+			<Option target="DEBUG import-mib" />
+		</Unit>
+		<Unit filename="import-mib\import-mib.y">
+			<Option target="notarget" />
+		</Unit>
+		<Unit filename="import-mib\namespace.c">
+			<Option compilerVar="CC" />
+			<Option target="import-mib" />
+			<Option target="DEBUG import-mib" />
+		</Unit>
+		<Unit filename="import-mib\namespace.h">
+			<Option target="import-mib" />
+			<Option target="DEBUG import-mib" />
+		</Unit>
+		<Unit filename="import-mib\registry.c">
+			<Option compilerVar="CC" />
+			<Option target="import-mib" />
+			<Option target="DEBUG import-mib" />
+		</Unit>
+		<Unit filename="import-mib\registry.h">
+			<Option target="import-mib" />
+			<Option target="DEBUG import-mib" />
+		</Unit>
+		<Unit filename="import-mib\resource.rc">
+			<Option compilerVar="WINDRES" />
+			<Option target="import-mib" />
+			<Option target="DEBUG import-mib" />
+		</Unit>
+		<Unit filename="libregistry\registry.c">
+			<Option compilerVar="CC" />
+			<Option target="libregistry" />
+			<Option target="DEBUG libregistry" />
+		</Unit>
+		<Unit filename="libregistry\registry.h">
+			<Option target="libregistry" />
+			<Option target="snmptrapdispatcher" />
+			<Option target="snmptrapconfig" />
+			<Option target="DEBUG libregistry" />
+			<Option target="DEBUG snmptrapdispatcher" />
+			<Option target="DEBUG snmptrapconfig" />
+		</Unit>
+		<Unit filename="plugins\plugin_messagebox.c">
+			<Option compilerVar="CC" />
+			<Option target="plugin messagebox" />
+		</Unit>
+		<Unit filename="plugins\plugin_messagebox.h">
+			<Option target="plugin messagebox" />
+		</Unit>
+		<Unit filename="plugins\plugin_syslog.c">
+			<Option compilerVar="CC" />
+			<Option target="plugin syslog" />
+		</Unit>
+		<Unit filename="plugins\plugin_syslog.h">
+			<Option target="plugin syslog" />
+		</Unit>
+		<Unit filename="snmptrapconfig\addDialog.c">
+			<Option compilerVar="CC" />
+			<Option target="snmptrapconfig" />
+			<Option target="DEBUG snmptrapconfig" />
+		</Unit>
+		<Unit filename="snmptrapconfig\addDialog.h">
+			<Option target="snmptrapconfig" />
+			<Option target="DEBUG snmptrapconfig" />
+		</Unit>
+		<Unit filename="snmptrapconfig\main.c">
+			<Option compilerVar="CC" />
+			<Option target="snmptrapconfig" />
+			<Option target="DEBUG snmptrapconfig" />
+		</Unit>
+		<Unit filename="snmptrapconfig\mainDialog.c">
+			<Option compilerVar="CC" />
+			<Option target="snmptrapconfig" />
+			<Option target="DEBUG snmptrapconfig" />
+		</Unit>
+		<Unit filename="snmptrapconfig\mainDialog.h">
+			<Option target="snmptrapconfig" />
+			<Option target="DEBUG snmptrapconfig" />
+		</Unit>
+		<Unit filename="snmptrapconfig\mainDialogData.c">
+			<Option compilerVar="CC" />
+			<Option target="snmptrapconfig" />
+			<Option target="DEBUG snmptrapconfig" />
+		</Unit>
+		<Unit filename="snmptrapconfig\mainDialogData.h">
+			<Option target="snmptrapconfig" />
+			<Option target="DEBUG snmptrapconfig" />
+		</Unit>
+		<Unit filename="snmptrapconfig\resource.h">
+			<Option target="snmptrapconfig" />
+			<Option target="DEBUG snmptrapconfig" />
+		</Unit>
+		<Unit filename="snmptrapconfig\resource.rc">
+			<Option compilerVar="WINDRES" />
+			<Option target="snmptrapconfig" />
+			<Option target="DEBUG snmptrapconfig" />
+		</Unit>
+		<Unit filename="snmptrapconfig\serviceController.c">
+			<Option compilerVar="CC" />
+			<Option target="snmptrapconfig" />
+			<Option target="DEBUG snmptrapconfig" />
+		</Unit>
+		<Unit filename="snmptrapconfig\serviceController.h">
+			<Option target="snmptrapconfig" />
+			<Option target="DEBUG snmptrapconfig" />
+		</Unit>
+		<Unit filename="snmptrapdispatcher\configuration.c">
+			<Option compilerVar="CC" />
+			<Option target="snmptrapdispatcher" />
+			<Option target="DEBUG snmptrapdispatcher" />
+		</Unit>
+		<Unit filename="snmptrapdispatcher\configuration.h">
+			<Option target="snmptrapdispatcher" />
+			<Option target="DEBUG snmptrapdispatcher" />
+		</Unit>
+		<Unit filename="snmptrapdispatcher\main.c">
+			<Option compilerVar="CC" />
+			<Option target="snmptrapdispatcher" />
+			<Option target="DEBUG snmptrapdispatcher" />
+		</Unit>
+		<Unit filename="snmptrapdispatcher\resources.rc">
+			<Option compilerVar="WINDRES" />
+			<Option target="snmptrapdispatcher" />
+			<Option target="DEBUG snmptrapdispatcher" />
+		</Unit>
+		<Unit filename="snmptrapdispatcher\xstring.c">
+			<Option compilerVar="CC" />
+			<Option target="snmptrapdispatcher" />
+			<Option target="DEBUG snmptrapdispatcher" />
+		</Unit>
+		<Unit filename="snmptrapdispatcher\xstring.h">
+			<Option target="snmptrapdispatcher" />
+			<Option target="DEBUG snmptrapdispatcher" />
+		</Unit>
 		<Unit filename="snmptraphandler\dispatcher.c">
 			<Option compilerVar="CC" />
 			<Option target="snmptraphandler standalone" />
@@ -268,173 +499,6 @@
 		<Unit filename="snmptraphandler\winsnmp\snmp.h">
 			<Option target="snmptraphandler winsnmp" />
 			<Option target="DEBUG snmptraphandler winsnmp" />
-		</Unit>
-		<Unit filename="snmptrapdispatcher\configuration.c">
-			<Option compilerVar="CC" />
-			<Option target="snmptrapdispatcher" />
-			<Option target="DEBUG snmptrapdispatcher" />
-		</Unit>
-		<Unit filename="snmptrapdispatcher\configuration.h">
-			<Option target="snmptrapdispatcher" />
-			<Option target="DEBUG snmptrapdispatcher" />
-		</Unit>
-		<Unit filename="snmptrapdispatcher\main.c">
-			<Option compilerVar="CC" />
-			<Option target="snmptrapdispatcher" />
-			<Option target="DEBUG snmptrapdispatcher" />
-		</Unit>
-		<Unit filename="snmptrapdispatcher\resources.rc">
-			<Option compilerVar="WINDRES" />
-			<Option target="snmptrapdispatcher" />
-			<Option target="DEBUG snmptrapdispatcher" />
-		</Unit>
-		<Unit filename="snmptrapdispatcher\xstring.c">
-			<Option compilerVar="CC" />
-			<Option target="snmptrapdispatcher" />
-			<Option target="DEBUG snmptrapdispatcher" />
-		</Unit>
-		<Unit filename="snmptrapdispatcher\xstring.h">
-			<Option target="snmptrapdispatcher" />
-			<Option target="DEBUG snmptrapdispatcher" />
-		</Unit>
-		<Unit filename="snmptrapconfig\addDialog.c">
-			<Option compilerVar="CC" />
-			<Option target="snmptrapconfig" />
-			<Option target="DEBUG snmptrapconfig" />
-		</Unit>
-		<Unit filename="snmptrapconfig\addDialog.h">
-			<Option target="snmptrapconfig" />
-			<Option target="DEBUG snmptrapconfig" />
-		</Unit>
-		<Unit filename="snmptrapconfig\main.c">
-			<Option compilerVar="CC" />
-			<Option target="snmptrapconfig" />
-			<Option target="DEBUG snmptrapconfig" />
-		</Unit>
-		<Unit filename="snmptrapconfig\mainDialog.c">
-			<Option compilerVar="CC" />
-			<Option target="snmptrapconfig" />
-			<Option target="DEBUG snmptrapconfig" />
-		</Unit>
-		<Unit filename="snmptrapconfig\mainDialog.h">
-			<Option target="snmptrapconfig" />
-			<Option target="DEBUG snmptrapconfig" />
-		</Unit>
-		<Unit filename="snmptrapconfig\mainDialogData.c">
-			<Option compilerVar="CC" />
-			<Option target="snmptrapconfig" />
-			<Option target="DEBUG snmptrapconfig" />
-		</Unit>
-		<Unit filename="snmptrapconfig\mainDialogData.h">
-			<Option target="snmptrapconfig" />
-			<Option target="DEBUG snmptrapconfig" />
-		</Unit>
-		<Unit filename="snmptrapconfig\resource.h">
-			<Option target="snmptrapconfig" />
-			<Option target="DEBUG snmptrapconfig" />
-		</Unit>
-		<Unit filename="snmptrapconfig\resource.rc">
-			<Option compilerVar="WINDRES" />
-			<Option target="snmptrapconfig" />
-			<Option target="DEBUG snmptrapconfig" />
-		</Unit>
-		<Unit filename="snmptrapconfig\serviceController.c">
-			<Option compilerVar="CC" />
-			<Option target="snmptrapconfig" />
-			<Option target="DEBUG snmptrapconfig" />
-		</Unit>
-		<Unit filename="snmptrapconfig\serviceController.h">
-			<Option target="snmptrapconfig" />
-			<Option target="DEBUG snmptrapconfig" />
-		</Unit>
-		<Unit filename="libregistry\registry.c">
-			<Option compilerVar="CC" />
-			<Option target="libregistry" />
-			<Option target="DEBUG libregistry" />
-		</Unit>
-		<Unit filename="libregistry\registry.h">
-			<Option target="libregistry" />
-			<Option target="snmptrapdispatcher" />
-			<Option target="snmptrapconfig" />
-			<Option target="DEBUG libregistry" />
-			<Option target="DEBUG snmptrapdispatcher" />
-			<Option target="DEBUG snmptrapconfig" />
-		</Unit>
-		<Unit filename="core\trapSnmp.c">
-			<Option compilerVar="CC" />
-			<Option target="snmptrapdispatcher" />
-			<Option target="snmptrapconfig" />
-			<Option target="import-mib" />
-			<Option target="DEBUG snmptrapdispatcher" />
-			<Option target="DEBUG snmptrapconfig" />
-			<Option target="DEBUG import-mib" />
-		</Unit>
-		<Unit filename="core\trapSnmp.h">
-			<Option target="snmptrapdispatcher" />
-			<Option target="snmptrapconfig" />
-			<Option target="import-mib" />
-			<Option target="DEBUG snmptrapdispatcher" />
-			<Option target="DEBUG snmptrapconfig" />
-			<Option target="DEBUG import-mib" />
-		</Unit>
-		<Unit filename="import-mib\import-mib.h">
-			<Option target="import-mib" />
-			<Option target="DEBUG import-mib" />
-		</Unit>
-		<Unit filename="import-mib\import-mib.l">
-			<Option target="notarget" />
-		</Unit>
-		<Unit filename="import-mib\import-mib.lex.c">
-			<Option compilerVar="CC" />
-			<Option target="import-mib" />
-			<Option target="DEBUG import-mib" />
-		</Unit>
-		<Unit filename="import-mib\import-mib.tab.c">
-			<Option compilerVar="CC" />
-			<Option target="import-mib" />
-			<Option target="DEBUG import-mib" />
-		</Unit>
-		<Unit filename="import-mib\import-mib.tab.h">
-			<Option target="import-mib" />
-			<Option target="DEBUG import-mib" />
-		</Unit>
-		<Unit filename="import-mib\import-mib.y">
-			<Option target="notarget" />
-		</Unit>
-		<Unit filename="import-mib\namespace.c">
-			<Option compilerVar="CC" />
-			<Option target="import-mib" />
-			<Option target="DEBUG import-mib" />
-		</Unit>
-		<Unit filename="import-mib\namespace.h">
-			<Option target="import-mib" />
-			<Option target="DEBUG import-mib" />
-		</Unit>
-		<Unit filename="import-mib\registry.c">
-			<Option compilerVar="CC" />
-			<Option target="import-mib" />
-			<Option target="DEBUG import-mib" />
-		</Unit>
-		<Unit filename="import-mib\registry.h">
-			<Option target="import-mib" />
-			<Option target="DEBUG import-mib" />
-		</Unit>
-		<Unit filename="import-mib\resource.rc">
-			<Option compilerVar="WINDRES" />
-			<Option target="import-mib" />
-			<Option target="DEBUG import-mib" />
-		</Unit>
-		<Unit filename="core\snmptraptools_config.h">
-			<Option target="snmptraphandler standalone" />
-			<Option target="snmptraphandler winsnmp" />
-			<Option target="snmptrapdispatcher" />
-			<Option target="snmptrapconfig" />
-			<Option target="import-mib" />
-			<Option target="DEBUG snmptraphandler standalone" />
-			<Option target="DEBUG snmptraphandler winsnmp" />
-			<Option target="DEBUG snmptrapdispatcher" />
-			<Option target="DEBUG snmptrapconfig" />
-			<Option target="DEBUG import-mib" />
 		</Unit>
 		<Extensions>
 			<code_completion />
