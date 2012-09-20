@@ -40,6 +40,7 @@
 #define MAX_OID_LEN                 256
 #define MAX_TRAP_VARIABLES          256
 #define MAX_REGISTRY_LEN            512
+#define MAX_PLUGINS					256
 
 #define ERROR_SNMP_INIT         1
 #define ERROR_DISPATCHER_INIT   2
@@ -54,5 +55,8 @@
 #define OID_TRAP_CODE_GENERIC   "1.3.6.1.6.3.1.1.5.0"
 
 #define DEFAULT_ACTION  "snmpmessagebox.exe"
+
+#define PLUGIN_FILTER	"plugin_*.dll"
+
 
 #endif // SNMPTRAPTOOL_CONFIG_H_INCLUDED

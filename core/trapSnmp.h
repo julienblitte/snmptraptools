@@ -6,6 +6,7 @@
 #include <time.h>
 #include <windows.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include "snmptraptools_config.h"
 
 #ifndef ntohs
@@ -29,8 +30,8 @@ typedef struct
 void snmptrap_free(snmpTrap *trap);
 void snmptrap_print(FILE *out, snmpTrap *trap);
 long snmpoid_last_id(const char *oid);
-BOOL snmpoid_start_by(const char *begin, const char *str);
-BOOL snmpoid_valid(const char *oid);
+bool snmpoid_start_by(const char *begin, const char *str);
+bool snmpoid_valid(const char *oid);
 void snmptrap_gets(char *buffer, snmpTrap *trap);
 
 const char *snmptrap_eventname(snmpTrap *trap);

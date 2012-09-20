@@ -26,16 +26,16 @@ void snmptrap_print(FILE *out, snmpTrap *trap)
     ts = localtime(&trap->date);
     strftime(date, sizeof(date), "%Y-%m-%d %H:%M:%S", ts);
 
-    fprintf(out, "%s trap (%ld, %ld) recieved from %s\n",
+    fprintf(out, "%s trap (%u, %u) recieved from %s\n",
             date, trap->generic_type, trap->specific_type, trap->agent);
 
     fprintf(out, "  Community: %s\n", trap->community);
     fprintf(out, "  Uptime: %u\n", trap->timestamp);
-    fprintf(out, "  Generic type: %ld\n", trap->generic_type);
-    fprintf(out, "  Specific type: %ld\n", trap->specific_type);
+    fprintf(out, "  Generic type: %u\n", trap->generic_type);
+    fprintf(out, "  Specific type: %u\n", trap->specific_type);
     fprintf(out, "  Address of agent: %s\n", trap->agent);
     fprintf(out, "  Enterprise OID: %s\n", trap->enterprise);
-    fprintf(out, "  Given values (%lu): \n", trap->variables_count);
+    fprintf(out, "  Given values (%u): \n", trap->variables_count);
 
     for(i=0; i < trap->variables_count; i++)
     {
@@ -65,7 +65,7 @@ long snmpoid_last_id(const char *oid)
     return atol(id);
 }
 
-BOOL snmpoid_start_by(const char *begin, const char *str)
+bool snmpoid_start_by(const char *begin, const char *str)
 {
     int i;
 
@@ -76,7 +76,7 @@ BOOL snmpoid_start_by(const char *begin, const char *str)
         // because if str[i] == '\0', the next condition will be true
         if (begin[i] != str[i])
         {
-            return FALSE;
+            return false;
         }
         i++;
     }
@@ -84,38 +84,33 @@ BOOL snmpoid_start_by(const char *begin, const char *str)
     return TRUE;
 }
 
-BOOL snmpoid_valid(const char *oid)
+bool snmpoid_valid(const char *oid)
 {
-    BOOL dot;
+    bool dot;
 
-    dot = TRUE; // first character must be a digit
+    dot = true; // first character must be a digit
     while(*oid != '\0')
     {
         if (*oid == OID_SEPARATOR)
         {
             if (dot) // double dot
             {
-                return FALSE;
+                return false;
             }
-            dot = TRUE;
+            dot = true;
         }
         else if (*oid >= '0' && *oid <= '9' )
         {
-            dot = FALSE;
+            dot = false;
         }
         else
         {
-            return FALSE;
+            return false;
         }
         oid++;
     }
 
-    if (dot == TRUE) // one loop is mandatory and last character must not be a dot
-    {
-        return FALSE;
-    }
-
-    return TRUE;
+	return (!dot); // one loop is mandatory and last character must not be a dot
 }
 
 void snmptrap_gets(char *buffer, snmpTrap *trap)
