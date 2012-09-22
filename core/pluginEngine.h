@@ -11,7 +11,7 @@
 #define GETUID		"GetUID"
 
 typedef const char * (WINAPI * _GetName) ();
-typedef void (WINAPI * _LoadConfig) (void *data, unsigned int data_size);
+typedef void (WINAPI * _LoadConfig) (const void *data, const unsigned int data_size);
 typedef void* (WINAPI * _EditConfig) (void *data, unsigned int *data_size);
 typedef void (WINAPI * _Run) (snmpTrap*);
 typedef unsigned int (WINAPI * _GetUID) ();

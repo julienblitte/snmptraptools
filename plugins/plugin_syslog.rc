@@ -1,0 +1,17 @@
+#include "plugin_syslog_resources.h"
+
+ID_DIALOG_CONFIG DIALOGEX 6, 5, 200, 90
+    CAPTION "Plugin configuration - Syslog"
+    FONT 8, "Tahoma"
+    STYLE 0x00000000
+    BEGIN
+        // XXXXXX id, x, y, width, height
+        LTEXT "Syslog server:", -1, 10, 5, 180, 12
+        EDITTEXT ID_EDIT_IP_ADDRESS, 10, 14, 180, 13
+
+        LTEXT "Application:", -1, 10, 35, 180, 12
+        EDITTEXT ID_EDIT_APPLICATION, 10, 44, 180, 13
+
+        PUSHBUTTON "Cancel", ID_BUTTON_CANCEL, 40, 70, 46, 15
+        DEFPUSHBUTTON "Ok", ID_BUTTON_OK, 100, 70, 46, 15
+    END

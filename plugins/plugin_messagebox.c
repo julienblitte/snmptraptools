@@ -10,16 +10,28 @@ DLL_EXPORT const char *GetName()
 	return plugin_name;
 }
 
-DLL_EXPORT void LoadConfig(void *data, unsigned int data_size)
+DLL_EXPORT void LoadConfig(const void *data, const unsigned int data_size)
 {
 	return;
 }
 
 DLL_EXPORT void *EditConfig(void *data, unsigned int *data_size)
 {
-	MessageBoxA(0, "No parameter available for this plugin.", plugin_name, MB_OK | MB_ICONINFORMATION);
+	static int config;
 
-	return NULL;
+	// ask for default value template
+	if (data == NULL)
+	{
+		// it's mandatory to send a valid pointer in this case
+		*data_size = sizeof(config);
+		return &config;
+	}
+	else
+	{
+		MessageBoxA(0, "No parameter available for this plugin.", plugin_name, MB_OK | MB_ICONINFORMATION);
+
+		return NULL;
+	}
 }
 
 DLL_EXPORT void Run(snmpTrap *trap)

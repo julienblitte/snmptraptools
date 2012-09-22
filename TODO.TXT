@@ -16,7 +16,6 @@
     * set data to plugin_set_configuration
 
   TODO: plugins
-  - implement EditConfig function
   - plugins to develop:
 	* run a program
     * email alerting

@@ -17,7 +17,7 @@
 #endif
 
 DLL_EXPORT const char *GetName();
-DLL_EXPORT void LoadConfig(void *data, unsigned int data_size);
+DLL_EXPORT void LoadConfig(const void *data, const unsigned int data_size);
 DLL_EXPORT void* EditConfig(void *data, unsigned int *data_size);
 DLL_EXPORT void Run(snmpTrap *trap);
 DLL_EXPORT unsigned int GetUID();
