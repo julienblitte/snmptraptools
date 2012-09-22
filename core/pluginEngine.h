@@ -31,5 +31,8 @@ char **plugin_find();
 bool plugin_load(const char *module, plugin_set *plugin);
 bool plugin_isvalid(plugin_set *p);
 void plugin_emit_sample(plugin_set *p);
+plugin_set *plugin_get_by_id(plugin_set *array, unsigned int array_size, unsigned int UID);
+bool plugin_set_configuration(void *data, uint32_t data_size, const char *plugin_name);
+void plugin_get_configuration(void *data, uint32_t *data_size, const char *plugin_name);
 
 #endif // H_PLUGINENGINE_INCLUDED

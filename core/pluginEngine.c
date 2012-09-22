@@ -5,7 +5,6 @@
 #include "pluginEngine.h"
 #include "snmptraptools_config.h"
 
-
 char **plugin_find()
 {
 	static char *files[MAX_PLUGINS];
@@ -147,53 +146,3 @@ plugin_set *plugin_get_by_id(plugin_set *array, unsigned int array_size, unsigne
 
 	return NULL;
 }
-
-#ifdef DEBUG
-int main()
-{
-	char **list = plugin_find();
-	unsigned int i;
-	plugin_set p[MAX_PLUGINS];
-	char buffer[256];
-	uint32_t buffer_size;
-
-	i=0;
-	while (list[i] && i < MAX_PLUGINS)
-	{
-		printf("%s: ", list[i]);
-
-		if (plugin_load(list[i], &p[i]))
-		{
-			printf("[%p] %s (%u)\n", p[i].dll, p[i].GetName(), p[i].GetUID());
-/*
-			plugin_emit_sample(&p);  // Run test
-*//*
-			p.EditConfig(NULL, 0);  // EditConfig test
-*//*
-			buffer_size = sizeof(buffer);
-			plugin_get_configuration(buffer, &buffer_size, p[i].GetName()); 	// get_configuration test
-			buffer[buffer_size]='\0';
-			printf("config:[%s]\n", buffer);
-*//*
-			strcpy(buffer, p.GetName());
-			buffer_size = strlen(buffer);
-			if (plugin_set_configuration(buffer, buffer_size, p.GetName()))		// set_configuration test
-			{
-				printf("Default settings created!\n");
-			}
-			else
-			{
-				printf("error!\n");
-			}
-*/
-		}
-		else
-		{
-			printf("unable to load plugin!\n");
-		}
-		i++;
-	}
-
-    return 0;
-}
-#endif // DEBUG
