@@ -95,6 +95,9 @@
 			<Option target="DEBUG plugin syslog" />
 			<Option target="DEBUG plugin messagebox" />
 		</Unit>
+		<Unit filename="plugins\debug_plugin_testing.c">
+			<Option target="DEBUG plugin test program" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<debugger />
