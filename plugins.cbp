@@ -14,6 +14,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wall" />
+					<Add option="-g" />
 					<Add option="-DDEBUG" />
 				</Compiler>
 				<Linker>
@@ -30,6 +31,7 @@
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-DBUILD_DLL" />
+					<Add option="-g" />
 					<Add option="-O2" />
 				</Compiler>
 				<Linker>
@@ -47,6 +49,7 @@
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-DBUILD_DLL" />
+					<Add option="-g" />
 					<Add option="-O2" />
 				</Compiler>
 				<Linker>
@@ -65,6 +68,15 @@
 		<Unit filename="core\pluginEngine.h">
 			<Option target="DEBUG plugin test program" />
 		</Unit>
+		<Unit filename="core\snmptraptools_config.h" />
+		<Unit filename="core\trapSnmp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="core\trapSnmp.h" />
+		<Unit filename="plugins\debug_plugin_testing.c">
+			<Option compilerVar="CC" />
+			<Option target="DEBUG plugin test program" />
+		</Unit>
 		<Unit filename="plugins\plugin_messagebox.c">
 			<Option compilerVar="CC" />
 			<Option target="DEBUG plugin messagebox" />
@@ -79,24 +91,12 @@
 		<Unit filename="plugins\plugin_syslog.h">
 			<Option target="DEBUG plugin syslog" />
 		</Unit>
-		<Unit filename="core\trapSnmp.c">
-			<Option compilerVar="CC" />
-			<Option target="DEBUG plugin test program" />
+		<Unit filename="plugins\plugin_syslog.rc">
+			<Option compilerVar="WINDRES" />
 			<Option target="DEBUG plugin syslog" />
-			<Option target="DEBUG plugin messagebox" />
 		</Unit>
-		<Unit filename="core\trapSnmp.h">
-			<Option target="DEBUG plugin test program" />
+		<Unit filename="plugins\plugin_syslog_resources.h">
 			<Option target="DEBUG plugin syslog" />
-			<Option target="DEBUG plugin messagebox" />
-		</Unit>
-		<Unit filename="core\snmptraptools_config.h">
-			<Option target="DEBUG plugin test program" />
-			<Option target="DEBUG plugin syslog" />
-			<Option target="DEBUG plugin messagebox" />
-		</Unit>
-		<Unit filename="plugins\debug_plugin_testing.c">
-			<Option target="DEBUG plugin test program" />
 		</Unit>
 		<Extensions>
 			<code_completion />

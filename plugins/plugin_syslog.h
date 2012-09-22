@@ -15,7 +15,7 @@
 #endif
 
 DLL_EXPORT const char *GetName();
-DLL_EXPORT void LoadConfig(void *data, unsigned int data_size);
+DLL_EXPORT void LoadConfig(const void *data, const unsigned int data_size);
 DLL_EXPORT void* EditConfig(void *data, unsigned int *data_size);
 DLL_EXPORT void Run(snmpTrap *trap);
 DLL_EXPORT unsigned int GetUID();
@@ -28,6 +28,9 @@ typedef struct _plugin_configuration
 	char target[16];
 	char application[32];
 } plugin_configuration;
+
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
+BOOL CALLBACK dlgAddMessageHandler(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 #define SYSLOG_FACILITY_USER_LEVEL	1
 #define SYSLOG_SEVERITY_NOTICE		5
