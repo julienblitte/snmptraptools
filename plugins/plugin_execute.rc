@@ -1,0 +1,19 @@
+#include "plugin_execute_resources.h"
+
+ID_DIALOG_CONFIG DIALOGEX 6, 5, 215, 100
+    CAPTION "Plugin configuration - Syslog"
+    FONT 8, "Tahoma"
+    STYLE 0x00000000
+    BEGIN
+        // XXXXXX id, x, y, width, height
+        LTEXT "Application to run:", -1, 10, 5, 180, 12
+        EDITTEXT ID_EDIT_RUN, 10, 14, 180, 13
+        PUSHBUTTON "...", ID_BROWSE_RUN, 189, 14, 15, 13
+
+        LTEXT "Working directory:", -1, 10, 35, 180, 12
+        EDITTEXT ID_EDIT_WORK_DIR, 10, 44, 180, 13
+        PUSHBUTTON "...", ID_BROWSE_WORK_DIR, 189, 44, 15, 13
+
+        PUSHBUTTON "Cancel", ID_BUTTON_CANCEL, 40, 70, 46, 15
+        DEFPUSHBUTTON "Ok", ID_BUTTON_OK, 100, 70, 46, 15
+    END
