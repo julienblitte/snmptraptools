@@ -7,13 +7,13 @@
 #include "..\core\snmptraptools_config.h"
 #include "mainDialog.h"
 #include "addDialog.h"
-#include "../libregistry/registry.h"
+#include "..\libregistry\registry.h"
 
 BOOL proposeServiceUpdate(HWND hDlg)
 {
     if (getServiceState() == SERVICE_RUNNING)
     {
-        enableDlgItem(hDlg, ID_BUTTON_UPDATE, TRUE);
+        enableDlgItem(hDlg, ID_MENU_UPDATE, TRUE);
         return TRUE;
     }
 
@@ -29,12 +29,12 @@ BOOL updateServiceState(HWND hDlg)
     {
     case SERVICE_RUNNING:
     case SERVICE_PAUSED:
-        enableDlgItem(hDlg, ID_BUTTON_START, FALSE);
-        enableDlgItem(hDlg, ID_BUTTON_STOP, TRUE);
+        enableDlgItem(hDlg, ID_MENU_START, FALSE);
+        enableDlgItem(hDlg, ID_MENU_STOP, TRUE);
         break;
     case SERVICE_STOPPED:
-        enableDlgItem(hDlg, ID_BUTTON_START, TRUE);
-        enableDlgItem(hDlg, ID_BUTTON_STOP, FALSE);
+        enableDlgItem(hDlg, ID_MENU_START, TRUE);
+        enableDlgItem(hDlg, ID_MENU_STOP, FALSE);
         break;
     }
 
@@ -43,11 +43,18 @@ BOOL updateServiceState(HWND hDlg)
 
 BOOL enableDlgItem(HWND hDlg, int nIDDlgItem, BOOL bEnable)
 {
+
     HWND hwnd;
     hwnd = GetDlgItem(hDlg, nIDDlgItem);
+
     if (hwnd != NULL)
     {
         return EnableWindow(hwnd, bEnable);
+    }
+    else
+    {
+    	// no hwnd, probably a menu
+    	EnableMenuItem(GetMenu(hDlg), nIDDlgItem, (bEnable?MF_ENABLED:MF_GRAYED));
     }
     return !bEnable;
 }
@@ -58,6 +65,7 @@ BOOL enableActionModification(HWND hDlg, BOOL state)
     enableDlgItem(hDlg, ID_RADIO_ANY, state);
     enableDlgItem(hDlg, ID_RADIO_GENERIC, state);
     enableDlgItem(hDlg, ID_RADIO_SPECIFIC, state);
+    enableDlgItem(hDlg, ID_MENU_PLUGIN, state);
 
     if (SendDlgItemMessage(hDlg, ID_RADIO_ANY, BM_GETCHECK, 0, 0) == BST_CHECKED)
     {
@@ -71,40 +79,9 @@ BOOL enableActionModification(HWND hDlg, BOOL state)
     }
 
     enableDlgItem(hDlg, ID_EDIT_DESCRIPTION, state);
-    enableDlgItem(hDlg, ID_EDIT_RUN, state);
-    enableDlgItem(hDlg, ID_BROWSE_RUN, state);
-
-    enableDlgItem(hDlg, ID_EDIT_WORK_DIR, state);
-    enableDlgItem(hDlg, ID_BROWSE_WORK_DIR, state);
+    enableDlgItem(hDlg, ID_COMBO_PLUGIN, state);
 
     return state;
-}
-
-BOOL GetOpenDirectory(HWND hDlg, char *buffer)
-{
-	BROWSEINFO dir;
-	LPITEMIDLIST pidl;
-
-	dir.hwndOwner = hDlg;
-	dir.pszDisplayName = buffer;
-	dir.lpszTitle = "Select directory";
-	dir.ulFlags = BIF_RETURNONLYFSDIRS;
-
-	ZeroMemory(&dir, sizeof(BROWSEINFO));
-	buffer[0] = '\0';
-
-	dir.hwndOwner = hDlg;
-	dir.pszDisplayName = buffer;
-	dir.lpszTitle = "Select directory";
-	dir.ulFlags = BIF_RETURNONLYFSDIRS;
-
-	pidl = SHBrowseForFolder(&dir);
-	if (pidl != NULL)
-	{
-		SHGetPathFromIDList(pidl, buffer);
-		return TRUE;
-	}
-	return FALSE;
 }
 
 BOOL dlgMainEventHandler(HWND hDlg, WPARAM wParam)
@@ -118,21 +95,21 @@ BOOL dlgMainEventHandler(HWND hDlg, WPARAM wParam)
 
     switch(wParam)
     {
-        case ON_CLICK|ID_BUTTON_START:
+        case ON_MENU_CLICK|ID_MENU_START:
             setServiceState(SERVICE_CONTROL_START);
             updateServiceState(hDlg);
             return TRUE;
-        case ON_CLICK|ID_BUTTON_STOP:
+        case ON_MENU_CLICK|ID_MENU_STOP:
             setServiceState(SERVICE_CONTROL_STOP);
             updateServiceState(hDlg);
             return TRUE;
         case ON_CLICK|ID_BUTTON_ADD:
             showAddDlg(hInst, hDlg);
             return TRUE;
-        case ON_CLICK|ID_BUTTON_UPDATE:
+        case ON_MENU_CLICK|ID_MENU_UPDATE:
             setServiceState(SERVICE_CONTROL_PARAMCHANGE);
             updateServiceState(hDlg);
-            enableDlgItem(hDlg, ID_BUTTON_UPDATE, FALSE);
+            enableDlgItem(hDlg, ID_MENU_UPDATE, FALSE);
             return TRUE;
         case ON_CLICK|ID_BUTTON_REMOVE:
             selected = (int)SendDlgItemMessage(hDlg, ID_LISTBOX_OID, LB_GETCURSEL, 0, 0);
@@ -162,8 +139,7 @@ BOOL dlgMainEventHandler(HWND hDlg, WPARAM wParam)
             return TRUE;
         case ON_CHANGE|ID_EDIT_TRAP_CODE:
         case ON_CHANGE|ID_EDIT_DESCRIPTION:
-        case ON_CHANGE|ID_EDIT_RUN:
-        case ON_CHANGE|ID_EDIT_WORK_DIR:
+		case ON_COMBO_SELECT|ID_COMBO_PLUGIN:
             enableDlgItem(hDlg, ID_BUTTON_MODIFY, TRUE);
             return TRUE;
         case ON_CLICK|ID_RADIO_GENERIC:
@@ -177,7 +153,7 @@ BOOL dlgMainEventHandler(HWND hDlg, WPARAM wParam)
             enableDlgItem(hDlg, ID_CAPTION_TRAP_CODE, TRUE);
             enableDlgItem(hDlg, ID_BUTTON_MODIFY, TRUE);
             return TRUE;
-        case ON_ITEM_SELECT|ID_LISTBOX_OID:
+        case ON_LIST_SELECT|ID_LISTBOX_OID:
             enableActionModification(hDlg, FALSE);
 
             selected = (int)SendDlgItemMessage(hDlg, ID_LISTBOX_OID, LB_GETCURSEL, 0, 0);
@@ -194,33 +170,7 @@ BOOL dlgMainEventHandler(HWND hDlg, WPARAM wParam)
                 enableDlgItem(hDlg, ID_BUTTON_REMOVE, FALSE);
             }
             return TRUE;
-        case ON_CLICK|ID_BROWSE_RUN:
-            ZeroMemory(&openFile, sizeof(OPENFILENAME));
-            buffer[0] = '\0';
-
-            openFile.lStructSize = sizeof(OPENFILENAME);
-            openFile.hwndOwner = hDlg;
-            openFile.hInstance = hInst;
-            openFile.lpstrFilter = "Executables\0*.exe;*.com;*.class;*.bat;*.cmd;*.pl;*.php;*.vbs;*.js;*.asp;\0All files\0*.*\0\0";
-            openFile.lpstrFile = buffer;
-            openFile.nMaxFile = sizeof(buffer);
-            openFile.Flags = OFN_FILEMUSTEXIST|OFN_HIDEREADONLY;
-
-            if (GetOpenFileName(&openFile))
-            {
-                SendDlgItemMessage(hDlg, ID_EDIT_RUN, WM_SETTEXT, 0, (LPARAM)buffer);
-                // TODO: update wkdir if empty
-                // gettext, if empty, extract path and set wkdir to it
-            }
-            return TRUE;
-
-        case ON_CLICK|ID_BROWSE_WORK_DIR:
-            if (GetOpenDirectory(hDlg, buffer) == TRUE)
-            {
-                SendDlgItemMessage(hDlg, ID_EDIT_WORK_DIR, WM_SETTEXT, 0, (LPARAM)buffer);
-            }
-            return TRUE;
-        case ON_CLICK|ID_BUTTON_EXPORT:
+        case ON_MENU_CLICK|ID_MENU_EXPORT:
             ZeroMemory(&openFile, sizeof(OPENFILENAME));
             buffer[0] = '\0';
 
@@ -235,12 +185,17 @@ BOOL dlgMainEventHandler(HWND hDlg, WPARAM wParam)
 
             if (GetSaveFileName(&openFile))
             {
-                regExportPath(HKEY_LOCAL_MACHINE, REGISTRY_CONFIG_PATH, openFile.lpstrFile);
+                regExportPath(HKEY_LOCAL_MACHINE, REGISTRY_ROOT_PATH, openFile.lpstrFile);
             }
             return TRUE;
-
+		case ON_MENU_CLICK|ID_MENU_EXIT:
+			SendDlgItemMessage(hDlg, 0, WM_CLOSE, (WPARAM)0, (LPARAM)0);
+			break;
+		case ON_MENU_CLICK|ID_MENU_PLUGIN:
+			configurePlugin(hDlg);
+			break;
         default:
-            printf("%04x: %04x\n", LOWORD(wParam), HIWORD(wParam));
+            printf("message %04x: %04x\n", LOWORD(wParam), HIWORD(wParam));
             break;
     }
 
@@ -257,9 +212,10 @@ BOOL CALLBACK dlgMainMessageHandler(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM 
             updateServiceState(hDlg);
             SetTimer(hDlg, 1, 500, NULL);
 
+            loadPlugins(hDlg);
             loadActionList(hDlg);
             enableActionModification(hDlg, FALSE);
-            enableDlgItem(hDlg, ID_BUTTON_UPDATE, FALSE);
+            enableDlgItem(hDlg, ID_MENU_UPDATE, FALSE);
 
             return TRUE;
 

@@ -6,10 +6,9 @@
 typedef struct _trap_action_entry
 {
     char *oid;
-    long specificType;
-    long genericType;
-    char *run;
-    char *wkDir;
+    uint32_t specificType;
+    uint32_t genericType;
+	uint32_t pluginUID;
     char *desc;
 } trap_action_entry;
 

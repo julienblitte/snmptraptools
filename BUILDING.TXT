@@ -43,3 +43,8 @@ For Flex, add the following building rule:
 
 bison -d import-mib\import-mib.y (génère deux fichiers tabs)
 flex -oimport-mib\import-mib.lex.c import-mib\import-mib.l
+
+Inno Setup
+==========
+Download Inno Setup to compile the installation script.
+ - http://www.jrsoftware.org/isinfo.php

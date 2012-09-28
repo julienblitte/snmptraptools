@@ -8,9 +8,11 @@
 #include "addDialog.h"
 #include "serviceController.h"
 #include "mainDialog.h"
-#include "../libregistry/registry.h"
+#include "..\libregistry\registry.h"
+#include "..\core\pluginEngine.h"
 
 char **actionList = NULL;
+static plugin_set plugins[MAX_PLUGINS];
 
 LONG loadActionList(HWND hDlg)
 {
@@ -147,7 +149,8 @@ BOOL loadAction(HWND hDlg, DWORD selected)
     BYTE buffer[MAX_REGISTRY_LEN];
     DWORD bufferSize;
 
-    DWORD numeric;
+    uint32_t numeric;
+    plugin_set *plugin;
 
     if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, REGISTRY_CONFIG_PATH, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_READ|KEY_WRITE, NULL, &hKey, NULL) != ERROR_SUCCESS)
     {
@@ -166,7 +169,7 @@ BOOL loadAction(HWND hDlg, DWORD selected)
     if (RegQueryValueEx(hSubKey, REGISTRY_SPECIFIC_TYPE, NULL, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
     {
         memcpy(&numeric, buffer, sizeof(numeric));
-        snprintf((char *)buffer, sizeof(buffer), "%lu", numeric);
+        snprintf((char *)buffer, sizeof(buffer), "%u", numeric);
 
         SendDlgItemMessage(hDlg, ID_RADIO_ANY, BM_SETCHECK, BST_UNCHECKED, 0);
         SendDlgItemMessage(hDlg, ID_RADIO_GENERIC, BM_SETCHECK, BST_UNCHECKED, 0);
@@ -180,7 +183,7 @@ BOOL loadAction(HWND hDlg, DWORD selected)
         if (RegQueryValueEx(hSubKey, REGISTRY_GENERIC_TYPE, NULL, NULL, buffer, &bufferSize) ==  ERROR_SUCCESS)
         {
             memcpy(&numeric, buffer, sizeof(numeric));
-            snprintf((char *)buffer, sizeof(buffer), "%lu", numeric);
+            snprintf((char *)buffer, sizeof(buffer), "%u", numeric);
 
             SendDlgItemMessage(hDlg, ID_RADIO_ANY, BM_SETCHECK, BST_UNCHECKED, 0);
             SendDlgItemMessage(hDlg, ID_RADIO_GENERIC, BM_SETCHECK, BST_CHECKED, 0);
@@ -207,18 +210,24 @@ BOOL loadAction(HWND hDlg, DWORD selected)
     SendDlgItemMessage(hDlg, ID_EDIT_DESCRIPTION, WM_SETTEXT, 0, (LPARAM)buffer);
 
     bufferSize = sizeof(buffer);
-    if (RegQueryValueEx(hSubKey, REGISTRY_RUN, NULL, NULL, buffer, &bufferSize) != ERROR_SUCCESS)
+    if (RegQueryValueEx(hSubKey, REGISTRY_PLUGIN, NULL, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
     {
-            buffer[0] = '\0';
-    }
-    SendDlgItemMessage(hDlg, ID_EDIT_RUN, WM_SETTEXT, 0, (LPARAM)buffer);
+		memcpy(&numeric, buffer, sizeof(numeric));
 
-    bufferSize = sizeof(buffer);
-    if (RegQueryValueEx(hSubKey, REGISTRY_WKDIR, NULL, NULL, buffer, &bufferSize) != ERROR_SUCCESS)
-    {
-            buffer[0] = '\0';
+		// identify plugin
+		plugin = plugin_get_by_id(plugins, MAX_PLUGINS, numeric);
+		if (plugin != NULL)
+		{
+			// locate in the list and select it
+			numeric = SendDlgItemMessage(hDlg, ID_COMBO_PLUGIN, CB_FINDSTRINGEXACT , (WPARAM)-1, (LPARAM)plugin->GetName());
+			if (numeric != CB_ERR)
+			{
+				SendDlgItemMessage(hDlg, ID_COMBO_PLUGIN, CB_SETCURSEL, (WPARAM)numeric, 0);
+			}
+		}
+
+
     }
-    SendDlgItemMessage(hDlg, ID_EDIT_WORK_DIR, WM_SETTEXT, 0, (LPARAM)buffer);
 
     RegCloseKey(hSubKey);
     RegCloseKey(hKey);
@@ -324,27 +333,27 @@ BOOL saveAction(HWND hDlg, DWORD selected)
         RegDeleteValue(hSubKey, REGISTRY_DESCRIPTION);
     }
 
-    SendDlgItemMessage(hDlg, ID_EDIT_RUN, WM_GETTEXT, (WPARAM)sizeof(buffer), (LPARAM)buffer);
-    bufferSize = strlen((char *)buffer)+1;
-    if (bufferSize > 1)
-    {
-        RegSetValueEx(hSubKey, REGISTRY_RUN, 0, REG_SZ, buffer, bufferSize);
-    }
-    else
-    {
-        RegDeleteValue(hSubKey, REGISTRY_RUN);
-    }
-
-    SendDlgItemMessage(hDlg, ID_EDIT_WORK_DIR, WM_GETTEXT, (WPARAM)sizeof(buffer), (LPARAM)buffer);
-    bufferSize = strlen((char *)buffer)+1;
-    if (bufferSize > 1)
-    {
-        RegSetValueEx(hSubKey, REGISTRY_WKDIR, 0, REG_SZ, buffer, bufferSize);
-    }
-    else
-    {
-        RegDeleteValue(hSubKey, REGISTRY_WKDIR);
-    }
+	// plugin UID
+	numeric = SendDlgItemMessage(hDlg, ID_COMBO_PLUGIN, CB_GETCURSEL, (WPARAM)0, (LPARAM)0);
+	if (numeric != CB_ERR)
+	{
+		if (numeric < MAX_PLUGINS && plugins[numeric].UID != 0)
+		{
+				numeric = plugins[numeric].UID;
+		}
+		else
+		{
+			numeric = 0;
+		}
+	}
+	else
+	{
+		// undefined plugin
+		numeric = 0;
+	}
+	bufferSize = sizeof(numeric);
+	memcpy(buffer, &numeric, bufferSize);
+	RegSetValueEx(hSubKey, REGISTRY_PLUGIN, 0, REG_DWORD, buffer, bufferSize);
 
     RegCloseKey(hSubKey);
     RegCloseKey(hKey);
@@ -352,3 +361,63 @@ BOOL saveAction(HWND hDlg, DWORD selected)
     return TRUE;
 }
 
+void configurePlugin(HWND hDlg)
+{
+	uint32_t i;
+	char plugin_config[MAX_PLUGIN_CONFIG_LEN];
+	uint32_t plugin_config_size;
+
+	char *shared_data;
+
+	// plugin UID
+	i = SendDlgItemMessage(hDlg, ID_COMBO_PLUGIN, CB_GETCURSEL, (WPARAM)0, (LPARAM)0);
+	if (i == CB_ERR)
+	{
+		MessageBox(hDlg, "Select a plugin to configure", "Plugin configuration", MB_ICONWARNING);
+		return;
+	}
+
+	if (i < MAX_PLUGINS && plugins[i].UID != 0)
+	{
+		// load configuration
+		plugin_config_size = sizeof(plugin_config);
+		if (!plugin_get_configuration(plugin_config, &plugin_config_size, plugins[i].GetName()))
+		{
+			// unable to get configuration, get default values
+			shared_data = plugins[i].EditConfig(NULL, &plugin_config_size);
+			memcpy(plugin_config, shared_data, plugin_config_size);
+			plugin_set_configuration(plugin_config, plugin_config_size, plugins[i].GetName());
+		}
+
+		// load editor
+		shared_data = plugins[i].EditConfig(plugin_config, &plugin_config_size);  // edit config
+
+		// save data
+		if (shared_data != NULL)
+		{
+			memcpy(plugin_config, shared_data, plugin_config_size);
+		}
+		plugin_set_configuration(plugin_config, plugin_config_size, plugins[i].GetName());
+	}
+
+}
+
+void loadPlugins(HWND hDlg)
+{
+	char **plugin_dll;
+	int i, j;
+
+	plugin_dll = plugin_find();
+	i=0;
+	j=0;
+	while (plugin_dll[i] && j < MAX_PLUGINS)
+	{
+		if (plugin_load(plugin_dll[i], &plugins[j]))
+		{
+			SendDlgItemMessage(hDlg, ID_COMBO_PLUGIN, CB_ADDSTRING, 0, (LPARAM)plugins[j].GetName());
+
+			j++;
+		}
+		i++;
+	}
+}

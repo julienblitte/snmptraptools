@@ -1,21 +1,23 @@
-#include "plugin_messagebox.h"
+#include <windows.h>
+#include <stdint.h>
+
 #include "..\core\trapSnmp.h"
-#include <stdbool.h>
+#include "..\core\plugin_common.h"
 
-static const char plugin_name[] = PLUGIN_NAME;
-static unsigned int plugin_uid = PLUGIN_UID;
+static const char plugin_name[] = "messagebox";
+static const uint32_t plugin_uid = STR2UID('M','S','G','B');
 
-DLL_EXPORT const char *GetName()
+DLL_EXPORT const char *GETNAME()
 {
 	return plugin_name;
 }
 
-DLL_EXPORT void LoadConfig(const void *data, const unsigned int data_size)
+DLL_EXPORT void LOADCONFIG(const void *data, const unsigned int data_size)
 {
 	return;
 }
 
-DLL_EXPORT void *EditConfig(void *data, unsigned int *data_size)
+DLL_EXPORT void *EDITCONFIG(void *data, unsigned int *data_size)
 {
 	static int config;
 
@@ -34,7 +36,7 @@ DLL_EXPORT void *EditConfig(void *data, unsigned int *data_size)
 	}
 }
 
-DLL_EXPORT void Run(snmpTrap *trap)
+DLL_EXPORT void RUN(snmpTrap *trap)
 {
 	static char buffer[1024];
 
@@ -44,21 +46,12 @@ DLL_EXPORT void Run(snmpTrap *trap)
 	MessageBoxA(0, buffer, plugin_name, MB_OK | MB_ICONINFORMATION|MB_SERVICE_NOTIFICATION);
 }
 
-DLL_EXPORT unsigned int GetUID()
+DLL_EXPORT uint32_t GETUID()
 {
 	return plugin_uid;
 }
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
-	/*
-    switch (fdwReason)
-    {
-        case DLL_PROCESS_ATTACH:
-            break;
-        case DLL_PROCESS_DETACH:
-            break;
-    }
-    */
     return TRUE;
 }
