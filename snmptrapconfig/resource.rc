@@ -1,42 +1,54 @@
+#include "..\core\snmptraptools_config.h"
 #include "resource.h"
 
 ID_ICON ICON "config.ico"
 
-ID_DIALOG_MAIN DIALOGEX 6, 5, 245, 305
+ID_MENU_DIALOG_1 MENU
+	BEGIN
+		POPUP "&File"
+		BEGIN
+			MENUITEM "Export &config.", ID_MENU_EXPORT
+			MENUITEM SEPARATOR
+			MENUITEM "E&xit", ID_MENU_EXIT
+		END
+		POPUP "Ser&vice"
+		BEGIN
+			  MENUITEM "&Update config.", ID_MENU_UPDATE
+			  MENUITEM "&Start service", ID_MENU_START
+			  MENUITEM "S&top service", ID_MENU_STOP
+		 END
+		POPUP "&Plugin"
+		BEGIN
+			  MENUITEM "&Configure current", ID_MENU_PLUGIN
+		END
+	END
+
+ID_DIALOG_MAIN DIALOGEX 6, 5, 245, 250
     CAPTION "Windows SNMP Trap Handler"
     FONT 8, "Tahoma"
+    MENU ID_MENU_DIALOG_1
     //STYLE 0x00000000
     BEGIN
         // XXXXXX id, x, y, width, height
-        PUSHBUTTON "Start service", ID_BUTTON_START, 10, 10, 46, 15
-        PUSHBUTTON "Stop service", ID_BUTTON_STOP, 70, 10, 46, 15
-        PUSHBUTTON "Update", ID_BUTTON_UPDATE, 130, 10, 46, 15
 
-        LISTBOX ID_LISTBOX_OID, 10, 30, 170, 100
+        LISTBOX ID_LISTBOX_OID, 10, 10, 170, 100
 
-        PUSHBUTTON "Add", ID_BUTTON_ADD, 190, 40, 46, 15
-        PUSHBUTTON "Remove", ID_BUTTON_REMOVE, 190, 60, 46, 15, WS_DISABLED
-        PUSHBUTTON "Save", ID_BUTTON_MODIFY, 190, 80, 46, 15, WS_DISABLED
+        PUSHBUTTON "Add", ID_BUTTON_ADD, 190, 20, 46, 15
+        PUSHBUTTON "Remove", ID_BUTTON_REMOVE, 190, 40, 46, 15, WS_DISABLED
+        PUSHBUTTON "Save", ID_BUTTON_MODIFY, 190, 60, 46, 15, WS_DISABLED
 
-        LTEXT "Description:", -1, 10, 190, 60, 10
-        EDITTEXT ID_EDIT_DESCRIPTION, 10, 200, 220, 12
+        LTEXT "Description:", -1, 10, 170, 60, 10
+        EDITTEXT ID_EDIT_DESCRIPTION, 10, 180, 220, 12
 
-        LTEXT "Run:", -1, 10, 220, 60, 10
-        EDITTEXT ID_EDIT_RUN, 10, 230, 206, 12
-        PUSHBUTTON "...", ID_BROWSE_RUN, 215, 230, 15, 12
+        LTEXT "Plugin:", -1, 10, 200, 60, 10
+        COMBOBOX ID_COMBO_PLUGIN, 10, 210, 220, 120, CBS_DROPDOWNLIST|CBS_HASSTRINGS|CBS_DISABLENOSCROLL
 
-        LTEXT "Working directory:", -1, 10, 250, 60, 10
-        EDITTEXT ID_EDIT_WORK_DIR, 10, 260, 206, 12
-        PUSHBUTTON "...", ID_BROWSE_WORK_DIR, 215, 260, 15, 12
-
-        PUSHBUTTON "Export config.", ID_BUTTON_EXPORT, 10, 280, 60, 15
-
-        GROUPBOX " Service trap type ", ID_GROUPBOX_TRAPTYPE, 10, 132, 220 , 52, WS_GROUP
-            AUTORADIOBUTTON "Any", ID_RADIO_ANY, 17, 140, 40, 15
-            AUTORADIOBUTTON "Generic", ID_RADIO_GENERIC, 17, 153, 40, 15
-            AUTORADIOBUTTON "Enterprise specific", ID_RADIO_SPECIFIC, 17, 166, 100, 15
-            LTEXT "Trap code", ID_CAPTION_TRAP_CODE, 130, 150, 60, 10
-            EDITTEXT ID_EDIT_TRAP_CODE, 130, 160, 30, 12
+        GROUPBOX " Service trap type ", ID_GROUPBOX_TRAPTYPE, 10, 112, 220 , 52, WS_GROUP
+            AUTORADIOBUTTON "Any", ID_RADIO_ANY, 17, 120, 40, 15
+            AUTORADIOBUTTON "Generic", ID_RADIO_GENERIC, 17, 133, 40, 15
+            AUTORADIOBUTTON "Enterprise specific", ID_RADIO_SPECIFIC, 17, 146, 100, 15
+            LTEXT "Trap code", ID_CAPTION_TRAP_CODE, 130, 130, 60, 10
+            EDITTEXT ID_EDIT_TRAP_CODE, 130, 140, 30, 12
 
     END
 
@@ -54,8 +66,8 @@ ID_DIALOG_ADD DIALOGEX 6, 5, 200, 50
     END
 
 ID_VERSION_INFO VERSIONINFO
-	FILEVERSION 0,2,0,5
-	PRODUCTVERSION  0,2,0,5
+	FILEVERSION VERSION_NUM
+	PRODUCTVERSION VERSION_NUM
 	FILEFLAGSMASK 0x3fL
 	FILEFLAGS 0x0L
 	FILEOS 0x40004L
@@ -71,7 +83,7 @@ ID_VERSION_INFO VERSIONINFO
                                 "http://www.gnu.org/licenses/lgpl.html\0"
 				//VALUE "CompanyName", "\0"
 				VALUE "FileDescription", "SNMPTrapHandler configuration program\0"
-				VALUE "FileVersion", "0,2,0,5\0"
+				VALUE "FileVersion", VERSION_STR
 				VALUE "InternalName", "snmptrapconfig.exe\0"
 				VALUE "LegalCopyright", "(C) Julien Blitte\0"
 				//VALUE "LegalTrademarks", "\0"
@@ -79,8 +91,8 @@ ID_VERSION_INFO VERSIONINFO
 				VALUE "OriginalFilename", "snmptrapconfig.exe\0"
 				//VALUE "PrivateBuild", "\0"
 				VALUE "ProductName", "SNMP Trap Tools set\0"
-				VALUE "ProductVersion", "0,2,0,5\0"
-				VALUE "SpecialBuild", "Built the 2010-11-07 on Estephe with MinGW tool set\0"
+				VALUE "ProductVersion", VERSION_STR
+				VALUE "SpecialBuild", VERSION_BUILD
 			END
 		END
 		BLOCK "VarFileInfo"

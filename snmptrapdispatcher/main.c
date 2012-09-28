@@ -5,58 +5,29 @@
 #include <windows.h>
 #include <stdbool.h>
 #include "..\core\trapSnmp.h"
+#include "..\core\pluginEngine.h"
 #include "..\core\snmptraptools_config.h"
 #include "configuration.h"
-#include "xstring.h"
 
 FILE *logFile;
-
-const char *compileDescription(trap_action_entry *action, snmpTrap *trap)
-{
-    static char description[MAX_DESCRIPTION_LEN];
-    char nameToken[16];
-    int i;
-
-    if (action->desc == NULL)
-    {
-        return "";
-    }
-
-    // copy description text
-    strncpy(description, action->desc, sizeof(description));
-
-    // handle ${*} item
-    if (strstr(description, "${*}") != NULL)
-    {
-        for(i=0; i < trap->variables_count; i++)
-        {
-            snprintf(nameToken, sizeof(nameToken), "${%d} ${*}", i+1);
-            strnreplace(description, "${*}", nameToken, sizeof(description));
-        }
-        strnreplace(description, "${*}", "", sizeof(description));
-    }
-
-    // replace each values
-    for(i=0; i < trap->variables_count; i++)
-    {
-        snprintf(nameToken, sizeof(nameToken), "${%d}", i+1);
-        strnreplace(description, nameToken, trap->variables_value[i], sizeof(description));
-    }
-
-    return description;
-}
+static plugin_set plugins[MAX_PLUGINS];
 
 void actionCallback(trap_action_entry *action, snmpTrap *trap, unsigned long actionNumber)
 {
-    static char param[MAX_PARAMETERS];
+    plugin_set *target;
 
-    fprintf(logFile, "run: [%s]\n", action->run);
+    fprintf(logFile, "  Rule matches for plugin #%08X: ", action->pluginUID);
 
-    if (action->run != NULL)
+	target = plugin_get_by_id(plugins, sizeof(plugins), action->pluginUID);
+    if (target != NULL)
     {
-        snprintf(param, sizeof(param), "%s %s %u %u \"%s\"", trap->agent, trap->enterprise, trap->generic_type, trap->specific_type,
-                 compileDescription(action, trap));
-        ShellExecute(NULL, "open", action->run, param, action->wkDir, SW_SHOW);
+    	fprintf(logFile, "%s\n", target->GetName());
+
+		target->Run(trap);
+    }
+    else
+    {
+    	fprintf(logFile, "failed to identify plugin!\n");
     }
 }
 
@@ -66,7 +37,12 @@ int main()
     snmpTrap trap;
     trap_action_entry *trap_actions;
     bool recieving = false;
+	char **plugin_dll;
+	int i, j;
 
+	char plugin_config[MAX_PLUGIN_CONFIG_LEN];
+	uint32_t plugin_config_size;
+	char *plugin_default_value;
 
     trap_actions = configurationLoad();
     if (trap_actions == NULL)
@@ -79,6 +55,39 @@ int main()
     {
         return EXIT_FAILURE;
     }
+
+	fprintf(logFile, "Dispatcher restart, reload plugins.\n");
+	plugin_dll = plugin_find();
+	i=0;
+	j=0;
+	while (plugin_dll[i] && j < MAX_PLUGINS)
+	{
+		fprintf(logFile, "  File %s: ", plugin_dll[i]);
+		if (plugin_load(plugin_dll[i], &plugins[j]))
+		{
+			fprintf(logFile, "plugin %s loaded, id=%08X.\n", plugins[j].GetName(), plugins[j].GetUID());
+
+			plugin_config_size = sizeof(plugin_config);
+			if (!plugin_get_configuration(plugin_config, &plugin_config_size, plugins[j].GetName()))
+			{
+				// unable to get configuration, get default values
+				plugin_default_value = plugins[j].EditConfig(NULL, &plugin_config_size);
+				memcpy(plugin_config, plugin_default_value, plugin_config_size);
+				plugin_set_configuration(plugin_config, plugin_config_size, plugins[j].GetName());
+			}
+
+			plugins[j].LoadConfig(plugin_config, plugin_config_size);
+
+			j++;
+		}
+		else
+		{
+			fprintf(logFile, "load failure!\n");
+		}
+		i++;
+	}
+	fprintf(logFile, "\n");
+	fflush(logFile);
 
     while(fgets(buffer, sizeof(buffer), stdin) != NULL)
     {

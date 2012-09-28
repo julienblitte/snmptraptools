@@ -129,6 +129,23 @@
 					<Add library="lib\libwsock32.a" />
 				</Linker>
 			</Target>
+			<Target title="plugin execute">
+				<Option output="bin\plugin_execute" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DBUILD_DLL" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="lib\libcomdlg32.a" />
+				</Linker>
+			</Target>
 			<Target title="DEBUG snmptraphandler standalone">
 				<Option output="debug\snmptraphandler_standalone" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Debug\" />
@@ -183,18 +200,6 @@
 					<Add library="kernel32" />
 				</Linker>
 			</Target>
-			<Target title="DEBUG libregistry">
-				<Option output="debug\libregistry" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="" />
-				<Option object_output="obj\Debug\" />
-				<Option type="2" />
-				<Option compiler="gcc" />
-				<Option createDefFile="1" />
-				<Compiler>
-					<Add option="-Wall" />
-					<Add option="-g" />
-				</Compiler>
-			</Target>
 			<Target title="DEBUG import-mib">
 				<Option output="debug\import-mib" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Debug\" />
@@ -213,6 +218,19 @@
 					<Add before="flex -oimport-mib\import-mib.lex.c import-mib\import-mib.l" />
 				</ExtraCommands>
 			</Target>
+			<Target title="DEBUG plugin tester">
+				<Option output="debug\plugin_tester" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin\" />
+				<Option object_output="obj\Debug\" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-DDEBUG" />
+					<Add option="-g" />
+				</Compiler>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
@@ -229,6 +247,7 @@
 			<Option target="snmptrapconfig" />
 			<Option target="DEBUG snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapconfig" />
+			<Option target="DEBUG plugin tester" />
 		</Unit>
 		<Unit filename="core\snmptraptools_config.h">
 			<Option target="snmptraphandler standalone" />
@@ -241,6 +260,7 @@
 			<Option target="DEBUG snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapconfig" />
 			<Option target="DEBUG import-mib" />
+			<Option target="DEBUG plugin tester" />
 		</Unit>
 		<Unit filename="core\trapSnmp.c">
 			<Option compilerVar="CC" />
@@ -248,6 +268,7 @@
 			<Option target="snmptrapconfig" />
 			<Option target="plugin messagebox" />
 			<Option target="plugin syslog" />
+			<Option target="plugin execute" />
 			<Option target="import-mib" />
 			<Option target="DEBUG snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapconfig" />
@@ -258,10 +279,20 @@
 			<Option target="snmptrapconfig" />
 			<Option target="plugin messagebox" />
 			<Option target="plugin syslog" />
+			<Option target="plugin execute" />
 			<Option target="import-mib" />
 			<Option target="DEBUG snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapconfig" />
 			<Option target="DEBUG import-mib" />
+		</Unit>
+		<Unit filename="core\plugin_common.h">
+			<Option target="snmptrapdispatcher" />
+			<Option target="snmptrapconfig" />
+			<Option target="plugin messagebox" />
+			<Option target="plugin syslog" />
+			<Option target="plugin execute" />
+			<Option target="DEBUG snmptrapdispatcher" />
+			<Option target="DEBUG snmptrapconfig" />
 		</Unit>
 		<Unit filename="import-mib\import-mib.h">
 			<Option target="import-mib" />
@@ -313,21 +344,16 @@
 		<Unit filename="libregistry\registry.c">
 			<Option compilerVar="CC" />
 			<Option target="libregistry" />
-			<Option target="DEBUG libregistry" />
 		</Unit>
 		<Unit filename="libregistry\registry.h">
 			<Option target="libregistry" />
 			<Option target="snmptrapdispatcher" />
 			<Option target="snmptrapconfig" />
-			<Option target="DEBUG libregistry" />
 			<Option target="DEBUG snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapconfig" />
 		</Unit>
 		<Unit filename="plugins\plugin_messagebox.c">
 			<Option compilerVar="CC" />
-			<Option target="plugin messagebox" />
-		</Unit>
-		<Unit filename="plugins\plugin_messagebox.h">
 			<Option target="plugin messagebox" />
 		</Unit>
 		<Unit filename="plugins\plugin_syslog.c">
@@ -336,6 +362,27 @@
 		</Unit>
 		<Unit filename="plugins\plugin_syslog.h">
 			<Option target="plugin syslog" />
+		</Unit>
+		<Unit filename="plugins\plugin_syslog_resources.h">
+			<Option target="plugin syslog" />
+		</Unit>
+		<Unit filename="plugins\plugin_syslog.rc">
+			<Option compilerVar="WINDRES" />
+			<Option target="plugin syslog" />
+		</Unit>
+		<Unit filename="plugins\plugin_execute.c">
+			<Option compilerVar="CC" />
+			<Option target="plugin execute" />
+		</Unit>
+		<Unit filename="plugins\plugin_execute.h">
+			<Option target="plugin execute" />
+		</Unit>
+		<Unit filename="plugins\plugin_execute_resources.h">
+			<Option target="plugin execute" />
+		</Unit>
+		<Unit filename="plugins\plugin_execute.rc">
+			<Option compilerVar="WINDRES" />
+			<Option target="plugin execute" />
 		</Unit>
 		<Unit filename="snmptrapconfig\addDialog.c">
 			<Option compilerVar="CC" />
@@ -387,6 +434,10 @@
 			<Option target="snmptrapconfig" />
 			<Option target="DEBUG snmptrapconfig" />
 		</Unit>
+		<Unit filename="snmptrapconfig\config.ico">
+			<Option target="snmptrapconfig" />
+			<Option target="DEBUG snmptrapconfig" />
+		</Unit>
 		<Unit filename="snmptrapdispatcher\configuration.c">
 			<Option compilerVar="CC" />
 			<Option target="snmptrapdispatcher" />
@@ -406,12 +457,7 @@
 			<Option target="snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapdispatcher" />
 		</Unit>
-		<Unit filename="snmptrapdispatcher\xstring.c">
-			<Option compilerVar="CC" />
-			<Option target="snmptrapdispatcher" />
-			<Option target="DEBUG snmptrapdispatcher" />
-		</Unit>
-		<Unit filename="snmptrapdispatcher\xstring.h">
+		<Unit filename="snmptrapdispatcher\dispatcher.ico">
 			<Option target="snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapdispatcher" />
 		</Unit>
@@ -499,6 +545,10 @@
 		<Unit filename="snmptraphandler\winsnmp\snmp.h">
 			<Option target="snmptraphandler winsnmp" />
 			<Option target="DEBUG snmptraphandler winsnmp" />
+		</Unit>
+		<Unit filename="plugins\debug_plugin_testing.c">
+			<Option compilerVar="CC" />
+			<Option target="DEBUG plugin tester" />
 		</Unit>
 		<Extensions>
 			<code_completion />

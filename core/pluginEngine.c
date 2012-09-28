@@ -40,19 +40,19 @@ bool plugin_load(const char *module, plugin_set *plugin)
 		return false;
 	}
 
-	plugin->GetName = (_GetName)GetProcAddress(plugin->dll, GETNAME);
+	plugin->GetName = (TYPE(GETNAME))GetProcAddress(plugin->dll, NAME(GETNAME));
 	if (!plugin->GetName) goto plugin_load_error;
 
-	plugin->LoadConfig = (_LoadConfig)GetProcAddress(plugin->dll, LOADCONFIG);
+	plugin->LoadConfig = (TYPE(LOADCONFIG))GetProcAddress(plugin->dll, NAME(LOADCONFIG));
 	if (!plugin->LoadConfig) goto plugin_load_error;
 
-	plugin->EditConfig = (_EditConfig)GetProcAddress(plugin->dll, EDITCONFIG);
+	plugin->EditConfig = (TYPE(EDITCONFIG))GetProcAddress(plugin->dll, NAME(EDITCONFIG));
 	if (!plugin->EditConfig) goto plugin_load_error;
 
-	plugin->Run = (_Run)GetProcAddress(plugin->dll, RUN);
+	plugin->Run = (TYPE(RUN))GetProcAddress(plugin->dll, NAME(RUN));
 	if (!plugin->Run) goto plugin_load_error;
 
-	plugin->GetUID = (_GetUID)GetProcAddress(plugin->dll, GETUID);
+	plugin->GetUID = (TYPE(GETUID))GetProcAddress(plugin->dll, NAME(GETUID));
 	if (!plugin->GetUID) goto plugin_load_error;
 
 	plugin->UID = plugin->GetUID();
@@ -92,23 +92,25 @@ void plugin_emit_sample(plugin_set *p)
 	p->Run(&trap);
 }
 
-void plugin_get_configuration(void *data, uint32_t *data_size, const char *plugin_name)
+bool plugin_get_configuration(void *data, uint32_t *data_size, const char *plugin_name)
 {
     HKEY hKey;
 
     if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, REGISTRY_PLUGIN_CONFIG_PATH, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_READ|KEY_WRITE, NULL, &hKey, NULL) != ERROR_SUCCESS)
     {
         printf("Unable to access plugin key in registry!\n");
-        return;
+        return false;
     }
 
 	if (RegQueryValueEx(hKey, plugin_name, NULL, NULL, data, (LPDWORD)data_size) != ERROR_SUCCESS)
 	{
-		data_size = 0;
+		*data_size = 0;
+		RegCloseKey(hKey);
+		return false;
 	}
 
 	RegCloseKey(hKey);
-	return;
+	return true;
 }
 
 bool plugin_set_configuration(void *data, uint32_t data_size, const char *plugin_name)
@@ -136,6 +138,10 @@ plugin_set *plugin_get_by_id(plugin_set *array, unsigned int array_size, unsigne
 {
 	while (array_size > 0)
 	{
+		if (array->UID == 0)
+		{
+			break;
+		}
 		if (array->UID == UID)
 		{
 			return array;

@@ -9,3 +9,5 @@ BOOL addAction(HWND hDlg, LPCTSTR oid);
 BOOL deleteAction(HWND hDlg, DWORD selected);
 BOOL saveAction(HWND hDlg, DWORD selected);
 BOOL exportData(LPCTSTR filename);
+void loadPlugins(HWND hDlg);
+void configurePlugin(HWND hDlg);

@@ -1,16 +1,16 @@
-#include "plugin_syslog.h"
-#include "plugin_syslog_resources.h"
-#include "..\core\trapSnmp.h"
-
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
-
 #include <windows.h>
 #include <winsock2.h>
 
-static const char plugin_name[] = PLUGIN_NAME;
-static const unsigned int plugin_uid = PLUGIN_UID;
+#include "plugin_syslog.h"
+#include "plugin_syslog_resources.h"
+#include "..\core\trapSnmp.h"
+#include "..\core\plugin_common.h"
+
+static const char plugin_name[] = "syslog forward";
+static const uint32_t plugin_uid = STR2UID('S','Y','S','L');
 
 static plugin_configuration config;
 
@@ -51,14 +51,12 @@ int syslog_send_message(const char *message, const char *destination)
 	return sendto(s, message, strlen(message), 0, (struct sockaddr*)&dest, sizeof(dest));
 }
 
-
-
-DLL_EXPORT const char *GetName()
+DLL_EXPORT const char *GETNAME()
 {
 	return plugin_name;
 }
 
-DLL_EXPORT void LoadConfig(const void *data, const unsigned int data_size)
+DLL_EXPORT void LOADCONFIG(const void *data, const unsigned int data_size)
 {
 	if (data_size == sizeof(config))
 	{
@@ -68,7 +66,7 @@ DLL_EXPORT void LoadConfig(const void *data, const unsigned int data_size)
 	return;
 }
 
-DLL_EXPORT void *EditConfig(void *data, unsigned int *data_size)
+DLL_EXPORT void *EDITCONFIG(void *data, unsigned int *data_size)
 {
 	// request for new default values
 	if (data == NULL)
@@ -86,7 +84,7 @@ DLL_EXPORT void *EditConfig(void *data, unsigned int *data_size)
 	return &config;
 }
 
-DLL_EXPORT void Run(snmpTrap *trap)
+DLL_EXPORT void RUN(snmpTrap *trap)
 {
 	static char syslogContent[512];
 	static char sendBuffer[1024];
@@ -101,12 +99,12 @@ DLL_EXPORT void Run(snmpTrap *trap)
 	if (net < 0)
 	{
 		net = GetLastError();
-		snprintf(sendBuffer, sizeof(syslogContent), "Error sending message to %s.\n\nSystem report error %d.", config.target, net);
+		snprintf(sendBuffer, sizeof(sendBuffer), "Error sending message to %s.\n\nSystem report error %d.", config.target, net);
 		MessageBox(0, sendBuffer, plugin_name, MB_OK|MB_ICONERROR|MB_SERVICE_NOTIFICATION);
 	}
 }
 
-DLL_EXPORT unsigned int GetUID()
+DLL_EXPORT uint32_t GETUID()
 {
 	return plugin_uid;
 }

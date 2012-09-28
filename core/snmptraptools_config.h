@@ -6,6 +6,7 @@
 
 #define SERVER_LISTEN_PORT			162
 #define REGISTRY_SERVICE_PATH		"SYSTEM\\CurrentControlSet\\Services\\snmptraptools\\"
+#define REGISTRY_ROOT_PATH			"SYSTEM\\CurrentControlSet\\Services\\snmptraptools\\"
 #define REGISTRY_CONFIG_PATH		"SYSTEM\\CurrentControlSet\\Services\\snmptraptools\\dispatcher\\"
 #define REGISTRY_PLUGIN_CONFIG_PATH		"SYSTEM\\CurrentControlSet\\Services\\snmptraptools\\plugins\\"
 #define REGISTRY_SERVICE_EXECUTABLE	"ImagePath"
@@ -41,6 +42,7 @@
 #define MAX_TRAP_VARIABLES          256
 #define MAX_REGISTRY_LEN            512
 #define MAX_PLUGINS					256
+#define MAX_PLUGIN_CONFIG_LEN		4096
 
 #define ERROR_SNMP_INIT         1
 #define ERROR_DISPATCHER_INIT   2
@@ -58,5 +60,8 @@
 
 #define PLUGIN_FILTER	"plugin_*.dll"
 
+#define VERSION_NUM		0,3,0,0
+#define VERSION_STR		"0,3,0,0a\0"
+#define VERISON_BUILD	"Built the 2012-09-29 on Estephe with MinGW tool set + bison fix\0"
 
 #endif // SNMPTRAPTOOL_CONFIG_H_INCLUDED

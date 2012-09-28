@@ -43,7 +43,7 @@ int main()
 	char **list = plugin_find();
 	unsigned int i;
 	plugin_set p[MAX_PLUGINS];
-	char buffer[256];
+	char buffer[MAX_PLUGIN_CONFIG_LEN];
 	uint32_t buffer_size;
 	void *shared_data;
 
@@ -83,7 +83,7 @@ int main()
 						printf("failed!\n");
 					}
 
-					printf("\tT: write plugin configuration: ");
+					printf("\tT: write plugin configuration");
 					if (plugin_set_configuration(buffer, buffer_size, p[i].GetName()))		// set_configuration test
 					{
 						printf("%d bytes written\n", buffer_size);
@@ -97,9 +97,16 @@ int main()
 				{
 					printf("\tT: read plugin configuration: ");
 					buffer_size = sizeof(buffer);
-					plugin_get_configuration(buffer, &buffer_size, p[i].GetName()); 	// get_configuration test
-					printf("%d bytes read\n", buffer_size);
+					if (plugin_get_configuration(buffer, &buffer_size, p[i].GetName()))
+					{
+						printf("%d bytes read\n", buffer_size);
+					}
+					else
+					{
+						printf("failed!\n");
+					}
 				}
+				printf("buffer_size=%d\n", buffer_size);
 				if (tests & DEBUG_PLUGIN_TEST_PLUGIN_CONFIG_EDITOR)
 				{
 					printf("\tT: run plugin configuration editor: ");
@@ -114,6 +121,7 @@ int main()
 						printf("no changes.\n");
 					}
 				}
+				printf("buffer_size=%d\n", buffer_size);
 				if (tests & DEBUG_PLUGIN_TEST_WRITE_CONFIGURATION)
 				{
 					printf("\tT: write plugin configuration: ");
@@ -126,6 +134,7 @@ int main()
 						printf("failed!\n");
 					}
 				}
+				printf("buffer_size=%d\n", buffer_size);
 				if (tests & DEBUG_PLUGIN_TEST_LOAD_CONFIGURATION)
 				{
 					printf("\tT: uploading configuration to plugin\n");

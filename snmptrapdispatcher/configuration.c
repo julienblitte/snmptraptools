@@ -47,7 +47,7 @@ trap_action_entry *configurationLoad()
         result[keyIndex].genericType = TRAP_TYPE_UNKNOW;
 
         bufferSize = sizeof(buffer);
-        if (RegGetValue(hKey, currentKey, REGISTRY_OID, 0, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
+        if (RegGetValue(hKey, currentKey, REGISTRY_OID, RRF_RT_REG_SZ, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
         {
             result[keyIndex].oid = strdup(buffer);
         }
@@ -59,33 +59,28 @@ trap_action_entry *configurationLoad()
 		}
 
 		bufferSize = sizeof(buffer);
-		if (RegGetValue(hKey, currentKey, REGISTRY_SPECIFIC_TYPE, 0, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
+		if (RegGetValue(hKey, currentKey, REGISTRY_SPECIFIC_TYPE, RRF_RT_REG_DWORD, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
 		{
-			// result[keyIndex].specificType = *((long *)buffer);
+			// result[keyIndex].specificType = *((uint32_t *)buffer);
 			memcpy(&result[keyIndex].specificType, buffer, sizeof(((trap_action_entry*)NULL)->specificType));
 		}
 
 		bufferSize = sizeof(buffer);
-		if (RegGetValue(hKey, currentKey, REGISTRY_GENERIC_TYPE, 0, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
+		if (RegGetValue(hKey, currentKey, REGISTRY_GENERIC_TYPE, RRF_RT_REG_DWORD, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
 		{
-			//result[keyIndex].genericType = *((long *)buffer);
+			//result[keyIndex].genericType = *((uint32_t *)buffer);
 			memcpy(&result[keyIndex].genericType, buffer, sizeof(((trap_action_entry*)NULL)->genericType));
 		}
 
 		bufferSize = sizeof(buffer);
-		if (RegGetValue(hKey, currentKey, REGISTRY_RUN, 0, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
+		if (RegGetValue(hKey, currentKey, REGISTRY_PLUGIN, RRF_RT_REG_DWORD, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
 		{
-			result[keyIndex].run = strdup(buffer);
+			//result[keyIndex].pluginUID = *((uint32_t *)buffer);
+			memcpy(&result[keyIndex].pluginUID, buffer, sizeof(((trap_action_entry*)NULL)->pluginUID));
 		}
 
 		bufferSize = sizeof(buffer);
-		if (RegGetValue(hKey, currentKey, REGISTRY_WKDIR, 0, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
-		{
-			result[keyIndex].wkDir = strdup(buffer);
-		}
-
-		bufferSize = sizeof(buffer);
-		if (RegGetValue(hKey, currentKey, REGISTRY_DESCRIPTION, 0, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
+		if (RegGetValue(hKey, currentKey, REGISTRY_DESCRIPTION, RRF_RT_REG_SZ, NULL, buffer, &bufferSize) == ERROR_SUCCESS)
 		{
 			result[keyIndex].desc = strdup(buffer);
 		}
@@ -111,14 +106,6 @@ void configurationClean(trap_action_entry *list)
     while(list[i].oid != NULL)
     {
         free(list[i].oid);
-        if (list[i].run != NULL)
-        {
-            free(list[i].run);
-        }
-        if (list[i].wkDir != NULL)
-        {
-            free(list[i].wkDir);
-        }
         if (list[i].desc != NULL)
         {
             free(list[i].desc);

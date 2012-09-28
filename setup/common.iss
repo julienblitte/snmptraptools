@@ -7,13 +7,13 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{B7ABA127-3FBE-4118-BD12-A2B9D372D1F9}
 AppName=Snmptraptools
-AppVersion=2.51b
+AppVersion=3.00a
 AppPublisherURL=http://marin.jb.free.fr/snmptraptools
 AppSupportURL=http://marin.jb.free.fr/snmptraptools
 AppUpdatesURL=http://marin.jb.free.fr/snmptraptools
 DefaultDirName={pf}\Snmptraptools
 DefaultGroupName=Snmptraptools
-OutputBaseFilename=setup_snmptraptools_2.51b
+OutputBaseFilename=setup_snmptraptools_3.00a
 LicenseFile=lgpl3.txt
 OutputDir=..\bin
 Compression=lzma
@@ -55,9 +55,8 @@ Filename: "{sys}\sc.exe"; Parameters: "start snmptraptools"; Tasks: runservice
 
 [Registry]
 Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\snmptraptools\dispatcher\0"; ValueType: string; ValueData: "1.3.6.1.4.1"
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\snmptraptools\dispatcher\0"; ValueType: string; ValueName: "description"; ValueData: "values: ${{*}"
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\snmptraptools\dispatcher\0"; ValueType: string; ValueName: "run"; ValueData: "snmptrapmessagebox.exe"
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\snmptraptools\dispatcher\0"; ValueType: string; ValueName: "wkdir"; ValueData: "{app}"
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\snmptraptools\dispatcher\0"; ValueType: string; ValueName: "description"; ValueData: "sample messagebox"
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\snmptraptools\dispatcher\0"; ValueType: dword; ValueName: "plugin"; ValueData: "$4247534D"
 
 [UninstallRun]
 Filename: "{sys}\sc.exe"; Parameters: "stop snmptraptools"
