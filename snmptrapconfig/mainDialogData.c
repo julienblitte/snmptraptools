@@ -157,8 +157,6 @@ BOOL loadAction(HWND hDlg, DWORD selected)
         return FALSE;
     }
 
-    printf("%u: %s\n", (unsigned int)selected, actionList[selected]);
-
     // TODO: retrive oid from selected index...
     if (RegOpenKeyEx(hKey, actionList[selected], 0, KEY_READ, &hSubKey) != ERROR_SUCCESS)
     {

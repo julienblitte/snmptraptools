@@ -1,7 +1,7 @@
 #include "plugin_execute_resources.h"
 
-ID_DIALOG_CONFIG DIALOGEX 6, 5, 215, 100
-    CAPTION "Plugin configuration - Syslog"
+ID_DIALOG_CONFIG DIALOGEX 6, 5, 215, 95
+    CAPTION "Plugin configuration - Execute"
     FONT 8, "Tahoma"
     STYLE 0x00000000
     BEGIN
@@ -14,6 +14,6 @@ ID_DIALOG_CONFIG DIALOGEX 6, 5, 215, 100
         EDITTEXT ID_EDIT_WORK_DIR, 10, 44, 180, 13
         PUSHBUTTON "...", ID_BROWSE_WORK_DIR, 189, 44, 15, 13
 
-        PUSHBUTTON "Cancel", ID_BUTTON_CANCEL, 40, 70, 46, 15
-        DEFPUSHBUTTON "Ok", ID_BUTTON_OK, 100, 70, 46, 15
+        PUSHBUTTON "Cancel", ID_BUTTON_CANCEL, 50, 70, 46, 15
+        DEFPUSHBUTTON "Ok", ID_BUTTON_OK, 110, 70, 46, 15
     END

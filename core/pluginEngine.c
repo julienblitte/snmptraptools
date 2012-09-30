@@ -98,7 +98,9 @@ bool plugin_get_configuration(void *data, uint32_t *data_size, const char *plugi
 
     if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, REGISTRY_PLUGIN_CONFIG_PATH, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_READ|KEY_WRITE, NULL, &hKey, NULL) != ERROR_SUCCESS)
     {
+#ifdef DEBUG
         printf("Unable to access plugin key in registry!\n");
+#endif
         return false;
     }
 
@@ -119,13 +121,17 @@ bool plugin_set_configuration(void *data, uint32_t data_size, const char *plugin
 
     if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, REGISTRY_PLUGIN_CONFIG_PATH, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_READ|KEY_WRITE, NULL, &hKey, NULL) != ERROR_SUCCESS)
     {
+#ifdef DEBUG
         printf("Unable to access plugin key in registry!\n");
+#endif
         return false;
     }
 
 	if (RegSetValueEx(hKey, plugin_name, 0, REG_BINARY, (BYTE*)data, data_size) != ERROR_SUCCESS)
     {
+#ifdef DEBUG
 		printf("Unable to create value \"%s\" in plugin!\n", plugin_name);
+#endif
 		RegCloseKey(hKey);
 		return false;
 	}

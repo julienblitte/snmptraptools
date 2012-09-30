@@ -195,7 +195,9 @@ BOOL dlgMainEventHandler(HWND hDlg, WPARAM wParam)
 			configurePlugin(hDlg);
 			break;
         default:
-            printf("message %04x: %04x\n", LOWORD(wParam), HIWORD(wParam));
+#ifdef DEBUG
+            printf(">message %04x from %04x.\n", LOWORD(wParam), HIWORD(wParam));
+#endif
             break;
     }
 
