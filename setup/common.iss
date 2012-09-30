@@ -40,9 +40,11 @@ Source: "..\bin\snmptrapdispatcher.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\snmptraphandler_standalone.exe"; DestDir: "{app}"; Components: standalone; Flags: ignoreversion; DestName: "snmptraphandler.exe"
 Source: "..\bin\snmptraphandler_winsnmp.exe"; DestDir: "{app}"; Components: winsnmp; Flags: ignoreversion; DestName: "snmptraphandler.exe"
 Source: "..\bin\import-mib.exe"; DestDir: "{app}"; Flags: ignoreversion; DestName: "import-mib.exe"
-Source: "..\tools\snmptrapemail\download sendEmail.html"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\tools\snmptrapemail\snmptrapemail.bat"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\tools\snmptrapmessagebox\snmptrapmessagebox.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\bin\plugin_execute.dll"; DestDir: "{app}"; Flags: ignoreversion; DestName: "plugin_execute.dll"
+Source: "..\bin\plugin_http.dll"; DestDir: "{app}"; Flags: ignoreversion; DestName: "plugin_http.dll"
+Source: "..\bin\plugin_messagebox.dll"; DestDir: "{app}"; Flags: ignoreversion; DestName: "plugin_messagebox.dll"
+Source: "..\bin\plugin_syslog.dll"; DestDir: "{app}"; Flags: ignoreversion; DestName: "plugin_syslog.dll"
+
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

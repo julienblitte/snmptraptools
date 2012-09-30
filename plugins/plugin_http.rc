@@ -1,0 +1,21 @@
+#include "plugin_http_resources.h"
+
+ID_DIALOG_CONFIG DIALOGEX 6, 5, 205, 110
+    CAPTION "Plugin configuration - HTTP"
+    FONT 8, "Tahoma"
+    STYLE 0x00000000
+    BEGIN
+        // XXXXXX id, x, y, width, height
+        GROUPBOX " HTTP server ", ID_GROUPBOX_SERVER, 8, 5, 190, 40
+			LTEXT "Address:", -1, 16, 16, 140, 12
+			EDITTEXT ID_EDIT_IP_ADDRESS, 16, 25, 140, 13
+
+			LTEXT "Port:", -1, 160, 16, 30, 12
+			EDITTEXT ID_EDIT_PORT, 160, 25, 30, 13
+
+        LTEXT "Script path:", -1, 10, 53, 186, 12
+        EDITTEXT ID_EDIT_SCRIPT, 10, 62, 186, 13
+
+        PUSHBUTTON "Cancel", ID_BUTTON_CANCEL, 45, 85, 46, 15
+        DEFPUSHBUTTON "Ok", ID_BUTTON_OK, 110, 85, 46, 15
+    END
