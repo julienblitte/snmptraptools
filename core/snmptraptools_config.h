@@ -62,6 +62,6 @@
 
 #define VERSION_NUM		0,3,0,0
 #define VERSION_STR		"0,3,0,0a\0"
-#define VERISON_BUILD	"Built the 2012-09-29 on Estephe with MinGW tool set + bison fix\0"
+#define VERSION_BUILD	"Built the 2012-09-29 on Estephe with MinGW tool set + bison fix\0"
 
 #endif // SNMPTRAPTOOL_CONFIG_H_INCLUDED

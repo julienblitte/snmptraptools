@@ -68,7 +68,6 @@
 				<Option object_output="obj\Release\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
-				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-O2" />
@@ -101,7 +100,6 @@
 				<Option object_output="obj\" />
 				<Option type="3" />
 				<Option compiler="gcc" />
-				<Option createDefFile="1" />
 				<Option createStaticLib="1" />
 				<Compiler>
 					<Add option="-O2" />
@@ -117,7 +115,6 @@
 				<Option object_output="obj\" />
 				<Option type="3" />
 				<Option compiler="gcc" />
-				<Option createDefFile="1" />
 				<Option createStaticLib="1" />
 				<Compiler>
 					<Add option="-Wall" />
@@ -129,12 +126,28 @@
 					<Add library="lib\libwsock32.a" />
 				</Linker>
 			</Target>
+			<Target title="plugin http">
+				<Option output="bin\plugin_http" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DBUILD_DLL" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="lib\libwsock32.a" />
+					<Add library="lib\libws2_32.a" />
+				</Linker>
+			</Target>
 			<Target title="plugin execute">
 				<Option output="bin\plugin_execute" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\" />
 				<Option type="3" />
 				<Option compiler="gcc" />
-				<Option createDefFile="1" />
 				<Option createStaticLib="1" />
 				<Compiler>
 					<Add option="-O2" />
@@ -222,9 +235,8 @@
 				<Option output="debug\plugin_tester" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="bin\" />
 				<Option object_output="obj\Debug\" />
-				<Option type="2" />
+				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-DDEBUG" />
@@ -241,6 +253,7 @@
 			<Option target="snmptrapconfig" />
 			<Option target="DEBUG snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapconfig" />
+			<Option target="DEBUG plugin tester" />
 		</Unit>
 		<Unit filename="core\pluginEngine.h">
 			<Option target="snmptrapdispatcher" />
@@ -248,6 +261,16 @@
 			<Option target="DEBUG snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapconfig" />
 			<Option target="DEBUG plugin tester" />
+		</Unit>
+		<Unit filename="core\plugin_common.h">
+			<Option target="snmptrapdispatcher" />
+			<Option target="snmptrapconfig" />
+			<Option target="plugin messagebox" />
+			<Option target="plugin syslog" />
+			<Option target="plugin execute" />
+			<Option target="plugin http" />
+			<Option target="DEBUG snmptrapdispatcher" />
+			<Option target="DEBUG snmptrapconfig" />
 		</Unit>
 		<Unit filename="core\snmptraptools_config.h">
 			<Option target="snmptraphandler standalone" />
@@ -269,6 +292,7 @@
 			<Option target="plugin messagebox" />
 			<Option target="plugin syslog" />
 			<Option target="plugin execute" />
+			<Option target="plugin http" />
 			<Option target="import-mib" />
 			<Option target="DEBUG snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapconfig" />
@@ -280,19 +304,11 @@
 			<Option target="plugin messagebox" />
 			<Option target="plugin syslog" />
 			<Option target="plugin execute" />
+			<Option target="plugin http" />
 			<Option target="import-mib" />
 			<Option target="DEBUG snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapconfig" />
 			<Option target="DEBUG import-mib" />
-		</Unit>
-		<Unit filename="core\plugin_common.h">
-			<Option target="snmptrapdispatcher" />
-			<Option target="snmptrapconfig" />
-			<Option target="plugin messagebox" />
-			<Option target="plugin syslog" />
-			<Option target="plugin execute" />
-			<Option target="DEBUG snmptrapdispatcher" />
-			<Option target="DEBUG snmptrapconfig" />
 		</Unit>
 		<Unit filename="import-mib\import-mib.h">
 			<Option target="import-mib" />
@@ -352,6 +368,38 @@
 			<Option target="DEBUG snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapconfig" />
 		</Unit>
+		<Unit filename="plugins\debug_plugin_testing.c">
+			<Option compilerVar="CC" />
+			<Option target="DEBUG plugin tester" />
+		</Unit>
+		<Unit filename="plugins\plugin_execute.c">
+			<Option compilerVar="CC" />
+			<Option target="plugin execute" />
+		</Unit>
+		<Unit filename="plugins\plugin_execute.h">
+			<Option target="plugin execute" />
+		</Unit>
+		<Unit filename="plugins\plugin_execute.rc">
+			<Option compilerVar="WINDRES" />
+			<Option target="plugin execute" />
+		</Unit>
+		<Unit filename="plugins\plugin_execute_resources.h">
+			<Option target="plugin execute" />
+		</Unit>
+		<Unit filename="plugins\plugin_http.c">
+			<Option compilerVar="CC" />
+			<Option target="plugin http" />
+		</Unit>
+		<Unit filename="plugins\plugin_http.h">
+			<Option target="plugin http" />
+		</Unit>
+		<Unit filename="plugins\plugin_http.rc">
+			<Option compilerVar="WINDRES" />
+			<Option target="plugin http" />
+		</Unit>
+		<Unit filename="plugins\plugin_http_resources.h">
+			<Option target="plugin http" />
+		</Unit>
 		<Unit filename="plugins\plugin_messagebox.c">
 			<Option compilerVar="CC" />
 			<Option target="plugin messagebox" />
@@ -363,26 +411,12 @@
 		<Unit filename="plugins\plugin_syslog.h">
 			<Option target="plugin syslog" />
 		</Unit>
-		<Unit filename="plugins\plugin_syslog_resources.h">
-			<Option target="plugin syslog" />
-		</Unit>
 		<Unit filename="plugins\plugin_syslog.rc">
 			<Option compilerVar="WINDRES" />
 			<Option target="plugin syslog" />
 		</Unit>
-		<Unit filename="plugins\plugin_execute.c">
-			<Option compilerVar="CC" />
-			<Option target="plugin execute" />
-		</Unit>
-		<Unit filename="plugins\plugin_execute.h">
-			<Option target="plugin execute" />
-		</Unit>
-		<Unit filename="plugins\plugin_execute_resources.h">
-			<Option target="plugin execute" />
-		</Unit>
-		<Unit filename="plugins\plugin_execute.rc">
-			<Option compilerVar="WINDRES" />
-			<Option target="plugin execute" />
+		<Unit filename="plugins\plugin_syslog_resources.h">
+			<Option target="plugin syslog" />
 		</Unit>
 		<Unit filename="snmptrapconfig\addDialog.c">
 			<Option compilerVar="CC" />
@@ -390,6 +424,10 @@
 			<Option target="DEBUG snmptrapconfig" />
 		</Unit>
 		<Unit filename="snmptrapconfig\addDialog.h">
+			<Option target="snmptrapconfig" />
+			<Option target="DEBUG snmptrapconfig" />
+		</Unit>
+		<Unit filename="snmptrapconfig\config.ico">
 			<Option target="snmptrapconfig" />
 			<Option target="DEBUG snmptrapconfig" />
 		</Unit>
@@ -434,16 +472,16 @@
 			<Option target="snmptrapconfig" />
 			<Option target="DEBUG snmptrapconfig" />
 		</Unit>
-		<Unit filename="snmptrapconfig\config.ico">
-			<Option target="snmptrapconfig" />
-			<Option target="DEBUG snmptrapconfig" />
-		</Unit>
 		<Unit filename="snmptrapdispatcher\configuration.c">
 			<Option compilerVar="CC" />
 			<Option target="snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapdispatcher" />
 		</Unit>
 		<Unit filename="snmptrapdispatcher\configuration.h">
+			<Option target="snmptrapdispatcher" />
+			<Option target="DEBUG snmptrapdispatcher" />
+		</Unit>
+		<Unit filename="snmptrapdispatcher\dispatcher.ico">
 			<Option target="snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapdispatcher" />
 		</Unit>
@@ -454,10 +492,6 @@
 		</Unit>
 		<Unit filename="snmptrapdispatcher\resources.rc">
 			<Option compilerVar="WINDRES" />
-			<Option target="snmptrapdispatcher" />
-			<Option target="DEBUG snmptrapdispatcher" />
-		</Unit>
-		<Unit filename="snmptrapdispatcher\dispatcher.ico">
 			<Option target="snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapdispatcher" />
 		</Unit>
@@ -545,10 +579,6 @@
 		<Unit filename="snmptraphandler\winsnmp\snmp.h">
 			<Option target="snmptraphandler winsnmp" />
 			<Option target="DEBUG snmptraphandler winsnmp" />
-		</Unit>
-		<Unit filename="plugins\debug_plugin_testing.c">
-			<Option compilerVar="CC" />
-			<Option target="DEBUG plugin tester" />
 		</Unit>
 		<Extensions>
 			<code_completion />

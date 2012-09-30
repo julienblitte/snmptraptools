@@ -15,7 +15,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     // The user interface is a modal dialog box
     if (DialogBox(hInstance, MAKEINTRESOURCE(ID_DIALOG_MAIN), NULL, (DLGPROC)dlgMainMessageHandler) != 0)
     {
-        printf("error: %lu\n", GetLastError());
         return EXIT_FAILURE;
     }
 

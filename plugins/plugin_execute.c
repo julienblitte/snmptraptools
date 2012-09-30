@@ -12,7 +12,7 @@
 #include "..\core\trapSnmp.h"
 #include "..\core\plugin_common.h"
 
-static const char plugin_name[] = "execute";
+static const char plugin_name[] = "Execute";
 static const unsigned int plugin_uid = STR2UID('E','X','E','C');;
 
 static plugin_configuration config;
@@ -37,7 +37,7 @@ DLL_EXPORT void LOADCONFIG(const void *data, const unsigned int data_size)
 DLL_EXPORT void *EDITCONFIG(void *data, unsigned int *data_size)
 {
 	// request for new default values
-	if (data == NULL)
+	if (data == NULL || *data_size != sizeof(config))
 	{
 		strncpy(config.run, "", sizeof(config.run));
 		strncpy(config.wkdir, "", sizeof(config.wkdir));

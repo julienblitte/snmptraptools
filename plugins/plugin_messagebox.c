@@ -4,7 +4,7 @@
 #include "..\core\trapSnmp.h"
 #include "..\core\plugin_common.h"
 
-static const char plugin_name[] = "messagebox";
+static const char plugin_name[] = "Messagebox";
 static const uint32_t plugin_uid = STR2UID('M','S','G','B');
 
 DLL_EXPORT const char *GETNAME()
@@ -22,7 +22,7 @@ DLL_EXPORT void *EDITCONFIG(void *data, unsigned int *data_size)
 	static int config;
 
 	// ask for default value template
-	if (data == NULL)
+	if (data == NULL || *data_size != sizeof(config))
 	{
 		// it's mandatory to send a valid pointer in this case
 		*data_size = sizeof(config);

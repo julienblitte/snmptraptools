@@ -61,9 +61,10 @@ Dependencies:
  * import-mib: liby, libfl, libregistry
  * plugin syslog: libwsocks32
  * plugin execute: libcomdlg32
+ * plugin http: libws2_32
 
 Origins of files:
  - Built from project: libregistry
- - Extracted from MinGW: libcomdlg32, libwsock32, libwsnmp32, liby, libfl
+ - Extracted from MinGW: libcomdlg32, libwsock32, libwsnmp32, liby, libfl, libws2_32
 
  

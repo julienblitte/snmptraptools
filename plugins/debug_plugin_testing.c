@@ -106,7 +106,6 @@ int main()
 						printf("failed!\n");
 					}
 				}
-				printf("buffer_size=%d\n", buffer_size);
 				if (tests & DEBUG_PLUGIN_TEST_PLUGIN_CONFIG_EDITOR)
 				{
 					printf("\tT: run plugin configuration editor: ");
@@ -121,7 +120,6 @@ int main()
 						printf("no changes.\n");
 					}
 				}
-				printf("buffer_size=%d\n", buffer_size);
 				if (tests & DEBUG_PLUGIN_TEST_WRITE_CONFIGURATION)
 				{
 					printf("\tT: write plugin configuration: ");
@@ -134,7 +132,6 @@ int main()
 						printf("failed!\n");
 					}
 				}
-				printf("buffer_size=%d\n", buffer_size);
 				if (tests & DEBUG_PLUGIN_TEST_LOAD_CONFIGURATION)
 				{
 					printf("\tT: uploading configuration to plugin\n");

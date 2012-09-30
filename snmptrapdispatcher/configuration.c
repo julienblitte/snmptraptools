@@ -19,20 +19,23 @@ trap_action_entry *configurationLoad()
 
     if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, REGISTRY_CONFIG_PATH, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_READ|KEY_WRITE, NULL, &hKey, NULL) != ERROR_SUCCESS)
     {
-        printf("Unable to access key in registry!\n");
+#ifdef DEBUG
+		printf("Unable to access key %s in registry!\n", REGISTRY_CONFIG_PATH);
+#endif
         return NULL;
     }
 
     if (RegCountSubKeys(hKey, &keyCount) != ERROR_SUCCESS)
     {
+#ifdef DEBUG
         printf("RegCountSubKeys failed!\n");
+#endif
         return NULL;
     }
 
     result = calloc(keyCount+1, sizeof(trap_action_entry));
     if (result == NULL)
     {
-        printf("calloc failed!\n");
         return NULL;
     }
 
