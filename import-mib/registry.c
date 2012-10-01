@@ -62,21 +62,14 @@ BOOL registryAddOid(HKEY hKey, LPCTSTR oid, DWORD trapCode, LPCTSTR description)
 		result = FALSE;
     }
 
-	// add value REGISTRY_RUN
-    if (RegSetValueEx(hSubKey, REGISTRY_RUN, 0, REG_SZ, (BYTE*)DEFAULT_ACTION, strlen(DEFAULT_ACTION)+1) != ERROR_SUCCESS)
-    {
-		result = FALSE;
-    }
-
-	// add value REGISTRY_WKDIR
-    if (RegSetValueEx(hSubKey, REGISTRY_WKDIR, 0, REG_SZ, (BYTE*)registryWkDir, registryWkDir_size) != ERROR_SUCCESS)
+	// add value REGISTRY_PLUGIN
+	trapCode = DEFAULT_PLUGIN;
+    if (RegSetValueEx(hSubKey, REGISTRY_PLUGIN, 0, REG_DWORD, (BYTE*)&trapCode, sizeof(trapCode)) != ERROR_SUCCESS)
     {
 		result = FALSE;
     }
 
     RegCloseKey(hSubKey);
-
-    // client side: refreshActionList(hDlg);
 
     return result;
 }

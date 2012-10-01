@@ -1,0 +1,30 @@
+#include "plugin_smtp_resources.h"
+#include <winuser.h>
+
+ID_DIALOG_CONFIG DIALOGEX 6, 5, 205, 202
+    CAPTION "Plugin configuration - E-mail"
+    FONT 8, "Tahoma"
+    STYLE 0x00000000
+    BEGIN
+        // XXXXXX id, x, y, width, height
+		LTEXT "SMTP Server:", -1, 10, 5, 186, 12
+		EDITTEXT ID_EDIT_SERVER, 10, 15, 186, 13
+
+		LTEXT "Sender address:", -1, 10, 33, 186, 12
+		EDITTEXT ID_EDIT_FROM, 10, 43, 186, 13
+
+        LTEXT "Reciever address:", -1, 10, 61, 186, 12
+        EDITTEXT ID_EDIT_TO, 10, 71, 186, 13
+
+        GROUPBOX " Authentication ", ID_GROUPBOX_AUTH, 8, 90, 190, 80
+			CHECKBOX "Enabled", ID_CHECKBOX_AUTH, 16, 100, 174, 12, BS_AUTOCHECKBOX
+
+			LTEXT "Login:", -1, 16, 115, 174, 12
+			EDITTEXT ID_EDIT_LOGIN, 16, 125, 174, 13
+
+			LTEXT "Password:", -1, 16, 140, 174, 12
+			EDITTEXT ID_EDIT_PASSWORD, 16, 150, 174, 13, ES_PASSWORD
+
+        PUSHBUTTON "Cancel", ID_BUTTON_CANCEL, 45, 178, 46, 15
+        DEFPUSHBUTTON "Ok", ID_BUTTON_OK, 110, 178, 46, 15
+    END

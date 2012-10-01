@@ -7,13 +7,13 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{B7ABA127-3FBE-4118-BD12-A2B9D372D1F9}
 AppName=Snmptraptools
-AppVersion=3.00a
+AppVersion=3.01a
 AppPublisherURL=http://marin.jb.free.fr/snmptraptools
 AppSupportURL=http://marin.jb.free.fr/snmptraptools
 AppUpdatesURL=http://marin.jb.free.fr/snmptraptools
 DefaultDirName={pf}\Snmptraptools
 DefaultGroupName=Snmptraptools
-OutputBaseFilename=setup_snmptraptools_3.00a
+OutputBaseFilename=setup_snmptraptools_3.01a
 LicenseFile=lgpl3.txt
 OutputDir=..\bin
 Compression=lzma
@@ -43,6 +43,7 @@ Source: "..\bin\import-mib.exe"; DestDir: "{app}"; Flags: ignoreversion; DestNam
 Source: "..\bin\plugin_execute.dll"; DestDir: "{app}"; Flags: ignoreversion; DestName: "plugin_execute.dll"
 Source: "..\bin\plugin_http.dll"; DestDir: "{app}"; Flags: ignoreversion; DestName: "plugin_http.dll"
 Source: "..\bin\plugin_messagebox.dll"; DestDir: "{app}"; Flags: ignoreversion; DestName: "plugin_messagebox.dll"
+Source: "..\bin\plugin_smtp.dll"; DestDir: "{app}"; Flags: ignoreversion; DestName: "plugin_smtp.dll"
 Source: "..\bin\plugin_syslog.dll"; DestDir: "{app}"; Flags: ignoreversion; DestName: "plugin_syslog.dll"
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
