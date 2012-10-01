@@ -16,4 +16,4 @@
 #define ON_CLICK       (( BN_CLICKED    )<<16)
 #define ON_CHANGE      (( EN_CHANGE     )<<16)
 
-#endif // PLUGIN_SYSLOG_RESOURCES_H_INCLUDED
+#endif // PLUGIN_HTTP_RESOURCES_H_INCLUDED

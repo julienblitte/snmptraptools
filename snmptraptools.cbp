@@ -9,6 +9,7 @@
 			<Target title="snmptraphandler standalone">
 				<Option output="bin\snmptraphandler_standalone" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Release\" />
+				<Option working_dir="bin\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -22,6 +23,7 @@
 			<Target title="snmptraphandler winsnmp">
 				<Option output="bin\snmptraphandler_winsnmp" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Release\" />
+				<Option working_dir="bin\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -35,6 +37,7 @@
 			<Target title="snmptrapdispatcher">
 				<Option output="bin\snmptrapdispatcher" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Release\" />
+				<Option working_dir="bin\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -48,6 +51,7 @@
 			<Target title="snmptrapconfig">
 				<Option output="bin\snmptrapconfig" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Release\" />
+				<Option working_dir="bin\" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -64,7 +68,7 @@
 			</Target>
 			<Target title="libregistry">
 				<Option output="lib\libregistry" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="" />
+				<Option working_dir="bin\" />
 				<Option object_output="obj\Release\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
@@ -79,6 +83,7 @@
 			<Target title="import-mib">
 				<Option output="bin\import-mib" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Release\" />
+				<Option working_dir="bin\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -98,6 +103,7 @@
 			<Target title="plugin messagebox">
 				<Option output="bin\plugin_messagebox" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\" />
+				<Option working_dir="bin\" />
 				<Option type="3" />
 				<Option compiler="gcc" />
 				<Option createStaticLib="1" />
@@ -159,9 +165,28 @@
 					<Add library="lib\libcomdlg32.a" />
 				</Linker>
 			</Target>
+			<Target title="plugin smtp">
+				<Option output="bin\plugin_smtp" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DBUILD_DLL" />
+					<Add option="-DDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="lib\libwsock32.a" />
+					<Add library="lib\libws2_32.a" />
+				</Linker>
+			</Target>
 			<Target title="DEBUG snmptraphandler standalone">
 				<Option output="debug\snmptraphandler_standalone" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Debug\" />
+				<Option working_dir="bin\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option parameters="non-service-mode" />
@@ -175,6 +200,7 @@
 			<Target title="DEBUG snmptraphandler winsnmp">
 				<Option output="debug\snmptraphandler_winsnmp" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Debug\" />
+				<Option working_dir="bin\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option parameters="non-service-mode" />
@@ -188,6 +214,7 @@
 			<Target title="DEBUG snmptrapdispatcher">
 				<Option output="debug\snmptrapdispatcher" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Debug\" />
+				<Option working_dir="bin\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -200,6 +227,7 @@
 			<Target title="DEBUG snmptrapconfig">
 				<Option output="debug\snmptrapconfig" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Debug\" />
+				<Option working_dir="bin\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -216,6 +244,7 @@
 			<Target title="DEBUG import-mib">
 				<Option output="debug\import-mib" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Debug\" />
+				<Option working_dir="bin\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -269,6 +298,7 @@
 			<Option target="plugin syslog" />
 			<Option target="plugin execute" />
 			<Option target="plugin http" />
+			<Option target="plugin smtp" />
 			<Option target="DEBUG snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapconfig" />
 		</Unit>
@@ -293,6 +323,7 @@
 			<Option target="plugin syslog" />
 			<Option target="plugin execute" />
 			<Option target="plugin http" />
+			<Option target="plugin smtp" />
 			<Option target="import-mib" />
 			<Option target="DEBUG snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapconfig" />
@@ -305,6 +336,7 @@
 			<Option target="plugin syslog" />
 			<Option target="plugin execute" />
 			<Option target="plugin http" />
+			<Option target="plugin smtp" />
 			<Option target="import-mib" />
 			<Option target="DEBUG snmptrapdispatcher" />
 			<Option target="DEBUG snmptrapconfig" />
@@ -418,6 +450,20 @@
 		<Unit filename="plugins\plugin_syslog_resources.h">
 			<Option target="plugin syslog" />
 		</Unit>
+		<Unit filename="plugins\plugin_smtp.c">
+			<Option compilerVar="CC" />
+			<Option target="plugin smtp" />
+		</Unit>
+		<Unit filename="plugins\plugin_smtp.h">
+			<Option target="plugin smtp" />
+		</Unit>
+		<Unit filename="plugins\plugin_smtp.rc">
+			<Option compilerVar="WINDRES" />
+			<Option target="plugin smtp" />
+		</Unit>
+		<Unit filename="plugins\plugin_smtp_resources.h">
+			<Option target="plugin smtp" />
+		</Unit>		
 		<Unit filename="snmptrapconfig\addDialog.c">
 			<Option compilerVar="CC" />
 			<Option target="snmptrapconfig" />

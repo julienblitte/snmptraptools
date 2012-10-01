@@ -9,10 +9,8 @@
 #define REGISTRY_ROOT_PATH			"SYSTEM\\CurrentControlSet\\Services\\snmptraptools\\"
 #define REGISTRY_CONFIG_PATH		"SYSTEM\\CurrentControlSet\\Services\\snmptraptools\\dispatcher\\"
 #define REGISTRY_PLUGIN_CONFIG_PATH		"SYSTEM\\CurrentControlSet\\Services\\snmptraptools\\plugins\\"
-#define REGISTRY_SERVICE_EXECUTABLE	"ImagePath"
+#define REGISTRY_SERVICE_EXECUTABLE		"ImagePath"
 #define REGISTRY_OID			NULL
-#define REGISTRY_RUN            "run"
-#define REGISTRY_WKDIR          "wkdir"
 #define REGISTRY_PLUGIN         "plugin"
 #define REGISTRY_SPECIFIC_TYPE  "specificType"
 #define REGISTRY_GENERIC_TYPE   "genericType"
@@ -56,12 +54,12 @@
 #define OID_TRAP_CODE   "1.3.6.1.6.3.1.1.4.1.0"
 #define OID_TRAP_CODE_GENERIC   "1.3.6.1.6.3.1.1.5.0"
 
-#define DEFAULT_ACTION  "snmpmessagebox.exe"
+#define DEFAULT_PLUGIN  0
 
 #define PLUGIN_FILTER	"plugin_*.dll"
 
-#define VERSION_NUM		0,3,0,0
-#define VERSION_STR		"0,3,0,0a\0"
-#define VERSION_BUILD	"Built the 2012-09-29 on Estephe with MinGW tool set + bison fix\0"
+#define VERSION_NUM		0,3,0,1
+#define VERSION_STR		"0,3,0,1a\0"
+#define VERSION_BUILD	"Built the 2012-09-30 on Estephe with MinGW tool set + bison fix\0"
 
 #endif // SNMPTRAPTOOL_CONFIG_H_INCLUDED
