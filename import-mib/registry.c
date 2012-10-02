@@ -3,20 +3,11 @@
 #include "..\core\snmptraptools_config.h"
 #include "..\libregistry\registry.h"
 
-char registryWkDir[MAX_PATH];
-DWORD registryWkDir_size;
-
 HKEY registryOpen()
 {
 	HKEY hKey;
 
     if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, REGISTRY_CONFIG_PATH, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_READ|KEY_WRITE, NULL, &hKey, NULL) != ERROR_SUCCESS)
-    {
-        return NULL;
-    }
-
-    registryWkDir_size = sizeof(registryWkDir);
-    if (registryServiceDirectory(registryWkDir, &registryWkDir_size) != TRUE)
     {
         return NULL;
     }
@@ -78,33 +69,3 @@ void registryClose(HKEY hKey)
 {
     RegCloseKey(hKey);
 }
-
-BOOL registryServiceDirectory(char *path, DWORD *path_size)
-{
-	char *filename;
-	HKEY serviceKey;
-
-	if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, REGISTRY_SERVICE_PATH, 0, KEY_READ, &serviceKey) != ERROR_SUCCESS)
-	{
-		return FALSE;
-	}
-
-	if (RegQueryValueEx(serviceKey, REGISTRY_SERVICE_EXECUTABLE, NULL, NULL, (BYTE*)path, path_size) != ERROR_SUCCESS)
-	{
-		RegCloseKey(serviceKey);
-		return FALSE;
-	}
-
-	// directory and filename split
-	filename = strrchr(path, '\\');
-	if (filename != NULL)
-	{
-		*filename = '\0';
-		filename++;
-	}
-
-	RegCloseKey(serviceKey);
-
-	return TRUE;
-}
-
