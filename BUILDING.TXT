@@ -41,7 +41,7 @@ For Flex, add the following building rule:
  - Macro: flex -o$file_dir/$file_name.scanner.cc $file
  - Generated files: $file_dir/$file_name.scanner.cc
 
-bison -d import-mib\import-mib.y (génère deux fichiers tabs)
+bison -d import-mib\import-mib.y
 flex -oimport-mib\import-mib.lex.c import-mib\import-mib.l
 
 
