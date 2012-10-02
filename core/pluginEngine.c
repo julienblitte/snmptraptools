@@ -5,18 +5,50 @@
 #include "pluginEngine.h"
 #include "snmptraptools_config.h"
 
+BYTE *pluginDirectory(BYTE *path, DWORD pathSize)
+{
+	char *backslash;
+
+	HKEY serviceKey;
+
+	// default value
+	strcpy((char*)path, PLUGIN_FILTER);
+
+	// try to locate the plugin directory using service executable
+	if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, REGISTRY_SERVICE_PATH, 0, KEY_READ, &serviceKey) == ERROR_SUCCESS)
+	{
+		if (RegQueryValueEx(serviceKey, REGISTRY_SERVICE_EXECUTABLE, NULL, NULL, (BYTE*)path, &pathSize) == ERROR_SUCCESS)
+		{
+			backslash = strrchr((char*)path, '\\');
+			if (backslash != NULL)
+			{
+				*backslash= '\0';
+				strcat((char*)path, "\\");
+				strcat((char*)path, PLUGIN_FILTER);
+			}
+		}
+		RegCloseKey(serviceKey);
+	}
+
+	return (BYTE*)path;
+}
+
 char **plugin_find()
 {
 	static char *files[MAX_PLUGINS];
+
+	char pluginPath[MAX_PATH];
 
 	WIN32_FIND_DATA fd;
 	HANDLE h;
 	unsigned int n;
 
+	pluginDirectory((BYTE*)pluginPath, sizeof(pluginPath));
+
 	memset(files, 0, sizeof(files));
 
 	n = 0;
-	h = FindFirstFile(PLUGIN_FILTER, &fd);
+	h = FindFirstFile(pluginPath, &fd);
 	if (h != INVALID_HANDLE_VALUE)
 	{
 		files[n++] = strdup(fd.cFileName);
