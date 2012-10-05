@@ -109,6 +109,10 @@ bool ns_oid_concat(char *destvar, char *sourcevar, unsigned int node)
 	static char buffer[MAX_OID_LEN];
 	const char *sourcevalue;
 
+#ifdef DEBUG
+	printf("%s ::= { %s %u }\n", destvar, sourcevar, node);
+#endif
+
 	sourcevalue = ns_find(sourcevar);
 	if (sourcevalue == NULL)
 	{
@@ -118,6 +122,10 @@ bool ns_oid_concat(char *destvar, char *sourcevar, unsigned int node)
 	snprintf(buffer, sizeof(buffer), "%s%c%u", sourcevalue, OID_SEPARATOR, node);
 	ns_add(destvar, buffer);
 
+#ifdef DEBUG
+	printf("\t[%s: %s]\n", destvar, buffer);
+#endif
+
 	return true;
 }
 
@@ -125,6 +133,10 @@ void add_trap_registry(const char *name, const char *enterprise, unsigned int tr
 {
     const char *oid;
     static char description[MAX_DESCRIPTION_LEN];
+
+#ifdef DEBUG
+	printf("%s = %s (%u)\n", name, enterprise, trapCode);
+#endif
 
     oid = ns_find(enterprise);
     if (oid == NULL)
@@ -140,7 +152,7 @@ void add_trap_registry(const char *name, const char *enterprise, unsigned int tr
         }
     }
 
-    snprintf(description, sizeof(description), "%s ${*}", name);
+    snprintf(description, sizeof(description), "%s", name);
 
     if (registryAddOid(registry, (LPCTSTR)oid, (DWORD)trapCode, (LPCTSTR)description) != TRUE)
     {
@@ -164,6 +176,8 @@ int main(int argc, char *argv[])
 	}
 	else
 	{
+		// TODO: vérifier si application snmptrapconfig est lancée
+
 		if (MessageBox(NULL, "You are going to import MIB data to snmptraptools.\n\nPlease, verify that Configure tool is not running.\n", "Snmptraptools mib import", MB_ICONWARNING|MB_OKCANCEL) != IDOK)
 		{
 			fprintf(stderr, "Aborted by user.\n");
@@ -179,6 +193,7 @@ int main(int argc, char *argv[])
     }
 
 	// add common defined values
+	//TODO: move this to header and use an array of structure
 	ns_add("iso", "1");
 	ns_add("org", "1.3");
 	ns_add("dod", "1.3.6");

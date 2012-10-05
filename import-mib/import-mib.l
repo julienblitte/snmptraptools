@@ -6,7 +6,7 @@
 
 %%
 --.*$				/* comment */
-[\t\n ]+				/* spaces */
+[\t\r\n ]+			/* spaces */
 DEFINITIONS			{ yylval = TOKEN_DEFINITION; return TOKEN_DEFINITION; }
 IMPORTS				{ yylval = TOKEN_IMPORTS; return TOKEN_IMPORTS; }
 ENTERPRISE			{ yylval = TOKEN_ENTERPRISE; return TOKEN_ENTERPRISE; }
