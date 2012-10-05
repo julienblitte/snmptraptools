@@ -276,7 +276,7 @@ bool smtp_printf(SOCKET sock, const char *format, ...)
 	return true;
 }
 
-#define SMTP_CHECK_STATUS(code)			if ((status = smtp_read(sock))/100 != code) { return false; }
+#define SMTP_CHECK_STATUS(code)			if ((status = smtp_read(sock))/100 != code) { goto smtp_protocol_error; }
 bool smtp_send(const char *host, const char *from, const char *to,
 				const char *login, const char *password, const char *subject, const char *data)
 {
@@ -360,6 +360,14 @@ bool smtp_send(const char *host, const char *from, const char *to,
 	printf("--------------------- SMTP stops ---------------------\n");
 #endif
 	return true;
+
+
+smtp_protocol_error:
+#ifdef DEBUG
+	printf("--------------------- SMTP error ---------------------\n");
+#endif
+	closesocket(sock);
+	return false;
 }
 
 DLL_EXPORT const char *GETNAME()
@@ -393,7 +401,7 @@ DLL_EXPORT void *EDITCONFIG(void *data, unsigned int *data_size)
 	}
 	else
 	{
-		LoadConfig(data, *data_size);
+		LOADCONFIG(data, *data_size);
 		DialogBox(hinstance, MAKEINTRESOURCE(ID_DIALOG_CONFIG), NULL, (DLGPROC)dlgAddMessageHandler);
 	}
 
